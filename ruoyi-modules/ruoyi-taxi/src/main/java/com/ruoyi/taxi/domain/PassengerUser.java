@@ -22,6 +22,8 @@ public class PassengerUser {
     private String profilePhoto;
     private String code;
 
+    private String passengerCard;
+
     public String getCode() {
         return code;
     }
