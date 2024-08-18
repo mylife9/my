@@ -23,9 +23,9 @@ public class TaxiServiceImpl implements TaxiService {
     TaxiMapper taxiMapper;
 
     //经度正则表达式
-    private static final String LONGITUDE = "^[-+]?((90(\\.\\d{1,6})?)|([1-8]?\\d(\\.\\d{1,6})?))$";
+    private static final String LONGITUDE = "^-?((0|1?[0-7]?[0-9]?)(([.][0-9]{1,4})?)|180(([.][0]{1,4})?))$";
     //纬度正则表达式
-    private static final String LATITUDE = "/^[-+]?((180(\\.\\d{1,6})?)|((1[0-7]\\d)|([1-9]\\d?))(\\.\\d{1,6})?)$";
+    private static final String LATITUDE = "^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,4})?)|90(([.][0]{1,4})?))$";
 
     @Override
     public AjaxResult saveOrder(String token, PassengerVo passengerVo) {
@@ -77,6 +77,14 @@ public class TaxiServiceImpl implements TaxiService {
                 return AjaxResult.error("您上一单金额未支付,请先支付后在下单");
             }
         }
+
+        Integer order = taxiMapper.saveOrder(passengerVo,user);
+
+        if(order>0){
+
+        }
+
+
 
 
 
