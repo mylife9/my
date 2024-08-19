@@ -6,12 +6,10 @@ import com.ruoyi.taxi.domain.PassengerUser;
 import com.ruoyi.taxi.mapper.OrderMapper;
 import com.ruoyi.taxi.mapper.TaxiMapper;
 import com.ruoyi.taxi.service.OrderInfoService;
-import org.bouncycastle.asn1.esf.CrlValidatedID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.management.Notification;
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +21,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
     private TaxiMapper taxiMapper;
+
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
