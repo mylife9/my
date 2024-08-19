@@ -23,10 +23,18 @@ public class PassengerUser {
     private Integer state;
     private String profilePhoto;
     private String code;
+    private Integer chargebackNumber;
 
     private String passengerCard;
 
     private Integer passengerAge;
+    private double passengerPrice;
+
+    private Integer reputation;
+
+    private String passengerService;
+
+    private Integer jurisdiction;
 
 
 }

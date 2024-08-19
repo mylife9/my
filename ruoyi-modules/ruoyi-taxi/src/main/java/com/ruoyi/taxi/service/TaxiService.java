@@ -6,4 +6,5 @@ import com.ruoyi.taxi.domain.vo.PassengerVo;
 public interface TaxiService {
     AjaxResult saveOrder(String token, PassengerVo passengerVo);
 
+
 }

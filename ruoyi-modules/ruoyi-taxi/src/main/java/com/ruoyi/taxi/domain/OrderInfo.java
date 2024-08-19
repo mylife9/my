@@ -1,11 +1,11 @@
 package com.ruoyi.taxi.domain;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.math.BigDecimal;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,6 +43,9 @@ public class OrderInfo implements Serializable {
     */
     @ApiModelProperty("司机ID")
     private Long driverId;
+
+    @ApiModelProperty("大约金额")
+    private double aboutPrice;
     /**
     * 司机手机号
     */
@@ -71,7 +74,7 @@ public class OrderInfo implements Serializable {
     * 订单发起时间
     */
     @ApiModelProperty("订单发起时间")
-    private Date orderTime;
+    private LocalDateTime orderTime;
     /**
     * 预计用车时间
     */
@@ -276,7 +279,7 @@ public class OrderInfo implements Serializable {
     /**
     * 
     */
-    @ApiModelProperty("")
+    @ApiModelProperty("支付金额")
     private Double price;
     /**
     * 创建时间
@@ -293,4 +296,6 @@ public class OrderInfo implements Serializable {
     */
     @ApiModelProperty("实际公里数")
     private BigDecimal realDistance;
+    @ApiModelProperty("退单次数")
+    private Integer chargebackNumber;
 }
