@@ -1,5 +1,6 @@
 package com.ruoyi.taxi.mapper;
 
+import com.ruoyi.taxi.domain.DriverUserWorkStatus;
 import com.ruoyi.taxi.domain.OrderInfo;
 import com.ruoyi.taxi.domain.PassengerUser;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
@@ -8,6 +9,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface TaxiMapper {
@@ -25,5 +28,9 @@ public interface TaxiMapper {
 
     @Update("update passenger_user set chargeback_number = 0 WHERE id =#{passengerId}")
     void bunoreder1(Integer id, Integer passengerId);
+
+    @Select("select * from driver_user_work_status")
+    List<DriverUserWorkStatus> selectDriverWork();
+
 
 }

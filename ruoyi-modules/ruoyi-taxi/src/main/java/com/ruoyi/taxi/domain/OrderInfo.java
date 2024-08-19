@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.math.BigDecimal;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -93,14 +95,14 @@ public class OrderInfo implements Serializable {
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("预计出发地点经度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String depLongitude;
+    private Double depLongitude;
     /**
     * 预计出发地点纬度
     */
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("预计出发地点纬度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String depLatitude;
+    private Double depLatitude;
     /**
     * 预计目的地
     */
@@ -114,7 +116,7 @@ public class OrderInfo implements Serializable {
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("预计目的地经度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String destLongitude;
+    private Double destLongitude;
     /**
     * 预计公里数
     */
@@ -126,7 +128,7 @@ public class OrderInfo implements Serializable {
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("预计目的地纬度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String destLatitude;
+    private Double destLatitude;
     /**
     * 坐标加密标识1:GCJ-02测绘局标准2:WGS84 GPS标准3:BD-09 百度标准4:CGCS2000 北斗标准0:其他
     */
@@ -188,14 +190,14 @@ public class OrderInfo implements Serializable {
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("去接乘客时，司机的经度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String toPickUpPassengerLongitude;
+    private Double toPickUpPassengerLongitude;
     /**
     * 去接乘客时，司机的纬度
     */
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("去接乘客时，司机的纬度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String toPickUpPassengerLatitude;
+    private Double toPickUpPassengerLatitude;
     /**
     * 去接乘客时，司机的地点
     */
@@ -219,14 +221,14 @@ public class OrderInfo implements Serializable {
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("接到乘客，乘客上车经度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String pickUpPassengerLongitude;
+    private Double pickUpPassengerLongitude;
     /**
     * 接到乘客，乘客上车纬度
     */
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("接到乘客，乘客上车纬度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String pickUpPassengerLatitude;
+    private Double pickUpPassengerLatitude;
     /**
     * 乘客下车时间
     */
@@ -238,14 +240,14 @@ public class OrderInfo implements Serializable {
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("乘客下车经度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String passengerGetoffLongitude;
+    private Double passengerGetoffLongitude;
     /**
     * 乘客下车纬度
     */
     @Size(max= 16,message="编码长度不能超过16")
     @ApiModelProperty("乘客下车纬度")
     @Length(max= 16,message="编码长度不能超过16")
-    private String passengerGetoffLatitude;
+    private Double passengerGetoffLatitude;
     /**
     * 订单撤销时间
     */
@@ -298,4 +300,17 @@ public class OrderInfo implements Serializable {
     private BigDecimal realDistance;
     @ApiModelProperty("退单次数")
     private Integer chargebackNumber;
+
+    @Schema(description = "车辆类型1:新能源2:舒适型3:豪华型4:商务型")
+    private Integer carType;
+
+
+    @Schema(description = "预计时长(分钟)")
+    private Integer estimatedDuration;
+
+    @Schema(description = "预付金额")
+    private Double advanceAmount;
+
+    @Schema(description = "是否预约用车1:预约用车2:实时用车")
+    private Integer isReserve;
 }

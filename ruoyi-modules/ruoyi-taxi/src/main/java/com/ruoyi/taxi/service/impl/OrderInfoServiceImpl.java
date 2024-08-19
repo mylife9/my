@@ -24,10 +24,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Autowired
     private TaxiMapper taxiMapper;
 
-    //注入通知
-    @Autowired
-    private Notification notification;
-
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Override

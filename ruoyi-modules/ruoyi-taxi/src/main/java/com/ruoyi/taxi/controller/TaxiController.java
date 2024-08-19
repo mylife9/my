@@ -7,7 +7,6 @@ import com.ruoyi.taxi.service.TaxiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.Notification;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -18,9 +17,9 @@ public class TaxiController {
 
     @Autowired
     OrderInfoService orderInfoService;
-     //NotificationService
+
     /**
-     * 生成订单,用户验证接口
+     * 生成订单接口
      * **/
     @PostMapping("/saveOrder")
     public AjaxResult saveOrder(
