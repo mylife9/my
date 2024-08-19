@@ -13,14 +13,18 @@ import com.ruoyi.coupons.domain.User;
 import com.ruoyi.coupons.service.ICouponsTypeService;
 import com.ruoyi.coupons.service.ICouponsUseService;
 import com.ruoyi.coupons.service.ITbCouponsService;
+import com.ruoyi.coupons.utils.RedissonUtils;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 优惠券Controller
@@ -36,6 +40,9 @@ public class TbCouponsController extends BaseController {
     ICouponsTypeService couponsTypeService;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private RedissonUtils redissonUtils;
     RabbitTemplateConfigurer rabbitTemplateConfigurer;
     private Timer timer;
     private boolean isSending = false;
@@ -313,63 +320,18 @@ public class TbCouponsController extends BaseController {
         return "无效操作";*/
     }
 
-
+    /**
+     * @Description:优惠券的领取
+     * @Author: dsh
+     * @Date: 2024/8/19 星期一 22:53
+     * * @param couponId:
+     * @param userId:
+     * * @return: java.lang.String
+     *
+     */
     @Transactional
-    @GetMapping("/getCoupon/{couponId}")
-    public String getUserCoupon(@PathVariable Long couponId/*, @RequestHeader("token") String token*/) {
-        // 检查优惠券是否存在
-        TbCoupons coupon = tbCouponsService.selectOne(couponId);
-        if (coupon == null) {
-            return "优惠券不存在";
-        }
-
-
-        // 假设通过某种方式获取到当前用户的 ID
-   /*     Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();*/
-
-
-        Long userId = 1L;  // 实际应用中应从登录信息等获取
-
-        // 检查用户是否已领取过该优惠券以及领取次数是否达到限制
-        int maxAllowedReceives = 3;
-        //查询出当前的优惠券领取了多少张
-
-        int receivedCountForUser = couponsUseService.getReceivedCountForUser(userId, couponId);
-        //判断如果查询出的条数超过我所限制的张数
-        if (receivedCountForUser >= maxAllowedReceives) {
-            return "您不符合领取条件";
-        }
-
-
-        String couponsKey = "coupons:" + couponId;
-
-
-        Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(couponsKey);
-        //获取redis中的数量
-        Integer count = Integer.valueOf(String.valueOf(entries.get("count")));
-
-        // 业务逻辑：更新优惠券的领取数量
-        Long couponCount = stringRedisTemplate.opsForHash().increment(couponsKey, "count", -1);
-
-        if (couponCount < 0) {
-            //如果领取的数量最终都小于0了，就让值=0
-            Long num = stringRedisTemplate.opsForHash().increment(couponsKey, "count", 0);
-        }
-
-        // 将优惠券与用户关联（例如在数据库中记录用户领取的优惠券）
-        //存入数据
-        int i = couponsUseService.associateUserWithCoupon(userId, couponId);
-        //如果插入的数据条数是1或者是>1的数 那么就说明优惠券领取成功了
-        if (i >= 1) {
-            //如果能优惠券能领取成功 ， 那么数据库中的值就得和redis中的值是一致的
-            tbCouponsService.updateCountById(coupon.getId(), couponCount);
-        }
-
-        return "领取成功";
+    @GetMapping("/getCoupon/{couponId}/{userId}")
+    public String getUserCoupon(@PathVariable Long couponId, @PathVariable Long userId) {
+        return couponsUseService.getUserCoupon(couponId,userId);
     }
-
-
 }
