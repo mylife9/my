@@ -4,7 +4,6 @@ import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.taxi.domain.PassengerUser;
-import com.ruoyi.taxi.domain.vo.RegVo;
 import com.ruoyi.taxi.mapper.PassengerUserMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;

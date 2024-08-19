@@ -3,7 +3,9 @@ package com.ruoyi.taxi.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.OSS;
+import com.aliyun.oss.ServiceException;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.sign.Base64;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -17,9 +19,11 @@ import com.ruoyi.taxi.service.PassengerUserService;
 import com.ruoyi.taxi.utils.HttpClientUtil;
 import com.ruoyi.taxi.utils.ImageUtil;
 import com.ruoyi.taxi.utils.OSSFileUtil;
+import com.ruoyi.taxi.utils.OcrUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.http.client.HttpClient;
+import org.aspectj.weaver.loadtime.Aj;
 import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +33,9 @@ import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @program: rouyitaxi
@@ -46,50 +52,31 @@ public class PassengerUserController extends BaseController {
     OSSFileUtil ossFileUtil;
     @Autowired
     PassengerUserMapper userMapper;
+    @Autowired
+    OcrUtil ocrUtil;
 
     @PostMapping("/register")
     public AjaxResult register(@RequestBody PassengerUser user){
-        Integer i = userService.registerUser(user);
-
+        Integer i = userService.register(user);
         return i>0?success():error();
     }
 
     @GetMapping("/getCode")
     public AjaxResult getCode(@RequestParam(value = "mobile") String mobile){
         String code = userService.sendCode(mobile);
-
         return success("验证码发送成功："+code);
+    }
+
+    @PostMapping("/updateUser")
+    public AjaxResult updateUser(@RequestBody PassengerUser user){
+        Integer update = userService.updateUser(user);
+        return update>0?success():error();
     }
 
     @GetMapping("/login")
     public AjaxResult login(@RequestParam(value = "code") String code){
-        System.out.println(code);
-
-        String url = WxLoginConfig.getOpenUrl.replace("APPID", WxLoginConfig.appid).replace("SECRET",WxLoginConfig.secret).replace("JSCODE",code);
-
-        System.out.println(url);
-
-//        String result = restTemplate.getForEntity(url, String.class).getBody();
-        String result = HttpClientUtil.get(url, null);
-
-        System.out.println("======================================");
-        System.out.println(result);
-
-        JSONObject jsonObject = JSONObject.parseObject(result);
-
-        UserVo userVo = new UserVo();
-        userVo.setName("test");
-        userVo.setOpenId(jsonObject.get("openid").toString());
-
-        PassengerUser login = userMapper.login(userVo.getOpenId());
-        if(login == null){
-
-        }
-
-        userVo.setCode(code);
-
-        System.out.println(userVo.toString());
-        return success(userVo);
+        PassengerUser user = userService.login(code);
+        return success(user);
     }
 
     @RequestMapping("/upload")
@@ -102,33 +89,30 @@ public class PassengerUserController extends BaseController {
 
     //身份证ocr验证
     @RequestMapping("/ocr")
-    public void ocr(@RequestBody MultipartFile file) throws IOException {
-        long timestamp = System.currentTimeMillis();
-        String signStr = ShuMaiConfig.appid+"&"+timestamp+"&"+ShuMaiConfig.appSecurity;
-        String sign = DigestUtils.md5Hex(signStr.getBytes());
-
-        String ossUrl = ossFileUtil.uploadFile(file);
-
-        String url = ShuMaiConfig.idcarOcrUrl+"?appid="+ShuMaiConfig.appid+"&timestamp="+timestamp+"&sign="+sign+"&url="+ossUrl;
-
-        String post = HttpClientUtil.post(url, null,null);
-
-        System.out.println(post);
+    public AjaxResult ocr(@RequestBody MultipartFile file) throws Exception {
+        Map map = userService.ocr(file);
+        return success(map);
     }
 
     //驾驶证orc
     @RequestMapping("/driverOcr")
-    public void driverOcr(@RequestBody MultipartFile file) throws IOException {
-        long timestamp = System.currentTimeMillis();
-        String signStr = ShuMaiConfig.appid+"&"+timestamp+"&"+ShuMaiConfig.appSecurity;
-        String sign = DigestUtils.md5Hex(signStr.getBytes());
+    public AjaxResult driverOcr(@RequestBody MultipartFile file) throws IOException, ParseException {
+        Map map = userService.driverOcr(file);
+        return success(map);
+    }
 
-        String ossUrl = ossFileUtil.uploadFile(file);
+    @GetMapping("/getUserInfo")
+    public AjaxResult getUserInfo(@RequestParam(value = "openid") String openid){
+        PassengerUser user = userService.getUserInfo(openid);
+        return success(user);
+    }
 
-        String url = ShuMaiConfig.driverOcrUrl+"?appid="+ShuMaiConfig.appid+"&timestamp="+timestamp+"&sign="+sign+"&url="+ossUrl;
-
-        String post = HttpClientUtil.post(url, null,null);
+    @RequestMapping("/faceOcr")
+    public AjaxResult faceOcr(MultipartFile file) throws IOException {
+        String post = ocrUtil.ocrFace(file);
 
         System.out.println(post);
+
+        return success(post);
     }
 }
