@@ -6,6 +6,8 @@ import com.ruoyi.taxi.domain.PassengerUser;
 import com.ruoyi.taxi.mapper.OrderMapper;
 import com.ruoyi.taxi.mapper.TaxiMapper;
 import com.ruoyi.taxi.service.OrderInfoService;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
@@ -25,109 +28,40 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    @Override
-    public AjaxResult CancelAnOrder(Integer id, Integer passengerId) {
 
-        //从数据库中查询订单id信息
-        OrderInfo orid = orderMapper.getOrderId(id);
-        if (orid==null || !orid.getPassengerId().equals(passengerId)){
-            return AjaxResult.error("订单不存在或乘客ID不匹配");
-        }
-        //判断是今天是否存在取消状态
-        if (!stringRedisTemplate.hasKey("DATE"+passengerId)){
-            taxiMapper.bunoreder1(id,passengerId);
-            return AjaxResult.success("更新取消次数");
-        }
-        //更新订单状态为已取消
-        Integer reslut =  orderMapper.updateOrderStatusByOrderId(id,orid.getOrderStatus());
-        if (reslut>0){
-            //记录订单次数
-            PassengerUser count = taxiMapper.bunoreder(id,passengerId);
-            LocalDate now = LocalDate.now();
-            stringRedisTemplate.opsForValue().set("DATE"+passengerId, String.valueOf(now),15,TimeUnit.MINUTES);
-            //判断订单是否超过次数
-            if (count.getChargebackNumber()<4 && !stringRedisTemplate.hasKey("DATE"+passengerId)){
-                //记录订单次数,成功加一
-                taxiMapper.bunoreder(id,passengerId);
-                return AjaxResult.error("订单取消成功");
-            }else {
-                //订单取消失败
-                return AjaxResult.error("订单取消失败,您今天取消订单的次数已达上限");
-            }
-
-        }
-        return AjaxResult.error("订单取消失败");
-
-    }
 
     @Override
-    public AjaxResult ContactTheDriver(Integer id, Integer passengerId) {
-        OrderInfo orderInfo = orderMapper.ContactTheDriver(id);
-        //检查订单状态
-        if (orderInfo==null){
-            return AjaxResult.error("订单不存在");
+    public AjaxResult cancelOrder(Integer id, Integer passengerId) {
+        //检查乘客今天取消次数是否已达三次
+        PassengerUser passenger = taxiMapper.selectById(id);
+        //获取当前日期
+        LocalDate localDate = LocalDate.now();
+        //判断今天的取消次数
+        if (passenger.getChargebackNumber()>=3 && localDate.equals(LocalDate.now())){
+            return AjaxResult.error("今天已经取消三次,无法再取消");
         }
-        //判断是今天是否存在取消状态
-        if (!stringRedisTemplate.hasKey("DATE"+passengerId)){
-            taxiMapper.bunoreder1(id,passengerId);
-            return AjaxResult.success("更新取消次数");
+        OrderInfo info1 = orderMapper.selectById(id);
+        //订单刚开始可以直接取消
+        if (info1.getOrderStatus()==1 && info1.getOrderId()!=null && info1.getDriverPhone()!=null){
+            //改为取消订单
+            taxiMapper.updateChargebackNumber(passengerId,passenger.getChargebackNumber());
+            //乘客今天取消次数加一
+            passenger.setChargebackNumber(passenger.getChargebackNumber()+1);
+            return AjaxResult.error("订单取消成功");
         }
-        //记录订单次数
-        PassengerUser count = taxiMapper.bunoreder(id,passengerId);
-        //检查订单是否已被司机接单
-        if (orderInfo.getOrderStatus()==2){
-            //司机同意取消
-            Integer reslut =  orderMapper.updateOrderStatusByOrderId1(id,orderInfo.getOrderStatus());
-            if (reslut==1){
-                LocalDate now = LocalDate.now();
-                stringRedisTemplate.opsForValue().set("DATE"+passengerId, String.valueOf(now));
-                //判断订单是否超过次数
-                if (count.getChargebackNumber()<4 && !stringRedisTemplate.hasKey("DATE"+passengerId)){
-                    //记录订单次数,成功加一
-                    taxiMapper.bunoreder(id,passengerId);
-                    return AjaxResult.error("订单取消成功");
-                }
-            }else {
-                //返回信息给乘客
-                return AjaxResult.error("订单取消失败.您今天的取消次数已达上限");
-            }
+        //检查订单状态查看司机是否已经接单,如果司机已经接单则联系司机取消订单
+        if (info1.getOrderStatus()==2 && info1.getOrderId()!=null && info1.getDriverPhone()!=null){
+            //返回司机手机号
+            log.info("司机手机号:"+info1.getDriverPhone());
+            return AjaxResult.error("请联系司机取消订单");
         }
-        // 如果"，则返回错误或要求乘客重新确认
-        return AjaxResult.error("请先与司机联系并获得其同意后再取消订单");
-    }
-
-    @Override
-    public AjaxResult refund(Integer id, Integer passengerId) {
-        //从数据库中查询订单id信息
-        OrderInfo orid = orderMapper.getOrderId(id);
-        if (orid==null || orid.getOrderStatus()==3){
-            return AjaxResult.error("订单不存在或存在未支付的订单,无法进行退款");
+        //更新订单状态已取消
+        orderMapper.updateOrderStatus(info1);
+        //更新乘客今天取消订单的次数
+        passenger.setChargebackNumber(passenger.getChargebackNumber()+1);
+        if (!localDate.equals(LocalDate.now())){
+            taxiMapper.updateChargebackNumber(passengerId,passenger.getChargebackNumber());
         }
-        //判断是今天是否存在取消状态
-        if (!stringRedisTemplate.hasKey("DATE"+passengerId)){
-            taxiMapper.bunoreder1(id,passengerId);
-            return AjaxResult.success("更新取消次数");
-        }
-        //更新订单状态为已取消
-        Integer reslut =  orderMapper.updateOrderStatusByOrderId(id,orid.getOrderStatus());
-        if (reslut>0){
-            //记录订单次数
-            PassengerUser count = taxiMapper.bunoreder(id,passengerId);
-            LocalDate now = LocalDate.now();
-            stringRedisTemplate.opsForValue().set("DATE"+passengerId, String.valueOf(now),15,TimeUnit.MINUTES);
-            //判断订单是否超过次数
-            if (count.getChargebackNumber()<4 && !stringRedisTemplate.hasKey("DATE"+passengerId)){
-                //记录订单次数,成功加一
-                taxiMapper.bunoreder(id,passengerId);
-                orderMapper.updatetk(id,orid.getOrderStatus());
-                return AjaxResult.error("订单取消成功,退款成功请注意查看账户");
-            }else {
-                //订单取消失败
-                return AjaxResult.error("订单取消失败,您今天取消订单的次数已达上限");
-            }
-
-        }
-        return AjaxResult.error("订单取消失败");
-
+        return AjaxResult.success("订单取消成功");
     }
 }
