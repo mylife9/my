@@ -10,6 +10,7 @@ import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.coupons.domain.CouponsType;
 import com.ruoyi.coupons.domain.TbCoupons;
 import com.ruoyi.coupons.domain.User;
+import com.ruoyi.coupons.service.CouponsService;
 import com.ruoyi.coupons.service.ICouponsTypeService;
 import com.ruoyi.coupons.service.ICouponsUseService;
 import com.ruoyi.coupons.service.ITbCouponsService;
@@ -36,23 +37,40 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/coupons")
 public class TbCouponsController extends BaseController {
 
-    @Autowired
-    ICouponsTypeService couponsTypeService;
-    @Autowired
-    StringRedisTemplate stringRedisTemplate;
-
     @Resource
-    private RedissonUtils redissonUtils;
-    RabbitTemplateConfigurer rabbitTemplateConfigurer;
+    private ICouponsTypeService couponsTypeService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private ITbCouponsService tbCouponsService;
+    @Resource
+    private ICouponsUseService couponsUseService;
+    @Resource
+    private CouponsService couponsService;
+
+    private RabbitTemplateConfigurer rabbitTemplateConfigurer;
     private Timer timer;
     private boolean isSending = false;
-    @Autowired
-    private ITbCouponsService tbCouponsService;
     private Map<Long, Timer> timerMap = new HashMap<>(); // 使用一个 Map 来存储不同 ID 对应的定时器
     private Map<Long, Boolean> sendingStatusMap = new HashMap<>(); // 存储每个 ID 的发送状态
-    @Autowired
-    private ICouponsUseService couponsUseService;
 
+
+    /**
+     * 查询优惠券列表
+     */
+//    @RequiresPermissions("coupons:coupons:list")
+    @GetMapping("/couponsList")
+    public AjaxResult couponsList(){
+        return couponsService.couponsList();
+    }
+    /**
+     * 查询优惠券信息
+     */
+//    @RequiresPermissions("coupons:coupons:list")
+    @GetMapping("/couponsInfo/{id}")
+    public AjaxResult couponsInfo(@PathVariable("id")Long id){
+        return couponsService.couponsInfo(id);
+    }
     /**
      * 查询优惠券列表
      */
@@ -334,4 +352,6 @@ public class TbCouponsController extends BaseController {
     public String getUserCoupon(@PathVariable Long couponId, @PathVariable Long userId) {
         return couponsUseService.getUserCoupon(couponId,userId);
     }
+
+
 }

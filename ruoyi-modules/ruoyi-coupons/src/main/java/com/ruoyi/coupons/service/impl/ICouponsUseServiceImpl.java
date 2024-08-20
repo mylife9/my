@@ -62,25 +62,25 @@ public class ICouponsUseServiceImpl implements ICouponsUseService {
                 return "优惠券不存在";
             }
         }
-        // 检查用户是否已领取过该优惠券以及领取次数是否达到限制
-        String couponsSetKey = "couponsSet:" + couponId;
-        Set<String> couponsSet = stringRedisTemplate.opsForSet().members(couponsSetKey);
-        if (entries.size() > 0 || entries != null) {
-            boolean userFlag = couponsSet.contains(userId + "");
-            if (userFlag) {
-                return "您已领取，请勿领取";
-            }
-        }
-        //获取redis中的数量
-        Integer count = Integer.valueOf(String.valueOf(entries.get("count")));
-        if (count <= 0) {
-            return "库存不足";
-        }
         RLock lock = redissonUtils.getLock("coupons-lock:" + couponId);
         try {
             boolean b = lock.tryLock(1, 10, TimeUnit.SECONDS);
             if (!b) {
                 return "优惠券已被领取";
+            }
+            // 检查用户是否已领取过该优惠券以及领取次数是否达到限制
+            String couponsSetKey = "couponsSet:" + couponId;
+            Set<String> couponsSet = stringRedisTemplate.opsForSet().members(couponsSetKey);
+            if (entries.size() > 0 || entries != null) {
+                boolean userFlag = couponsSet.contains(userId + "");
+                if (userFlag) {
+                    return "您已领取，请勿领取";
+                }
+            }
+            //获取redis中的数量
+            Integer count = Integer.valueOf(String.valueOf(entries.get("count")));
+            if (count <= 0) {
+                return "库存不足";
             }
             // 业务逻辑：更新优惠券的领取数量
             Long couponCount = stringRedisTemplate.opsForHash().increment(couponsKey, "count", -1);
@@ -92,6 +92,7 @@ public class ICouponsUseServiceImpl implements ICouponsUseService {
             //如果插入的数据条数是1或者是>1的数 那么就说明优惠券领取成功了
             if (insertFlag >= 1) {
                 //如果能优惠券能领取成功 ， 那么数据库中的值就得和redis中的值是一致的
+                //使用乐观锁防止超卖
                 tbCouponsMapper.updateCountById(couponId, couponCount);
             }
             return "领取成功";

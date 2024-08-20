@@ -6,6 +6,7 @@ import com.ruoyi.coupons.service.ITbCouponsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Service
 public class TbCouponsServiceImpl implements ITbCouponsService {
-    @Autowired
+    @Resource
     private TbCouponsMapper tbCouponsMapper;
 
     /**

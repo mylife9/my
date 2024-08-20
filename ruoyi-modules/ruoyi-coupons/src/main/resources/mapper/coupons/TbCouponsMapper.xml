@@ -114,12 +114,9 @@
 
     </update>
     <update id="updateCountById">
-
         update tb_coupons
         set receive_count=#{couponCount}
-        where id = #{id}
-
-
+        where id = #{id} and receive_count > 0
     </update>
 
     <delete id="deleteTbCouponsById" parameterType="Long">
