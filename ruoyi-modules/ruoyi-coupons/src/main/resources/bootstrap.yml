@@ -3,7 +3,9 @@ server:
   port: 9301
 
 # Spring
-spring: 
+spring:
+  main:
+    allow-circular-references: true
   application:
     # 应用名称
     name: ruoyi-coupons
@@ -11,6 +13,12 @@ spring:
     # 环境配置
     active: dev
   cloud:
+    sentinel:
+      transport:
+        # Sentinel Dashboard的地址
+        dashboard: localhost:8080
+        # Sentinel Dashboard的端口
+        port: 8719
     nacos:
       discovery:
         # 服务注册地址

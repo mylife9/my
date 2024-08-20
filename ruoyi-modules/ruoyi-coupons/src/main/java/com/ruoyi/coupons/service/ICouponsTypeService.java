@@ -1,6 +1,7 @@
 package com.ruoyi.coupons.service;
 
 import com.ruoyi.coupons.domain.CouponsType;
+import com.ruoyi.coupons.domain.TbCoupons;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface ICouponsTypeService {
     List<CouponsType> selectListType();
 
 
-
+    TbCoupons selectCoupons(Long id);
 }

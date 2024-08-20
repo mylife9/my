@@ -79,6 +79,47 @@
             <artifactId>ruoyi-common-swagger</artifactId>
         </dependency>
 
+        <!-- Jedis 是一个 Java 编写的 Redis 客户端 -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <!-- Spring Boot Redis Auto Configuration -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+
+        <!-- Spring Boot Web Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+
+
+        <!-- 如果你想将限流规则持久化到Nacos -->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.csp</groupId>-->
+<!--            <artifactId>sentinel-datasource-nacos</artifactId>-->
+<!--            <version>1.8.4</version> &lt;!&ndash; 与sentinel-core版本保持一致 &ndash;&gt;-->
+<!--        </dependency>-->
+
+        <!-- Spring Cloud Feign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

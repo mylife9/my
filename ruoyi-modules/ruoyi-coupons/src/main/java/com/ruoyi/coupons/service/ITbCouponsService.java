@@ -66,4 +66,6 @@ public interface ITbCouponsService {
 
 
     void updateCountById(Long id, Long couponCount);
+
+    void updateByReceiveCount(Long id);
 }

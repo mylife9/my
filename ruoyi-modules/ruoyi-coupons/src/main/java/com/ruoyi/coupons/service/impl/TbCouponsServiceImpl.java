@@ -108,5 +108,10 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     }
 
+    @Override
+    public void updateByReceiveCount(Long id) {
+        tbCouponsMapper.updateByReceiveCount(id);
+    }
+
 
 }
