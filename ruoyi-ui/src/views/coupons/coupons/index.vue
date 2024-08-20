@@ -114,18 +114,17 @@
             v-if="scope.row.couponsStatus==0"
             size="mini"
             type="text"
-            @click="handleCoupons(scope.row,1)"
+            @click="startCoupon(scope.row)"
           >开始发券
           </el-button>
-
-<!--          <el-button
+          <el-button
             v-if="scope.row.couponsStatus==1"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click="handleCoupons(scope.row,0)"
+            @click="closeCoupon(scope.row)"
           >停止发卷
-          </el-button>-->
+          </el-button>
 
 
         </template>
@@ -201,7 +200,7 @@ import {
   delCoupons,
   getCoupons,
   listCoupons,
-  startCoupons, edit
+  startCoupons, edit, closeCoupons
 } from "@/api/coupons/coupons";
 
 export default {
@@ -258,14 +257,20 @@ export default {
   },
   methods: {
     //发卷按钮
-    handleCoupons(row, status) {
-      var data = {
-        id: row.id,
-        status: status
-      }
-      startCoupons(data).then(res => {
+    startCoupon(row) {
+      const ids = row.id || this.ids;
+      startCoupons(ids).then(res => {
         console.log(res);
-        this.$message(res);
+        this.$message(res.msg);
+        this.getList()
+      })
+    },
+    //停止发放
+    closeCoupon(row) {
+      const ids = row.id || this.ids;
+      closeCoupons(ids).then(res => {
+        console.log(res);
+        this.$message(res.msg);
         this.getList()
       })
     },

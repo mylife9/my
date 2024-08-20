@@ -65,7 +65,7 @@ public interface TbCouponsMapper {
 
     TbCoupons couponsInfo(Long id);
 
-    int startCoupons(Long[] ids, int couponsStatus);
+    int startCoupons(@Param("ids")Long[] ids,@Param("couponsStatus") int couponsStatus);
 
-    List<TbCoupons> findStartCouponsByIds(Long[] ids);
+    List<TbCoupons> findStartCouponsByIds(@Param("ids") Long[] ids);
 }

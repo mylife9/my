@@ -51,10 +51,17 @@ export function listType() {
   })
 }
 
-// 发卷按钮和停止按钮
+// 开始发放
 export function startCoupons(id) {
   return request({
-    url: '/coupons/coupons/startCoupons'+id,
-    method: 'post',
+    url: '/coupons/coupons/startCoupons/'+id,
+    method: 'get',
+  })
+}
+// 停止发放
+export function closeCoupons(id) {
+  return request({
+    url: '/coupons/coupons/closeCoupons/'+id,
+    method: 'get',
   })
 }

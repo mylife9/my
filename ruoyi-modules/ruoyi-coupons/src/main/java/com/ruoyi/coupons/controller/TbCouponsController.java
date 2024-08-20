@@ -121,7 +121,7 @@ public class TbCouponsController extends BaseController {
      *
      */
     @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/startCoupons/{ids}")
+    @GetMapping("/startCoupons/{ids}")
     public AjaxResult startCoupons(@PathVariable Long[] ids) {
         return tbCouponsService.startCoupons(ids);
     }
@@ -134,6 +134,7 @@ public class TbCouponsController extends BaseController {
      *
      */
     @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/closeCoupons/{ids}")
     public AjaxResult closeCoupons(@PathVariable Long[] ids) {
         return tbCouponsService.closeCoupons(ids);
     }

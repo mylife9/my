@@ -46,7 +46,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
     @Resource
     private CouponsLogMapper couponsLogMapper;
     //开放优惠券的key
-    private final String startKey = "startCouponsKey:";
+    private final String STARTKEY = "startCouponsKey:";
     //缓存中存储所有优惠券信息的KEY
     private final String COUPONSALL_KEY = "coupons-all";
     //缓存中存储优惠券详细信息的KEY
@@ -306,7 +306,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
                     int updateRows = tbCouponsMapper.startCoupons(ids,couponsStatus);
                     if(updateRows>0){
                         //开放优惠券存储redis的key
-                        String couponsKey = startKey+coupon.getId();
+                        String couponsKey = STARTKEY+coupon.getId();
                         //3.将信息存到redis当中
 
                         //如果优惠券的数量小于0，不进行存储
@@ -316,16 +316,18 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
                         //存入优惠券的数量
                         stringRedisTemplate.opsForHash().put(couponsKey, "count", String.valueOf(coupon.getReceiveCount()));
                         //存入优惠券的名称
-                        stringRedisTemplate.opsForHash().put(couponsKey, "name", String.valueOf(coupon.getCouponsName()));
+                        stringRedisTemplate.opsForHash().put(couponsKey, "name", coupon.getCouponsName());
                         //存入优惠券的编号（唯一）
-                        stringRedisTemplate.opsForHash().put(couponsKey, "number", String.valueOf(coupon.getCouponsNumber()));
+                        stringRedisTemplate.opsForHash().put(couponsKey, "number", coupon.getCouponsNumber());
                         //设置优惠券开放的过期时间
                         long timeout = coupon.getCouponsExpirationDate().getTime()-coupon.getCouponsCreateDate().getTime();
                         stringRedisTemplate.expire(couponsKey,timeout,TimeUnit.SECONDS);
                     }
+                    stringRedisTemplate.delete(COUPONSALL_KEY);
                     return AjaxResult.success("活动已开放");
                 }
             }
+
         }
         return AjaxResult.error("优惠券不存在");
     }
@@ -340,16 +342,17 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
         if(updateRows>0){
             for (Long id : ids) {
                 //获取要开放的优惠券的key
-                String couponsKey = startKey+id;
+                String couponsKey = STARTKEY+id;
                 //查询redis优惠券的信息
                 Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(couponsKey);
                 //获取优惠券的库存
-                Long count = (Long) entries.get("count");
+                Long count = Long.valueOf((String) entries.get("count"));
                 //2.将缓存的优惠券库存信息重新同步到数据库
-                tbCouponsMapper.updateCountById(id,count);
+                tbCouponsMapper.updateCountById(id,count );
                 //3.根据开放的优惠券的key删除
                 stringRedisTemplate.delete(couponsKey);
             }
+            stringRedisTemplate.delete(COUPONSALL_KEY);
             return AjaxResult.success("优惠券已关闭发放");
         }
         return AjaxResult.error("优惠券不存在");
