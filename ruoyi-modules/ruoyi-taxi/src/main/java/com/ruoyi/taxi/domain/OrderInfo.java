@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -81,6 +83,7 @@ public class OrderInfo implements Serializable {
     * 预计用车时间
     */
     @ApiModelProperty("预计用车时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date departTime;
     /**
     * 预计出发地点详细地址
@@ -164,6 +167,7 @@ public class OrderInfo implements Serializable {
     * 接单时间，派单成功时间
     */
     @ApiModelProperty("接单时间，派单成功时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date receiveOrderTime;
     /**
     * 机动车驾驶证号
@@ -183,6 +187,7 @@ public class OrderInfo implements Serializable {
     * 司机去接乘客出发时间
     */
     @ApiModelProperty("司机去接乘客出发时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date toPickUpPassengerTime;
     /**
     * 去接乘客时，司机的经度
@@ -209,11 +214,13 @@ public class OrderInfo implements Serializable {
     * 司机到达上车点时间
     */
     @ApiModelProperty("司机到达上车点时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date driverArrivedDepartureTime;
     /**
     * 接到乘客，乘客上车时间
     */
     @ApiModelProperty("接到乘客，乘客上车时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date pickUpPassengerTime;
     /**
     * 接到乘客，乘客上车经度
@@ -233,6 +240,7 @@ public class OrderInfo implements Serializable {
     * 乘客下车时间
     */
     @ApiModelProperty("乘客下车时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date passengerGetoffTime;
     /**
     * 乘客下车经度
@@ -287,11 +295,13 @@ public class OrderInfo implements Serializable {
     * 创建时间
     */
     @ApiModelProperty("创建时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtCreate;
     /**
     * 修改时间
     */
     @ApiModelProperty("修改时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtModified;
     /**
     * 实际公里数

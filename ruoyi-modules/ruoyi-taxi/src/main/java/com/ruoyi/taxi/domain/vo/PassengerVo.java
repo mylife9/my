@@ -39,7 +39,7 @@ public class PassengerVo {
     private Double destLatitude;
 
     @Schema(description = "预计公里数")
-    private Integer expectDistance;
+    private Double expectDistance;
 
     @Schema(description = "车辆类型1:新能源2:舒适型3:豪华型4:商务型")
     private Integer carType;

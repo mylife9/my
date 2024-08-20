@@ -16,6 +16,7 @@ public class PassengerUser {
     private Integer passengerId;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtCreate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtModified;
     private String passengerPhone;
     private String passengerName;
