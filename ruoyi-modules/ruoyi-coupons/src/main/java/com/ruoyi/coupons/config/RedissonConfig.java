@@ -1,4 +1,4 @@
-package com.ruoyi.coupons.conf;
+package com.ruoyi.coupons.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

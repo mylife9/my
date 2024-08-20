@@ -7,7 +7,7 @@
     <resultMap type="TbCoupons" id="TbCouponsResult">
         <result property="id" column="id"/>
         <result property="couponsNumber" column="coupons_number"/>
-        <result property="couposName" column="coupos_name"/>
+        <result property="couponsName" column="coupons_name"/>
         <result property="couponsAmount" column="coupons_amount"/>
         <result property="couponHold" column="coupon_hold"/>
         <result property="couponsType" column="coupons_type"/>
@@ -20,7 +20,7 @@
     <sql id="selectTbCouponsVo">
         select id,
                coupons_number,
-               coupos_name,
+               coupons_name,
                coupons_amount,
                coupon_hold,
                coupons_type,
@@ -31,31 +31,26 @@
         from tb_coupons
     </sql>
 
-    <select id="selectTbCouponsList" parameterType="TbCoupons" resultMap="TbCouponsResult">
+    <select id="couponsList" parameterType="TbCoupons" resultMap="TbCouponsResult">
         select c.*,t.type_name , DATEDIFF(c.coupons_expiration_date, c.coupons_create_date) as days from tb_coupons c
         left join coupons_type t
         on c.coupons_type =t.id
         <where>
-            <if test="couposName != null  and couposName != ''">and coupos_name like concat('%', #{couposName}, '%')
+            <if test="couponsName != null  and couponsName != ''">and coupons_name like concat('%', #{couponsName}, '%')
             </if>
             <if test="couponsType != null ">and coupons_type = #{couponsType}</if>
             <if test="couponsStatus != null ">and coupons_status = #{couponsStatus}</if>
         </where>
+        ORDER BY c.id
     </select>
 
-    <select id="selectTbCouponsById" parameterType="Long" resultMap="TbCouponsResult">
-        <include refid="selectTbCouponsVo"/>
-        where id = #{id}
-    </select>
-    <select id="selectOne" resultType="com.ruoyi.coupons.domain.TbCoupons">
 
+    <select id="couponsInfo" resultType="com.ruoyi.coupons.domain.TbCoupons">
         select c.*, t.type_name
         from tb_coupons c
                  left join coupons_type t
                            on c.coupons_type = t.id
         where c.id = #{id}
-
-
     </select>
 
 
@@ -63,7 +58,7 @@
         insert into tb_coupons
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="couponsNumber != null">coupons_number,</if>
-            <if test="couposName != null">coupos_name,</if>
+            <if test="couponsName != null">coupons_name,</if>
             <if test="couponsAmount != null">coupons_amount,</if>
             <if test="couponHold != null">coupon_hold,</if>
             <if test="couponsType != null">coupons_type,</if>
@@ -74,7 +69,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="couponsNumber != null">#{couponsNumber},</if>
-            <if test="couposName != null">#{couposName},</if>
+            <if test="couponsName != null">#{couponsName},</if>
             <if test="couponsAmount != null">#{couponsAmount},</if>
             <if test="couponHold != null">#{couponHold},</if>
             <if test="couponsType != null">#{couponsType},</if>
@@ -89,7 +84,7 @@
         update tb_coupons
         <trim prefix="SET" suffixOverrides=",">
             <if test="couponsNumber != null">coupons_number = #{couponsNumber},</if>
-            <if test="couposName != null">coupos_name = #{couposName},</if>
+            <if test="couponsName != null">coupons_name = #{couponsName},</if>
             <if test="couponsAmount != null">coupons_amount = #{couponsAmount},</if>
             <if test="couponHold != null">coupon_hold = #{couponHold},</if>
             <if test="couponsType != null">coupons_type = #{couponsType},</if>
@@ -100,23 +95,17 @@
         </trim>
         where id = #{id}
     </update>
-    <update id="updateStatus">
 
-        update tb_coupons
-        set coupons_status=#{status}
-        <if test="count!=null">
-            ,receive_count=#{count}
-        </if>
-
-
-        where id = #{id}
-
-
-    </update>
     <update id="updateCountById">
         update tb_coupons
         set receive_count=#{couponCount}
         where id = #{id} and receive_count > 0
+    </update>
+    <update id="startCoupons" >
+        update tb_coupons set coupons_status = #{couponsStatus} where id in
+                                                     <foreach collection="ids" item="id" open="(" separator="," close=")">
+                                                         #{id}
+                                                     </foreach>
     </update>
 
     <delete id="deleteTbCouponsById" parameterType="Long">
@@ -131,4 +120,21 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectTbCouponsList" parameterType="TbCoupons" resultMap="TbCouponsResult">
+        select c.*,t.type_name , DATEDIFF(c.coupons_expiration_date, c.coupons_create_date) as days from tb_coupons c
+        left join coupons_type t
+        on c.coupons_type =t.id
+        <where>
+            <if test="couposName != null  and couposName != ''">and coupos_name like concat('%', #{couposName}, '%')
+            </if>
+            <if test="couponsType != null ">and coupons_type = #{couponsType}</if>
+            <if test="couponsStatus != null ">and coupons_status = #{couponsStatus}</if>
+        </where>
+    </select>
+    <select id="findStartCouponsByIds" resultType="com.ruoyi.coupons.domain.TbCoupons">
+        select * from tb_coupons where id in <foreach collection="ids" close=")" open="(" separator="," item="id">
+        #{id}
+    </foreach>
+    </select>
 </mapper>

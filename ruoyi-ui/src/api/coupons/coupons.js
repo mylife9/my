@@ -12,7 +12,7 @@ export function listCoupons(query) {
 // 查询优惠券详细
 export function getCoupons(id) {
   return request({
-    url: '/coupons/coupons/' + id,
+    url: '/coupons/coupons/query/' + id,
     method: 'get'
   })
 }
@@ -20,16 +20,16 @@ export function getCoupons(id) {
 // 新增优惠券
 export function addCoupons(data) {
   return request({
-    url: '/coupons/coupons',
+    url: '/coupons/coupons/add',
     method: 'post',
     data: data
   })
 }
 
 // 修改优惠券
-export function updateCoupons(data) {
+export function edit(data) {
   return request({
-    url: '/coupons/coupons',
+    url: '/coupons/coupons/edit',
     method: 'put',
     data: data
   })
@@ -38,13 +38,13 @@ export function updateCoupons(data) {
 // 删除优惠券
 export function delCoupons(id) {
   return request({
-    url: '/coupons/coupons/' + id,
+    url: '/coupons/coupons/remove/' + id,
     method: 'delete'
   })
 }
 
-// 查询优惠券详细
-export function getCouponsTypeService() {
+// 查询优惠券所有类型
+export function listType() {
   return request({
     url: '/coupons/coupons/listType',
     method: 'get'
@@ -52,10 +52,9 @@ export function getCouponsTypeService() {
 }
 
 // 发卷按钮和停止按钮
-export function couponsUpdateService(data) {
+export function startCoupons(id) {
   return request({
-    url: '/coupons/coupons/updateCoupons',
+    url: '/coupons/coupons/startCoupons'+id,
     method: 'post',
-    data
   })
 }

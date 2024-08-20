@@ -2,6 +2,7 @@ package com.ruoyi.coupons.domain;
 
 import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.web.domain.BaseEntity;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @Author: M

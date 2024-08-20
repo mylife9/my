@@ -3,6 +3,7 @@ package com.ruoyi.coupons.mapper;
 import com.ruoyi.coupons.domain.TbCoupons;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -14,16 +15,9 @@ import java.util.List;
  */
 @Mapper
 public interface TbCouponsMapper {
-    /**
-     * 查询优惠券
-     *
-     * @param id 优惠券主键
-     * @return 优惠券
-     */
-    public TbCoupons selectTbCouponsById(Long id);
 
     /**
-     * 查询优惠券列表
+     * 导出优惠券列表
      *
      * @param tbCoupons 优惠券
      * @return 优惠券集合
@@ -62,11 +56,16 @@ public interface TbCouponsMapper {
      */
     public int deleteTbCouponsByIds(Long[] ids);
 
-
-    TbCoupons selectOne(Long id);
-
-
-    void updateStatus(@Param("id") Long id, @Param("status") Integer status, @Param("count") Integer count);
-
     void updateCountById(@Param("id") Long id, @Param("couponCount") Long couponCount);
+
+    @Update("UPDATE tb_coupons SET receive_count = receive_count -1 WHERE id = #{id}")
+    void updateByReceiveCount(Long id);
+
+    List<TbCoupons> couponsList(TbCoupons tbCoupons);
+
+    TbCoupons couponsInfo(Long id);
+
+    int startCoupons(Long[] ids, int couponsStatus);
+
+    List<TbCoupons> findStartCouponsByIds(Long[] ids);
 }

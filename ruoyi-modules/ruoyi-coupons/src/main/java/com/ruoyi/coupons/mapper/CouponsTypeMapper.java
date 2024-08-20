@@ -1,7 +1,9 @@
 package com.ruoyi.coupons.mapper;
 
 import com.ruoyi.coupons.domain.CouponsType;
+import com.ruoyi.coupons.domain.TbCoupons;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -15,5 +17,4 @@ public interface CouponsTypeMapper {
 
     public List<CouponsType> selectListType();
 
-    void insertCoupon(Integer id, Long couponsId);
 }

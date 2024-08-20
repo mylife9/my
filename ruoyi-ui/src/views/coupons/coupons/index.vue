@@ -2,9 +2,9 @@
   <div class="app-container">
     <el-form :model="queryParams" class="demo-form-inline" ref="queryForm" size="small" :inline="true"
              v-show="showSearch" width="100px">
-      <el-form-item label="优惠券的名称" prop="couposName">
+      <el-form-item label="优惠券的名称" prop="couponsName">
         <el-input
-          v-model="queryParams.couposName"
+          v-model="queryParams.couponsName"
           placeholder="请输入优惠券的名称"
           clearable
           @keyup.enter.native="handleQuery"
@@ -70,7 +70,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="id" align="center" prop="id"/>
       <el-table-column label="优惠券编号" align="center" prop="couponsNumber"/>
-      <el-table-column label="活动" align="center" prop="couposName"/>
+      <el-table-column label="优惠券名称" align="center" prop="couponsName"/>
       <el-table-column label="面值" align="center" prop="couponsAmount"/>
       <el-table-column label="最低消费" align="center" prop="couponHold"/>
       <el-table-column label="类型" align="center" prop="typeName">
@@ -146,8 +146,8 @@
         <el-form-item label="优惠券的编号" prop="couponsNumber">
           <el-input v-model="form.couponsNumber" placeholder="请输入优惠券的编号"/>
         </el-form-item>
-        <el-form-item label="优惠券的名称" prop="couposName">
-          <el-input v-model="form.couposName" placeholder="请输入优惠券的名称"/>
+        <el-form-item label="优惠券的名称" prop="couponsName">
+          <el-input v-model="form.couponsName" placeholder="请输入优惠券的名称"/>
         </el-form-item>
 
         <el-form-item label="优惠券的类型" prop="couponsType">
@@ -197,12 +197,11 @@
 <script>
 import {
   addCoupons,
-  couponsUpdateService,
+  listType,
   delCoupons,
   getCoupons,
-  getCouponsTypeService,
   listCoupons,
-  updateCoupons
+  startCoupons, edit
 } from "@/api/coupons/coupons";
 
 export default {
@@ -239,7 +238,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        couposName: null,
+        couponsName: null,
         couponsType: null,
         couponsStatus: null
       },
@@ -264,13 +263,11 @@ export default {
         id: row.id,
         status: status
       }
-      couponsUpdateService(data).then(res => {
+      startCoupons(data).then(res => {
         console.log(res);
         this.$message(res);
         this.getList()
       })
-
-
     },
     /** 查询优惠券列表 */
     getList() {
@@ -287,7 +284,7 @@ export default {
 
     //下拉框 类型
     getCouponsTypeList() {
-      getCouponsTypeService().then(res => {
+      listType().then(res => {
         console.log(res)
         this.options = res.rows
       })
@@ -302,7 +299,7 @@ export default {
       this.form = {
         id: null,
         couponsNumber: null,
-        couposName: null,
+        couponsName: null,
         couponsAmount: null,
         couponHold: null,
         couponsType: null,
@@ -338,6 +335,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.getCouponsTypeList();
       this.reset();
       const id = row.id || this.ids
       getCoupons(id).then(response => {
@@ -351,7 +349,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateCoupons(this.form).then(response => {
+            edit(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();

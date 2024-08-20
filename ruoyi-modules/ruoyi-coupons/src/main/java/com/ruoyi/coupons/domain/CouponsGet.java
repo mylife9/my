@@ -3,6 +3,7 @@ package com.ruoyi.coupons.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -10,15 +11,17 @@ import java.util.Date;
  * @Date: 2024/8/18 17:35:26
  * @Version: v1.0.0
  **/
-public class CouponsUse extends BaseEntity {
+public class CouponsGet extends BaseEntity {
 
     private Integer id;
+    @NotNull(message = "用户ID不能为空")
     private Integer userId;
+    @NotNull(message = "优惠券ID不能为空")
     private Integer couponId;
+    //优惠券的使用状态
+    private Integer couponStatus;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date receiveTime;
-    private Integer isUsed;
-    private Date usedTime;
 
     public Integer getId() {
         return id;
@@ -52,19 +55,11 @@ public class CouponsUse extends BaseEntity {
         this.receiveTime = receiveTime;
     }
 
-    public Integer getIsUsed() {
-        return isUsed;
+    public Integer getCouponStatus() {
+        return couponStatus;
     }
 
-    public void setIsUsed(Integer isUsed) {
-        this.isUsed = isUsed;
-    }
-
-    public Date getUsedTime() {
-        return usedTime;
-    }
-
-    public void setUsedTime(Date usedTime) {
-        this.usedTime = usedTime;
+    public void setCouponStatus(Integer couponStatus) {
+        this.couponStatus = couponStatus;
     }
 }

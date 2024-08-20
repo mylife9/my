@@ -1,5 +1,6 @@
 package com.ruoyi.coupons.service;
 
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.coupons.domain.TbCoupons;
 
 import java.util.List;
@@ -11,16 +12,9 @@ import java.util.List;
  * @date 2024-08-16
  */
 public interface ITbCouponsService {
-    /**
-     * 查询优惠券
-     *
-     * @param id 优惠券主键
-     * @return 优惠券
-     */
-    public TbCoupons selectTbCouponsById(Long id);
 
     /**
-     * 查询优惠券列表
+     * 导出优惠券列表
      *
      * @param tbCoupons 优惠券
      * @return 优惠券集合
@@ -59,11 +53,17 @@ public interface ITbCouponsService {
      */
     public int deleteTbCouponsById(Long id);
 
+    AjaxResult couponsList(TbCoupons tbCoupons);
 
-    TbCoupons selectOne(Long id);
+    AjaxResult couponsInfo(Long id);
 
-    void updateStatus(Long id, Integer status, Integer count);
+    AjaxResult getUserCoupon(Long couponId, Long userId);
 
+    AjaxResult startCoupons(Long[] ids);
 
-    void updateCountById(Long id, Long couponCount);
+    AjaxResult closeCoupons(Long[] ids);
+
+    AjaxResult usableCoupon(Long userId);
+
+    AjaxResult useCoupon(Long orderId, Integer userId, Integer couponsId);
 }

@@ -79,13 +79,18 @@ public class TbCoupons extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Excel(name = "优惠券的过期时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date couponsExpirationDate;
-    @Excel(name = "优惠券的名称")
-    private String typeName;
+
     /**
      * 优惠券的状态 （1开始发放 0停止发放  2 删除）
      */
     @Excel(name = "优惠券的状态 ", readConverterExp = "1=开始发放,0=停止发放")
     private Long couponsStatus;
+
+    /**
+     * 优惠券的类型
+     */
+    @Excel(name = "优惠券的类型")
+    private String typeName;
 
 
     @Override
@@ -93,7 +98,7 @@ public class TbCoupons extends BaseEntity {
         return "TbCoupons{" +
                 "id=" + id +
                 ", couponsNumber='" + couponsNumber + '\'' +
-                ", couposName='" + couponsName + '\'' +
+                ", couponsName='" + couponsName + '\'' +
                 ", couponsAmount=" + couponsAmount +
                 ", couponHold=" + couponHold +
                 ", couponsType=" + couponsType +
@@ -137,12 +142,12 @@ public class TbCoupons extends BaseEntity {
         this.couponsNumber = couponsNumber;
     }
 
-    public String getCouposName() {
+    public String getCouponsName() {
         return couponsName;
     }
 
-    public void setCouposName(String couposName) {
-        this.couponsName = couposName;
+    public void setCouponsName(String couponsName) {
+        this.couponsName = couponsName;
     }
 
     public BigDecimal getCouponsAmount() {

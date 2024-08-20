@@ -1,11 +1,13 @@
 package com.ruoyi.coupons.service.impl;
 
 import com.ruoyi.coupons.domain.CouponsType;
+import com.ruoyi.coupons.domain.TbCoupons;
 import com.ruoyi.coupons.mapper.CouponsTypeMapper;
 import com.ruoyi.coupons.service.ICouponsTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,18 +18,13 @@ import java.util.List;
 @Service
 public class CouponsTypeServiceImpl implements ICouponsTypeService {
 
-    @Autowired
-    CouponsTypeMapper couponsTypeMapper;
+    @Resource
+    private CouponsTypeMapper couponsTypeMapper;
 
     @Override
     public List<CouponsType> selectListType() {
-
         return couponsTypeMapper.selectListType();
-
-
     }
-
-
 
 
 }
