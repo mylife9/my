@@ -1,7 +1,6 @@
 package com.ruoyi.taxi.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
 
 import java.util.Date;
 
@@ -11,11 +10,12 @@ import java.util.Date;
  * @description:
  * @create: 2024-08-16 11:59
  */
-@Data
 public class PassengerUser {
-    private String id;
+
+    private Long openId;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtCreate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtModified;
     private String passengerPhone;
     private String passengerName;
@@ -23,5 +23,18 @@ public class PassengerUser {
     private Integer state;
     private String profilePhoto;
     private String code;
-    private String openid;
+    private Integer chargebackNumber;
+
+    private String passengerCard;
+
+    private Integer passengerAge;
+    private double passengerPrice;
+
+    private Integer reputation;
+
+    private String passengerService;
+
+    private Integer jurisdiction;
+
+
 }
