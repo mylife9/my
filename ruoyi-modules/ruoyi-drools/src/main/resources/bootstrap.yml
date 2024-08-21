@@ -25,15 +25,11 @@ spring:
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-xxl:
-  job:
-    admin:
-      addresses: http://127.0.0.1:8099/xxl-job-admin
-      accessToken: default_token
-    executor:
-      appname: xxl-job-executor-sample # 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
-      address:
-      ip:
-      port: 9999
-      logpath: C:/
-      logretentiondays: -1
+
+
+
+
+
+
+
+
