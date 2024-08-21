@@ -10,17 +10,11 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.taxi.config.ShuMaiConfig;
 import com.ruoyi.taxi.config.WxLoginConfig;
 import com.ruoyi.taxi.domain.PassengerUser;
-import com.ruoyi.taxi.domain.vo.ImgVo;
-import com.ruoyi.taxi.domain.vo.UserVo;
 import com.ruoyi.taxi.mapper.PassengerUserMapper;
 import com.ruoyi.taxi.service.PassengerUserService;
 import com.ruoyi.taxi.utils.HttpClientUtil;
-import com.ruoyi.taxi.utils.ImageUtil;
 import com.ruoyi.taxi.utils.OSSFileUtil;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.Md5Crypt;
-import org.apache.http.client.HttpClient;
-import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -56,7 +50,7 @@ public class PassengerUserController extends BaseController {
     }
 
     @GetMapping("/getCode")
-    public AjaxResult getCode(@RequestParam(value = "mobile") String mobile){
+    public AjaxResult getCode(@PathVariable(value = "mobile") String mobile){
         String code = userService.sendCode(mobile);
 
         return success("验证码发送成功："+code);

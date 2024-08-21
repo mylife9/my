@@ -24,4 +24,6 @@ public class PassengerUser {
     private String profilePhoto;
     private String code;
     private String openid;
+
+
 }

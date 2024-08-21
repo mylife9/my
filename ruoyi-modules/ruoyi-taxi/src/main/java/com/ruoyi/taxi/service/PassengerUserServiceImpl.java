@@ -4,6 +4,7 @@ import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.taxi.domain.PassengerUser;
+import com.ruoyi.taxi.domain.vo.RegVo;
 import com.ruoyi.taxi.mapper.PassengerUserMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -45,6 +46,7 @@ public class PassengerUserServiceImpl implements PassengerUserService {
         }
 
         PassengerUser login = passengerUserMapper.isRegister(user.getPassengerPhone());
+//        PassengerUser login = passengerUserMapper.login(user.getPassengerPhone());
         if(login != null){
             throw new ServiceException("该用户已经注册，不能重复注册");
         }
