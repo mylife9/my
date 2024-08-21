@@ -17,4 +17,7 @@ public interface CouponsTypeMapper {
 
     public List<CouponsType> selectListType();
 
+    void insertCoupon(Integer id, Long couponsId);
+
+
 }

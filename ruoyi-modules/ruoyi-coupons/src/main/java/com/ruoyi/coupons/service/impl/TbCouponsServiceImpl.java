@@ -53,7 +53,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
     private final String LOCK_START_KEY = "lock-start-coupons:";
 
     /**
-     * 导出优惠券列表
+     * 查询优惠券列表
      *
      * @param tbCoupons 优惠券
      * @return 优惠券
