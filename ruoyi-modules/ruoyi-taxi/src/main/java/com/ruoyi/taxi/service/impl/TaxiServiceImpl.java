@@ -5,6 +5,7 @@ import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.taxi.controller.WebSocketController;
 import com.ruoyi.taxi.domain.DriverUserWorkStatus;
 import com.ruoyi.taxi.domain.OrderInfo;
 import com.ruoyi.taxi.domain.PassengerUser;
@@ -17,6 +18,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -34,8 +36,10 @@ import java.util.regex.Pattern;
 public class TaxiServiceImpl implements TaxiService {
     @Autowired
     TaxiMapper taxiMapper;
-
-
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    WebSocketController webSocketController;
 
     //当前时间
     public static final LocalTime now = LocalTime.now();
@@ -46,6 +50,8 @@ public class TaxiServiceImpl implements TaxiService {
     @Transactional
     public AjaxResult saveOrder( @Validated PassengerVo passengerVo) {
 
+        //redis key值
+        String key = "Order";
         //根据id获取用户信息
         PassengerUser passengerUser = taxiMapper.selectPassenger(passengerVo.getOpenId());
 
@@ -241,7 +247,12 @@ public class TaxiServiceImpl implements TaxiService {
         passengerVo.setPassengerPhone(18178101668L);
         taxiMapper.saveOrder(passengerVo);
 
+        //删除缓存
 
+        stringRedisTemplate.delete(key);
+
+        //使用websocket推送消息
+        webSocketController.sendMessage(JSON.toJSONString(passengerVo));
 
         return AjaxResult.success("添加成功");
     }

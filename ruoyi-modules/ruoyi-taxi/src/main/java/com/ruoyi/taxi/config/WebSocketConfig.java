@@ -1,4 +1,4 @@
-package com.ruoyi.order.config;
+package com.ruoyi.taxi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
