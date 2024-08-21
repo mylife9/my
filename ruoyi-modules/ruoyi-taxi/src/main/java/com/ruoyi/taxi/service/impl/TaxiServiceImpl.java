@@ -1,5 +1,6 @@
 package com.ruoyi.taxi.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -111,7 +112,7 @@ public class TaxiServiceImpl implements TaxiService {
 
                 //使用工具类计算上车位置和加位加位置的距离
                 Double newDistance = Utils.calculateDistance(passengerVo.getDestLongitude(), passengerVo.getDestLatitude(), driverWork.getAddrLongitude(), driverWork.getAddrLatitude());
-                
+
                 // 增加1.5小时（1.5小时 = 1.5 * 60 * 60 * 1000 毫秒）
                 long millisToAdd = (long) (1.5 * 60 * 60 * 1000);
                 Date endDataTime = new Date(Utils.currentDateTime.getTime() + millisToAdd);
@@ -239,6 +240,8 @@ public class TaxiServiceImpl implements TaxiService {
         passengerVo.setOpenId(1584355669008773122L);
         passengerVo.setPassengerPhone(18178101668L);
         taxiMapper.saveOrder(passengerVo);
+
+
 
         return AjaxResult.success("添加成功");
     }

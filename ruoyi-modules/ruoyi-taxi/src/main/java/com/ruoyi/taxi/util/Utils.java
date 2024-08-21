@@ -1,3 +1,4 @@
+
 package com.ruoyi.taxi.util;
 
 import com.ruoyi.taxi.domain.vo.PassengerVo;
@@ -13,7 +14,7 @@ public class Utils {
 
     /**
      * 新能源型费用计算
-     * **/
+     **/
     public static Double calculatePriceForNewEnergy(PassengerVo passengerVo) {
         Double expectDistance = passengerVo.getExpectDistance();
         Double estimatedDuration = passengerVo.getEstimatedDuration();
@@ -29,7 +30,7 @@ public class Utils {
 
     /**
      * 舒适型费用计算
-     * **/
+     **/
     public static Double calculatePriceForComfort(PassengerVo passengerVo) {
         // ... 实现舒适型的计费逻辑
         Double expectDistance = passengerVo.getExpectDistance();
@@ -46,7 +47,7 @@ public class Utils {
 
     /**
      * 豪华型费用计算
-     * **/
+     **/
     public static Double calculatePriceForLuxury(PassengerVo passengerVo) {
         // ... 实现豪华型的计费逻辑
         Double expectDistance = passengerVo.getExpectDistance();
@@ -63,7 +64,7 @@ public class Utils {
 
     /**
      * 商务型费用计算
-     * **/
+     **/
     public static Double calculatePriceForBusiness(PassengerVo passengerVo) {
         // ... 实现商务型的计费逻辑
         Double expectDistance = passengerVo.getExpectDistance();
@@ -79,7 +80,7 @@ public class Utils {
     }
 
 
-    public static Double calculateDistance(Double lat1,Double lon1,Double lat2,Double lon2){
+    public static Double calculateDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
         double newLongitude = lat2 - lat1;
 
 
