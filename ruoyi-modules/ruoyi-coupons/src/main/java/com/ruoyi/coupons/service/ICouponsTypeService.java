@@ -15,7 +15,4 @@ public interface ICouponsTypeService {
 
 
     List<CouponsType> selectListType();
-
-
-    TbCoupons selectCoupons(Long id);
 }

@@ -19,6 +19,5 @@ public interface CouponsTypeMapper {
 
     void insertCoupon(Integer id, Long couponsId);
 
-    @Select("SELECT * FROM tb_coupons WHERE id= #{id}")
-    TbCoupons selectCoupons(Long id);
+
 }

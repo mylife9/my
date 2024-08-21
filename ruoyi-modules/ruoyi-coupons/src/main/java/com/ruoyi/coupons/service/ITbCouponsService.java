@@ -1,5 +1,6 @@
 package com.ruoyi.coupons.service;
 
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.coupons.domain.TbCoupons;
 
 import java.util.List;
@@ -68,4 +69,6 @@ public interface ITbCouponsService {
     void updateCountById(Long id, Long couponCount);
 
     void updateByReceiveCount(Long id);
+
+    AjaxResult redisAcquireLockLock(Long id);
 }

@@ -28,10 +28,6 @@ public class CouponsTypeServiceImpl implements ICouponsTypeService {
 
     }
 
-    @Override
-    public TbCoupons selectCoupons(Long id) {
-        return couponsTypeMapper.selectCoupons(id);
-    }
 
 
 }

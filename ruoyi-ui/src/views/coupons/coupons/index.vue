@@ -117,6 +117,12 @@
             @click="handleCoupons(scope.row,1)"
           >开始发券
           </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            @click="receiveCoupons(scope.row.id)"
+          >领取优惠券
+          </el-button>
 
 <!--          <el-button
             v-if="scope.row.couponsStatus==1"
@@ -202,7 +208,8 @@ import {
   getCoupons,
   getCouponsTypeService,
   listCoupons,
-  updateCoupons
+  updateCoupons,
+  redisAcquireLockLock
 } from "@/api/coupons/coupons";
 
 export default {
@@ -271,6 +278,21 @@ export default {
       })
 
 
+    },
+    // 领取优惠券
+    receiveCoupons(id){
+
+      redisAcquireLockLock(id).then(res=>{
+        if(res.code==200){
+          console.log(res);
+          this.$message.success(res.msg);
+          this.getList();
+        } else {
+          console.log(res);
+          this.$message(res.msg);
+          this.getList();
+        }
+      })
     },
     /** 查询优惠券列表 */
     getList() {

@@ -43,6 +43,14 @@ export function delCoupons(id) {
   })
 }
 
+// 领取优惠券
+export function redisAcquireLockLock(id) {
+  return request({
+    url: '/coupons/coupons/redisAcquireLockLock/' + id,
+    method: 'post'
+  })
+}
+
 // 查询优惠券详细
 export function getCouponsTypeService() {
   return request({
