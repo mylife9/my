@@ -32,7 +32,7 @@ public class TaxiController {
      * 取消订单
      * 直接取消订单接口
      * **/
-    @PostMapping("/cancelOrder")
+    @PostMapping("/cancelOrder/{id}/{passengerId}")
     public AjaxResult cancelOrder(@PathVariable(name = "id")Integer id
             ,@PathVariable(name = "passengerId")Integer passengerId)
     {

@@ -6,6 +6,8 @@ import com.ruoyi.taxi.domain.PassengerUser;
 import com.ruoyi.taxi.mapper.OrderMapper;
 import com.ruoyi.taxi.mapper.TaxiMapper;
 import com.ruoyi.taxi.service.OrderInfoService;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
@@ -28,11 +31,14 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
 
     @Override
-    public AjaxResult ContactTheDriver(Integer id, Integer passengerId) {
-        OrderInfo orderInfo = orderMapper.ContactTheDriver(id);
-        //检查订单状态
-        if (orderInfo==null){
-            return AjaxResult.error("订单不存在");
+    public AjaxResult cancelOrder(Integer id, Integer passengerId) {
+        //检查乘客今天取消次数是否已达三次
+        PassengerUser passenger = taxiMapper.selectById(id);
+        //获取当前日期
+        LocalDate localDate = LocalDate.now();
+        //判断今天的取消次数
+        if (passenger.getChargebackNumber()>=3 && localDate.equals(LocalDate.now())){
+            return AjaxResult.error("今天已经取消三次,无法再取消");
         }
         OrderInfo info1 = orderMapper.selectById(id);
         //订单刚开始可以直接取消

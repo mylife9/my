@@ -1,6 +1,8 @@
 package com.ruoyi.taxi.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.core.annotation.Excel;
+import com.ruoyi.common.core.annotation.Excels;
 import io.swagger.models.auth.In;
 import lombok.Data;
 
@@ -11,16 +13,17 @@ public class DriverUserWorkStatus {
     /**
      * 司机工作id
      * **/
-    private Integer id;
+    private Long id;
 
     /**
      * 司机id
      * **/
-    private Integer driverId;
+    private Long driverId;
 
     /**
      * 收车：0；出车：1，暂停：2，接单中：3
      * **/
+    @Excel(name = "收车：0；出车：1，暂停：2，接单中：3")
     private Integer workStatus;
 
     /**
@@ -48,6 +51,7 @@ public class DriverUserWorkStatus {
     /**
      * 司机当前位置纬度
      * **/
+    @Excel(name = "司机当前位置纬度")
     private Double currentLatitude;
 
     /**

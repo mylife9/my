@@ -21,7 +21,7 @@ public class PassengerVo {
     private Integer passengerId;
 
     @Schema(description = "司机Id")
-    private Integer driverId;
+    private Long driverId;
 
     @Schema(description = "订单id")
     private Integer orderId;

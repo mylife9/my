@@ -260,6 +260,7 @@ public class OrderInfo implements Serializable {
     * 订单撤销时间
     */
     @ApiModelProperty("订单撤销时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date cancelTime;
     /**
     * 撤销发起者：1:乘客2:驾驶员3:平台公司
