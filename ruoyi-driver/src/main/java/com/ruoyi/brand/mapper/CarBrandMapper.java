@@ -60,6 +60,6 @@ public interface CarBrandMapper
      */
     public int deleteCarBrandByIds(Long[] ids);
 
-    @Select("select  * from tb_car_brand where pid = 0")
+
     List<CarBrand> selectBrandOne();
 }

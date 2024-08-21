@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.driver.mapper.CarMapper">
     
-    <resultMap type="Car" id="CarResult">
+    <resultMap type="com.ruoyi.driver.domain.Car" id="CarResult">
         <result property="id"    column="id"    />
         <result property="address"    column="address"    />
         <result property="vehicleNo"    column="vehicle_no"    />
@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </sql>
 
-    <select id="selectCarList" parameterType="Car" resultMap="CarResult">
+    <select id="selectCarList" parameterType="com.ruoyi.driver.domain.Car" resultMap="CarResult">
         <include refid="selectCarVo"/>
         <where>
             <if test="vehicleNo != null  and vehicleNo != ''"> and vehicle_no = #{vehicleNo}</if>
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <insert id="insertCar" parameterType="Car" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertCar" parameterType="com.ruoyi.driver.domain.Car" useGeneratedKeys="true" keyProperty="id">
         insert into car
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="address != null">address,</if>
@@ -156,7 +156,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
     </insert>
 
-    <update id="updateCar" parameterType="Car">
+    <update id="updateCar" parameterType="com.ruoyi.driver.domain.Car">
         update car
         <trim prefix="SET" suffixOverrides=",">
             <if test="address != null">address = #{address},</if>

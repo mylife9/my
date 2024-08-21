@@ -11,9 +11,9 @@ import java.util.Date;
  * @description:
  * @create: 2024-08-16 11:59
  */
-@Data
+
 public class PassengerUser {
-    private String id;
+    private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtCreate;
     private Date gmtModified;
@@ -25,5 +25,99 @@ public class PassengerUser {
     private String code;
     private String openid;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Date gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
+    public String getPassengerPhone() {
+        return passengerPhone;
+    }
+
+    public void setPassengerPhone(String passengerPhone) {
+        this.passengerPhone = passengerPhone;
+    }
+
+    public String getPassengerName() {
+        return passengerName;
+    }
+
+    public void setPassengerName(String passengerName) {
+        this.passengerName = passengerName;
+    }
+
+    public Integer getPassengerGender() {
+        return passengerGender;
+    }
+
+    public void setPassengerGender(Integer passengerGender) {
+        this.passengerGender = passengerGender;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
+
+    @Override
+    public String toString() {
+        return "PassengerUser{" +
+                "id=" + id +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
+                ", passengerPhone='" + passengerPhone + '\'' +
+                ", passengerName='" + passengerName + '\'' +
+                ", passengerGender=" + passengerGender +
+                ", state=" + state +
+                ", profilePhoto='" + profilePhoto + '\'' +
+                ", code='" + code + '\'' +
+                ", openid='" + openid + '\'' +
+                '}';
+    }
 }

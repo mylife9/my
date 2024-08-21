@@ -25,6 +25,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCarBrandVo"/>
         where id = #{id}
     </select>
+    <select id="selectBrandOne" resultType="com.ruoyi.brand.domain.CarBrand">
+        select  * from tb_car_brand where pid = 0
+    </select>
 
     <insert id="insertCarBrand" parameterType="com.ruoyi.brand.domain.CarBrand" useGeneratedKeys="true" keyProperty="id">
         insert into tb_car_brand

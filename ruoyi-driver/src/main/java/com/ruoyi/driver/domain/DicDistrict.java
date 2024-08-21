@@ -4,6 +4,7 @@ package com.ruoyi.driver.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 
 
@@ -11,7 +12,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 地区表
  * @TableName dic_district
  */
-
+@TableName("dic_district")
 public class DicDistrict  extends BaseEntity {
     /**
      * 地区编码

@@ -11,6 +11,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * @author ruoyi
  * @date 2024-08-18
  */
+
 public class CarBrand extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

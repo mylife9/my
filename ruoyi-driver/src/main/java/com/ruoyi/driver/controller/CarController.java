@@ -158,7 +158,7 @@ public class CarController extends BaseController
         String post = HttpClientUtil.post(ShuMaiConfig.idcarOcrUrl, null, jsonObject.toString());
         System.out.println(post);
     }
-    @RequiresPermissions("driver:driver:list")
+   /* @RequiresPermissions("driver:driver:list")*/
     @GetMapping("/dicList")
     public TableDataInfo dicList(){
         List<DicDistrict> dicDistricts=dicDistrictService.selectDic();
