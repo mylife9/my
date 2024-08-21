@@ -3,14 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.taxi.mapper.TaxiMapper">
+    <insert id="saveOrder">
+            insert into order_info(open_id,passenger_phone,driver_id,driver_phone,about_price,order_time,depart_time,dep_longitude,dep_latitude,
+                                   dest_longitude,dest_latitude,order_status,car_type,expect_distance,estimated_duration,vehicle_type,advance_amount,is_reserve,gmt_create,gmt_modified)
+            values (#{openId},#{passengerPhone},#{driverId},#{driverPhone},#{aboutPrice},now(),#{departTime},#{depLongitude},#{depLatitude},
+                    #{destLongitude},#{destLatitude},1,#{carType},#{expectDistance},#{estimatedDuration},#{vehicleType},#{advanceAmount},#{isReserve},now(),now())
+    </insert>
 
-    <select id="selectOrderInfo" resultType="java.lang.Boolean">
+    <select id="selectOrderInfo" resultType="com.ruoyi.taxi.domain.OrderInfo">
         select * from order_info where driver_id = #{driverId}
-        <if test="currentTime!=null and currentTime!=''">
+        <if test="currentTime!=null ">
             and depart_time &gt; #{currentTime}
         </if>
 
-        <if test="data!=null and data!=''">
+        <if test="endTime!=null ">
             and depart_time &lt; #{endTime}
         </if>
     </select>

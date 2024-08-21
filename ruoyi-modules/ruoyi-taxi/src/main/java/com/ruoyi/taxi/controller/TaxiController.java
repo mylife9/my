@@ -23,10 +23,9 @@ public class TaxiController {
      * **/
     @PostMapping("/saveOrder")
     public AjaxResult saveOrder(
-            @RequestHeader String token,
             @RequestBody PassengerVo passengerVo
     ){
-        return taxiService.saveOrder(token,passengerVo);
+        return taxiService.saveOrder(passengerVo);
     }
     /**
      * 取消订单

@@ -13,7 +13,8 @@ import java.util.Date;
  */
 @Data
 public class PassengerUser {
-    private Integer passengerId;
+
+    private Long openId;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date gmtCreate;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

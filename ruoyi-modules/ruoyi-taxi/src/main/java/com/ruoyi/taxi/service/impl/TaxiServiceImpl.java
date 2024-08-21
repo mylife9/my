@@ -10,6 +10,7 @@ import com.ruoyi.taxi.domain.PassengerUser;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
 import com.ruoyi.taxi.mapper.TaxiMapper;
 import com.ruoyi.taxi.service.TaxiService;
+import com.ruoyi.taxi.util.Utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,6 +18,7 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -31,16 +34,7 @@ public class TaxiServiceImpl implements TaxiService {
     @Autowired
     TaxiMapper taxiMapper;
 
-    //经度正则表达式
-    private static final String LONGITUDE = "^[-+]?((180(\\.\\d{1,6})?)|((1[0-7]\\d)|([1-9]\\d?))(\\.\\d{1,6})?)$";
 
-
-    //纬度正则表达式
-    private static final String LATITUDE = "^[-+]?((90(\\.\\d{1,6})?)|([1-8]?\\d(\\.\\d{1,6})?))$";
-
-
-    //地球半径
-    private static final double EARTH_RADIUS = 6378137;
 
     //当前时间
     public static final LocalTime now = LocalTime.now();
@@ -49,76 +43,24 @@ public class TaxiServiceImpl implements TaxiService {
 
     @Override
     @Transactional
-    public AjaxResult saveOrder(String token, PassengerVo passengerVo) {
+    public AjaxResult saveOrder( @Validated PassengerVo passengerVo) {
 
-        //判断用户是否输入起始位置
-        if (passengerVo.getDepLongitude() == 0 && passengerVo.getDepLatitude() == 0) {
-            return AjaxResult.error("请先输入您的起始位置");
+        //根据id获取用户信息
+        PassengerUser passengerUser = taxiMapper.selectPassenger(passengerVo.getOpenId());
+
+        //判断用户年龄小于16岁，提示用户不能单独乘车
+        if (passengerUser.getPassengerAge() < 16) {
+            AjaxResult.error("未成年不可独自乘车");
         }
 
-        //判断起始位置的经纬度是否合规
-        boolean depLongitudePattern = Pattern.matches(LONGITUDE, passengerVo.getDepLongitude().toString());
-        boolean depLatitudePattern = Pattern.matches(LATITUDE, passengerVo.getDestLatitude().toString());
-        if (!depLongitudePattern || !depLatitudePattern) {
-            System.out.println("您输入的起始位置不符合规范");
-            return AjaxResult.error("您输入的起始位置不符合规范");
+        //查询出用户最新的上一个订单
+        OrderInfo orderStatus = taxiMapper.selectOrder(passengerUser.getOpenId());
+
+        //如果有进行判断是否未支付
+        if (Optional.ofNullable(orderStatus).isPresent()) {
+            return AjaxResult.error("您上一单金额未支付,请先支付后在下单");
         }
 
-        //判断用户是否输入目的地
-        if (passengerVo.getDestLongitude() == 0 && passengerVo.getDestLatitude() == 0) {
-            return AjaxResult.error("请您输入您的目的地");
-        }
-
-        //判断起始位置的经纬度是否合规
-        boolean destLongitudePattern = Pattern.matches(LONGITUDE, passengerVo.getDepLongitude().toString());
-        boolean destLatitudePattern = Pattern.matches(LATITUDE, passengerVo.getDepLatitude().toString());
-        if (!destLongitudePattern || !destLatitudePattern) {
-            System.out.println("您输入的目的地不符合规范");
-            return AjaxResult.error("您输入的目的地不符合规范");
-        }
-
-//        解析token获取用户id
-//        Claims claims = Jwts.parser().setSigningKey("123456").parseClaimsJws(token).getBody();
-//        String passengerId = claims.get("passengerId", String.class);
-//
-//        //根据id获取用户信息
-//        PassengerUser user = taxiMapper.selectPassenger(passengerId);
-//
-//        //判断用户年龄小于16岁，提示用户不能单独乘车
-//        if (user.getPassengerAge() < 16) {
-//            AjaxResult.error("未成年不可独自乘车");
-//        }
-//
-//        //查询出用户最新的上一个订单
-//        OrderInfo orderInfo = taxiMapper.selectOrder(user.getPassengerId());
-//
-//        //如果有进行判断是否未支付
-//        if (orderInfo != null) {
-//            return AjaxResult.error("您上一单金额未支付,请先支付后在下单");
-//        }
-
-        //经度
-        double depLong = Math.toRadians(passengerVo.getDepLongitude());
-        double destLong = Math.toRadians(passengerVo.getDestLongitude());
-
-        //经度之差
-        double a = destLong - depLong;
-        //纬度
-        double depLat = Math.toRadians(passengerVo.getDepLatitude());
-        double destLat = Math.toRadians(passengerVo.getDestLatitude());
-
-        //纬度之差
-        double b = destLat - depLat;
-
-        //计算两点距离的公式
-        double expectDistance = Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(depLong) * Math.cos(destLong) * Math.pow(Math.sin(b / 2), 2)));
-
-
-        expectDistance = expectDistance * EARTH_RADIUS / 1000;
-
-        //保留小数点后两位
-        String format = String.format("%.2f", expectDistance);
-        expectDistance = Double.parseDouble(format);
 
         //初始化预付金额
         double aboutPrice = 0;
@@ -126,83 +68,30 @@ public class TaxiServiceImpl implements TaxiService {
         //普通叫车服务
         if (passengerVo.getVehicleType() == 1) {
 
-            //夜间时间
-            boolean isNight = now.isAfter(start) || now.isBefore(end);
+            switch (passengerVo.getCarType()) {
+                case 1: // 新能源
+                    aboutPrice = Utils.calculatePriceForNewEnergy(passengerVo);
+                    break;
+                case 2: // 舒适型
+                    aboutPrice = Utils.calculatePriceForComfort(passengerVo);
+                    break;
+                case 3: // 豪华型
+                    aboutPrice = Utils.calculatePriceForLuxury(passengerVo);
+                    break;
+                case 4: // 商务型
+                    aboutPrice = Utils.calculatePriceForBusiness(passengerVo);
+                    break;
+                default:
+                    aboutPrice = 0; // 或者设置为其他默认值，或者抛出异常
+            }
 
+            //如果是夜间
+            boolean isNight = now.isAfter(start) || now.isBefore(end);
             if (isNight) {
                 aboutPrice += passengerVo.getExpectDistance();
             }
-            //新能源
-            if (passengerVo.getCarType() == 1) {
-                //小于3公里收费计算
-                if (expectDistance <= 3) {
-                    aboutPrice = 10;
 
-                    passengerVo.setAboutPrice(aboutPrice);
-
-                    //大于3公里小于15公里收费计算
-                } else if (expectDistance > 3 && expectDistance <= 15) {
-                    aboutPrice = 10 + (passengerVo.getEstimatedDuration() * 0.3) + ((passengerVo.getExpectDistance() - 3) * 2.3);
-
-                    passengerVo.setAboutPrice(aboutPrice);
-
-                    //大于15公里收费计算
-                } else {
-                    aboutPrice = 10 + (passengerVo.getEstimatedDuration() * 0.3) + ((passengerVo.getExpectDistance() - 3) * 2.3) + (passengerVo.getExpectDistance() * 1.2);
-                    //判断如果是夜间，额外计费
-                    passengerVo.setAboutPrice(aboutPrice);
-
-                }
-            }
-
-            //舒适型
-            if (passengerVo.getCarType() == 2) {
-                //小于三公里费用计算
-                if (expectDistance <= 3) {
-                    aboutPrice = 14;
-
-                }
-                //大于3公里小于15公里费用计算
-                else if (expectDistance > 3 && expectDistance <= 15) {
-                    aboutPrice = 10 + (passengerVo.getEstimatedDuration() * 0.5) + ((passengerVo.getExpectDistance() - 3) * 2.8);
-                }
-                //舒适型大于15公里
-                else if (expectDistance > 15) {
-                    //时长费+里程费+远途费
-                    aboutPrice = 10 + (passengerVo.getEstimatedDuration() * 0.3) + ((passengerVo.getExpectDistance() - 3) * 2.3) + (passengerVo.getExpectDistance() * 1.4);
-                }
-            }
-            //豪华型
-            if (passengerVo.getCarType() == 3) {
-                //判断三公里以内
-                if (expectDistance <= 3) {
-                    aboutPrice = 20;
-                }
-                //判断是否是15公里以内
-                else if (expectDistance > 3 && expectDistance <= 15) {
-                    aboutPrice = 20 + (passengerVo.getEstimatedDuration() * 0.8) + ((passengerVo.getExpectDistance() - 3) * 3.5);
-                    //豪华型大于15公里
-                } else if (expectDistance > 15) {
-                    //时长费+里程费+远途费
-                    aboutPrice = 20 + (passengerVo.getEstimatedDuration() * 0.8) + ((passengerVo.getExpectDistance() - 3) * 3.5) + (passengerVo.getExpectDistance() * 1.75);
-                }
-            }
-
-            //商务型
-            if (passengerVo.getCarType() == 4) {
-                if (expectDistance <= 3) {
-                    aboutPrice = 23;
-                }
-                //判断是否是15公里以内
-                else if (expectDistance > 3 && expectDistance <= 15) {
-                    aboutPrice = 23 + (passengerVo.getEstimatedDuration() * 0.8) + ((passengerVo.getExpectDistance() - 3) * 4.0);
-                }
-                //商务型大于15公里
-                else if (expectDistance > 15) {
-                    //时长费+里程费+远途费
-                    aboutPrice = 23 + (passengerVo.getEstimatedDuration() * 0.8) + ((passengerVo.getExpectDistance() - 3) * 4.0) + (passengerVo.getExpectDistance() * 2.0);
-                }
-            }
+            passengerVo.setAboutPrice(aboutPrice);
             //判断是否预约用车
             if (passengerVo.getIsReserve() == 1 ) {
                 if (aboutPrice < 30) {
@@ -220,82 +109,29 @@ public class TaxiServiceImpl implements TaxiService {
 
             for (DriverUserWorkStatus driverWork : driverWorkList) {
 
-                //司机家经度
-                Double addrLongitude = driverWork.getAddrLongitude();
-                //目的地经度
-                Double destLongitude = passengerVo.getDestLongitude();
-
-                double newLongitude = addrLongitude - destLongitude;
-
-                //司机家纬度
-                Double addrLatitude = driverWork.getAddrLatitude();
-                //目的地纬度
-                Double destLatitude = passengerVo.getDestLatitude();
-
-                double newLatitude = addrLatitude - destLatitude;
-
-
-                double newDistance = Math.asin(Math.sqrt(Math.pow(Math.sin(newLongitude / 2), 2) + Math.cos(addrLongitude) * Math.cos(destLongitude) * Math.pow(Math.sin(newLatitude / 2), 2)));
-
-
-                newDistance = newDistance * EARTH_RADIUS / 1000;
-
-                //保留小数点后两位
-                String s = String.format("%.2f", newDistance);
-                newDistance = Double.parseDouble(s);
-
-
-                //查询所有司机1.5个小时内有没有服务
-                Date endTime = new Date();
-
+                //使用工具类计算上车位置和加位加位置的距离
+                Double newDistance = Utils.calculateDistance(passengerVo.getDestLongitude(), passengerVo.getDestLatitude(), driverWork.getAddrLongitude(), driverWork.getAddrLatitude());
+                
                 // 增加1.5小时（1.5小时 = 1.5 * 60 * 60 * 1000 毫秒）
                 long millisToAdd = (long) (1.5 * 60 * 60 * 1000);
-                endTime = new Date(endTime.getTime() + millisToAdd);
+                Date endDataTime = new Date(Utils.currentDateTime.getTime() + millisToAdd);
 
 
-                Date currentTime = new Date();
-
-                Boolean hasOrders = taxiMapper.selectOrderInfo(driverWork.getDriverId(), currentTime, endTime);
+                OrderInfo orderInfo = taxiMapper.selectOrderInfo(driverWork.getDriverId(), Utils.currentDateTime, endDataTime);
                 //有订单
-                if (hasOrders) {
+                //java8 optional查询对象是否包含值
+                if (Optional.ofNullable(orderInfo).isPresent()) {
                     //跳出这个司机
                     continue;
                 }
-                //判断5公里以内的
-                if (newDistance < 5) {
-                    //判断是否开启回家模式
-                    if (driverWork.getIsHeadingHome() == 1) {
-                        //判断司机在接单状态
-                        if (driverWork.getWorkStatus() == 3) {
-                            integers.add(driverWork.getDriverId());
-                        }
-                    }
-                    //如果没有随机派给3公里以内司机
-                } else {
-                    if (driverWork.getWorkStatus() == 3) {
-                        //司机所外位置经度
-                        Double currentLongitude = driverWork.getCurrentLongitude();
-                        //乘客上车位置
-                        Double depLongitude = passengerVo.getDepLongitude();
-
-                        double distanceLong = depLongitude - currentLongitude;
-
-
-                        //司机所在位置纬度
-                        Double currentLatitude = driverWork.getCurrentLatitude();
-                        //乘客下车位置
-                        Double depLatitude = passengerVo.getDepLatitude();
-
-                        double distanceLat = currentLatitude - depLatitude;
-
-                        //获取下车位置和司机所在位置路径
-                        double distance = Math.asin(Math.sqrt(Math.pow(Math.sin(distanceLong / 2), 2) + Math.cos(currentLongitude) * Math.cos(depLongitude) * Math.pow(Math.sin(distanceLat / 2), 2)));
-
-                        //获取小于三公里司机
-                        if (distance < 3) {
-                            integers.add(driverWork.getDriverId());
-                        }
-                    }
+                //判断5公里以内的开启回家模式司机并且而在接单状态
+                if (newDistance < 5 && driverWork.getIsHeadingHome() == 1 && driverWork.getWorkStatus() == 3) {
+                    integers.add(driverWork.getDriverId());
+                }
+                //没有就距离用户3公里以内的
+                Double distance = Utils.calculateDistance(passengerVo.getDestLongitude(), passengerVo.getDestLatitude(), driverWork.getAddrLongitude(), driverWork.getAddrLatitude());
+                if (driverWork.getWorkStatus() == 3 && distance < 3) {
+                    integers.add(driverWork.getDriverId());
                 }
             }
             if (integers.size() > 0) {
@@ -354,6 +190,7 @@ public class TaxiServiceImpl implements TaxiService {
         }
 
 
+
         // 日租价格计算逻辑
         if (passengerVo.getVehicleType() == 3) {
             //初始化价格
@@ -363,44 +200,45 @@ public class TaxiServiceImpl implements TaxiService {
             //初始化超出距离价格
             double distanceRate = 0.0;
 
-            // 新能源
-            if (passengerVo.getCarType() == 1) {
-                basePrice = 550.0;
-                durationRate = 0.3;
-                distanceRate = 2.3;
-            }
-            // 舒适型
-            else if (passengerVo.getCarType() == 2) {
-                basePrice = 650.0;
-                durationRate = 0.6;
-                distanceRate = 4.0;
-            }
-            // 豪华型
-            else if (passengerVo.getCarType() == 3) {
-                basePrice = 750.0;
-                durationRate = 0.7;
-                distanceRate = 5.0;
-            }
-            // 商务型
-            else if (passengerVo.getCarType() == 4) {
-                basePrice = 950.0;
-                durationRate = 1.0; // 注意：这里假设每超出一分钟加收1.0元，具体数值根据实际情况调整
-                distanceRate = 5.5;
+            switch (passengerVo.getCarType()) {
+                case 1: // 新能源
+                    basePrice = 550.0;
+                    durationRate = 0.3;
+                    distanceRate = 2.3;
+                    break;
+                case 2: // 舒适型
+                    basePrice = 650.0;
+                    durationRate = 0.6;
+                    distanceRate = 4.0;
+                    break;
+                case 3: // 豪华型
+                    basePrice = 750.0;
+                    durationRate = 0.7;
+                    distanceRate = 5.0;
+                    break;
+                case 4: // 商务型
+                    basePrice = 950.0;
+                    durationRate = 1.0; // 注意：这里假设每超出一分钟加收1.0元，具体数值根据实际情况调整
+                    distanceRate = 5.5;
+                    break;
+                default:
+                    // 处理未知车辆类型
+                    break;
             }
 
-            //没有超出
-            if (passengerVo.getEstimatedDuration() <= 560 && passengerVo.getExpectDistance() <= 100) {
-                aboutPrice = basePrice;
-            } else if (passengerVo.getEstimatedDuration() > 560) { //时间超出8小时
+           if (passengerVo.getEstimatedDuration() > 560) { //时间超出8小时
                 aboutPrice = basePrice + ((passengerVo.getEstimatedDuration() - 560) * durationRate);
-            } else if (passengerVo.getExpectDistance() > 100) {//距离超出100公里
-
+            }
+           if (passengerVo.getExpectDistance() > 100) {//距离超出100公里
                 aboutPrice = aboutPrice + ((passengerVo.getExpectDistance() - 100) * distanceRate);
             }
             passengerVo.setAboutPrice(aboutPrice);
         }
 
-        taxiMapper.saveOrder(passengerVo, new PassengerUser());
+
+        passengerVo.setOpenId(1584355669008773122L);
+        passengerVo.setPassengerPhone(18178101668L);
+        taxiMapper.saveOrder(passengerVo);
 
         return AjaxResult.success("添加成功");
     }
