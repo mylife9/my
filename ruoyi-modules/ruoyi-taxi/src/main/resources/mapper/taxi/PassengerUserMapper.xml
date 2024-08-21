@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.taxi.mapper.PassengerUserMapper">
+    <select id="isRegister" resultType="com.ruoyi.taxi.domain.PassengerUser">
+        select * from passenger_user where openid = #{openid}
+    </select>
+
+    <insert id="registerUser" useGeneratedKeys="true" keyProperty="id">
+        insert into passenger_user (
+        <if test="passengerPhone != null and passengerPhone != ''">passenger_phone,</if>
+        <if test="passengerName != null and passengerName != ''">passenger_name,</if>
+        <if test="passengerGender != null and passengerGender != ''">passenger_gender,</if>
+        <if test="state != null and state != ''">state,</if>
+        <if test="profilePhoto != null and profilePhoto != ''">profile_photo,</if>
+        <if test="passengerAge != null and passengerAge != ''">passenger_age,</if>
+        <if test="openid != null and openid != ''">openid,</if>
+        gmt_create
+        )values(
+        <if test="passengerPhone != null and passengerPhone != ''">#{passengerPhone},</if>
+        <if test="passengerName != null and passengerName != ''">#{passengerName},</if>
+        <if test="passengerGender != null and passengerGender != ''">#{passengerGender},</if>
+        <if test="state != null and state != ''">#{state},</if>
+        <if test="profilePhoto != null and profilePhoto != ''">#{profilePhoto},</if>
+        <if test="passengerAge != null and passengerAge != ''">#{passengerAge},</if>
+        <if test="openid != null and openid != ''">#{openid},</if>
+        now()
+        )
+    </insert>
+
+    <update id="updateUser" parameterType="com.ruoyi.taxi.domain.PassengerUser">
+        update passenger_user
+        <set>
+            <if test="passengerPhone != null and passengerPhone != ''">passenger_phone = #{passengerPhone},</if>
+            <if test="passengerName != null and passengerName != ''">passenger_name = #{passengerName},</if>
+            <if test="passengerGender != null and passengerGender != ''">passenger_gender = #{passengerGender},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="profilePhoto != null and profilePhoto != ''">profile_photo = #{profilePhoto},</if>
+            <if test="passengerAge != null and passengerAge != ''">passenger_age = #{passengerAge},</if>
+            <if test="openid != null and openid != ''">openid = #{openid},</if>
+            gmt_modified = sysdate()
+        </set>
+        where openid = #{openid}
+    </update>
+</mapper>
