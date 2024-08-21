@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Param;
  * @create: 2024-08-20 22:05
  */
 public interface CouponsLogMapper {
-    int insertLog(@Param("orderId") Long orderId, @Param("userId")Integer userId, @Param("couponsId")Integer couponsId);
+    void insertLog(@Param("orderId") Long orderId, @Param("userId")Integer userId, @Param("couponId")Integer couponId);
 }

@@ -18,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -230,11 +227,13 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
                 .getBody();*/
 //        Long userId = 2L;  // 实际应用中应从登录信息等获取
         //查询redis缓存是否存在优惠券
-        String couponsKey = "coupons:" + couponId;
+        String couponsKey = STARTKEY + couponId;
         Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(couponsKey);
         //防止缓存穿透（如果优惠券不存在，生成一个空对象）
-        if (entries.size() <= 0 || entries == null) {
+        if (entries.size() <= 0 && entries == null) {
+            //缓存中不存在查询数据库
             TbCoupons coupon = tbCouponsMapper.couponsInfo(couponId);
+            //数据库不存在生成一个空对象
             if (coupon == null) {
                 String nullKey = "couponsNull:" + couponId;
                 stringRedisTemplate.opsForHash().put(nullKey, "不存在的优惠券ID", couponId+"");
@@ -251,10 +250,10 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
             // 检查用户是否已领取过该优惠券以及领取次数是否达到限制
             String couponsSetKey = "couponsSet:" + couponId;
             Set<String> couponsSet = stringRedisTemplate.opsForSet().members(couponsSetKey);
-            if (entries.size() > 0 || entries != null) {
-                boolean userFlag = couponsSet.contains(userId + "");
+            if (couponsSet.size() > 0 && couponsSet != null) {
+                boolean userFlag = couponsSet.contains(String.valueOf(userId));
                 if (userFlag) {
-                    return AjaxResult.error("您已领取，请勿领取");
+                    return AjaxResult.error("您已领取，请勿重复领取");
                 }
             }
             //获取redis中的数量
@@ -268,12 +267,14 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
             //存入数据
             int insertFlag = couponsGetMapper.associateUserWithCoupon(userId, couponId);
             //领取成功后向缓存添加领取记录
-            stringRedisTemplate.opsForSet().add(couponsSetKey, "userId", userId + "");
+            stringRedisTemplate.opsForSet().add(couponsSetKey, "userId", String.valueOf(userId));
             //如果插入的数据条数是1或者是>1的数 那么就说明优惠券领取成功了
             if (insertFlag >= 1) {
                 //如果能优惠券能领取成功 ， 那么数据库中的值就得和redis中的值是一致的
                 //使用乐观锁防止超卖
                 tbCouponsMapper.updateCountById(couponId, couponCount);
+                //修改后删除，保证mysql 和 redis 数据一致
+                stringRedisTemplate.delete(COUPONSALL_KEY);
             }
             return AjaxResult.success("领取成功");
         } catch (InterruptedException e) {
@@ -286,7 +287,6 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
             }
         }
     }
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public AjaxResult startCoupons(Long[] ids) {
@@ -297,7 +297,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
                 //判断优惠券是否开放
                 if(coupon.getCouponsCreateDate().after(new Date())){
                     return AjaxResult.error("活动未开始");
-                }else if(coupon.getCouponsCreateDate().after(new Date())){
+                }else if(coupon.getCouponsExpirationDate().before(new Date())){
                     return AjaxResult.error("活动已结束");
                 }else{
                     //优惠券状态(0停止发放 1开始发放)
@@ -368,7 +368,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
                 return AjaxResult.success(usableCouponList);
             }
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
             if(lock.isLocked()){
                 lock.unlock();
@@ -379,20 +379,22 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public synchronized AjaxResult useCoupon(Long orderId, Integer userId, Integer couponsId) {
+    public synchronized AjaxResult useCoupon(Long orderId, Integer userId, Integer couponId) {
         //判断支付的状态
         OrderInfo orderInfo = orderInfoMapper.findOrderStatus(orderId);
+        //使用java8使用Optional类型的对象包含不包含值
+        if(!Optional.ofNullable(orderInfo).isPresent()){
+            return AjaxResult.error("订单还未创建");
+        }
+//        if(orderInfo==null){
+//            return AjaxResult.error("订单还未创建");
+//        }
         if(orderInfo.getOrderStatus()==8){
             //支付成功后添加优惠券使用记录
-            int insertFlag = couponsLogMapper.insertLog(orderId,userId,couponsId);
-            if(insertFlag>0){
-                int updateFlag =  couponsGetMapper.updateCouponStatus(couponsId,userId);
-                if(updateFlag>0){
-                    return AjaxResult.error("使用成功");
-                }
-                return AjaxResult.error("修改优惠券使用状态失败");
-            }
-            return AjaxResult.error("使用记录创建失败");
+            couponsLogMapper.insertLog(orderId,userId,couponId);
+            //修改用户优惠券的使用状态
+            couponsGetMapper.updateCouponStatus(couponId,userId);
+            return AjaxResult.error("使用记录创建成功");
         }
         return AjaxResult.error("订单还未支付");
     }

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.coupons.mapper.CouponsLogMapper">
 
-    <insert id="insertLog" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertLog">
         insert into coupons_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
@@ -13,7 +13,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
-            <if test="couponId != null">#{couponsId},</if>
+            <if test="couponId != null">#{couponId},</if>
             <if test="orderId != null">#{orderId},</if>
         </trim>
     </insert>

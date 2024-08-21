@@ -19,5 +19,5 @@ public interface CouponsGetMapper {
 
     List<TbCoupons> usableCoupon(Long userId);
 
-    int updateCouponStatus(@Param("couponId") Integer couponsId,@Param("userId") Integer userId);
+    void updateCouponStatus(@Param("couponId") Integer couponsId,@Param("userId") Integer userId);
 }
