@@ -1,13 +1,10 @@
-package com.ruoyi.taxi;
+package com.ruoyi.order;
 
 import com.ruoyi.common.security.annotation.EnableCustomConfig;
 import com.ruoyi.common.security.annotation.EnableRyFeignClients;
 import com.ruoyi.common.swagger.annotation.EnableCustomSwagger2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-
-import javax.swing.*;
 
 /**
  * @program: rouyi
@@ -19,9 +16,9 @@ import javax.swing.*;
 @EnableCustomSwagger2
 @EnableRyFeignClients
 @SpringBootApplication
-public class RuoYiTaxiApplication {
+public class RuoYiOrderApplication {
     public static void main(String[] args) {
-        SpringApplication.run(RuoYiTaxiApplication.class, args);
+        SpringApplication.run(RuoYiOrderApplication.class, args);
         System.out.println("(♥◠‿◠)ﾉﾞ  网约车模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +

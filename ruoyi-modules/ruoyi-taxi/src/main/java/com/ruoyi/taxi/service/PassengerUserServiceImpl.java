@@ -2,17 +2,12 @@ package com.ruoyi.taxi.service;
 
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.taxi.domain.PassengerUser;
-import com.ruoyi.taxi.domain.vo.RegVo;
 import com.ruoyi.taxi.mapper.PassengerUserMapper;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.xml.transform.Result;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class PassengerUserServiceImpl implements PassengerUserService {
     @Autowired
     PassengerUserMapper passengerUserMapper;
+
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
@@ -70,4 +66,5 @@ public class PassengerUserServiceImpl implements PassengerUserService {
 
         return code;
     }
+
 }
