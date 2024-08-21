@@ -5,9 +5,9 @@
 <mapper namespace="com.ruoyi.taxi.mapper.TaxiMapper">
     <insert id="saveOrder">
             insert into order_info(open_id,passenger_phone,driver_id,driver_phone,about_price,order_time,depart_time,dep_longitude,dep_latitude,
-                                   dest_longitude,dest_latitude,order_status,car_type,expect_distance,estimated_duration,vehicle_type,advance_amount,is_reserve,gmt_create,gmt_modified)
+                                   dest_longitude,dest_latitude,order_status,car_type,expect_distance,estimated_duration,vehicle_type,advance_amount,is_reserve,gmt_create,gmt_modified,departure,destination)
             values (#{openId},#{passengerPhone},#{driverId},#{driverPhone},#{aboutPrice},now(),#{departTime},#{depLongitude},#{depLatitude},
-                    #{destLongitude},#{destLatitude},1,#{carType},#{expectDistance},#{estimatedDuration},#{vehicleType},#{advanceAmount},#{isReserve},now(),now())
+                    #{destLongitude},#{destLatitude},1,#{carType},#{expectDistance},#{estimatedDuration},#{vehicleType},#{advanceAmount},#{isReserve},now(),now(),#{departure},#{destination})
     </insert>
 
     <select id="selectOrderInfo" resultType="com.ruoyi.taxi.domain.OrderInfo">

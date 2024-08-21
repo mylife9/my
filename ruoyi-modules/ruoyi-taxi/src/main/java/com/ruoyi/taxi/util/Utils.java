@@ -1,8 +1,13 @@
 
 package com.ruoyi.taxi.util;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 
 public class Utils {
@@ -97,5 +102,51 @@ public class Utils {
         newDistance = Double.parseDouble(s);
 
         return newDistance;
+    }
+
+    public static String getAMapByLngAndLat(Double getLng, Double getLat) throws Exception {
+        String url;
+        try {
+            url = "http://restapi.amap.com/v3/geocode/regeo?output=JSON&location=" + getLng + ","
+                    + getLat + "&key=" + "1ecb10ee8837f9a355719170286d5e3e" + "&radius=0&extensions=base";
+            String queryResult = getResponse(url); // 高德接品返回的是JSON格式的字符串
+            // 将获取结果转为json数据
+            JSONObject obj = JSONObject.parseObject(queryResult);
+            System.out.println("obj为：" + obj);
+            if (obj.get("status").toString().equals("1")) {
+                // 如果没有返回-1
+                JSONObject regeocode = obj.getJSONObject("regeocode");
+                if (regeocode.size() > 0) {
+                    // 在regeocode中拿到 formatted_address 具体位置
+                    return regeocode.get("formatted_address").toString();
+                } else {
+                    throw new RuntimeException("未找到相匹配的地址！");
+                }
+            } else {
+                throw new RuntimeException("请求错误！");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "-1";
+    }
+
+
+    private static String getResponse(String serverUrl) {
+        // 用JAVA发起http请求，并返回json格式的结果
+        StringBuffer result = new StringBuffer();
+        try {
+            URL url = new URL(serverUrl);
+            URLConnection conn = url.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result.append(line);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result.toString();
     }
 }

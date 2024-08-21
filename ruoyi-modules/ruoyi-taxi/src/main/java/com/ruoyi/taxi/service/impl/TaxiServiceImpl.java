@@ -48,25 +48,25 @@ public class TaxiServiceImpl implements TaxiService {
 
     @Override
     @Transactional
-    public AjaxResult saveOrder( @Validated PassengerVo passengerVo) {
+    public synchronized AjaxResult saveOrder( @Validated PassengerVo passengerVo) {
 
         //redis key值
         String key = "Order";
         //根据id获取用户信息
         PassengerUser passengerUser = taxiMapper.selectPassenger(passengerVo.getOpenId());
 
-        //判断用户年龄小于16岁，提示用户不能单独乘车
-        if (passengerUser.getPassengerAge() < 16) {
-            AjaxResult.error("未成年不可独自乘车");
-        }
-
-        //查询出用户最新的上一个订单
-        OrderInfo orderStatus = taxiMapper.selectOrder(passengerUser.getOpenId());
-
-        //如果有进行判断是否未支付
-        if (Optional.ofNullable(orderStatus).isPresent()) {
-            return AjaxResult.error("您上一单金额未支付,请先支付后在下单");
-        }
+//        //判断用户年龄小于16岁，提示用户不能单独乘车
+//        if (passengerUser.getPassengerAge() < 16) {
+//            AjaxResult.error("未成年不可独自乘车");
+//        }
+//
+//        //查询出用户最新的上一个订单
+//        OrderInfo orderStatus = taxiMapper.selectOrder(passengerUser.getOpenId());
+//
+//        //如果有进行判断是否未支付
+//        if (Optional.ofNullable(orderStatus).isPresent()) {
+//            return AjaxResult.error("您上一单金额未支付,请先支付后在下单");
+//        }
 
 
         //初始化预付金额
@@ -243,8 +243,8 @@ public class TaxiServiceImpl implements TaxiService {
         }
 
 
-        passengerVo.setOpenId(1584355669008773122L);
         passengerVo.setPassengerPhone(18178101668L);
+
         taxiMapper.saveOrder(passengerVo);
 
         //删除缓存
@@ -253,6 +253,7 @@ public class TaxiServiceImpl implements TaxiService {
 
         //使用websocket推送消息
         webSocketController.sendMessage(JSON.toJSONString(passengerVo));
+
 
         return AjaxResult.success("添加成功");
     }

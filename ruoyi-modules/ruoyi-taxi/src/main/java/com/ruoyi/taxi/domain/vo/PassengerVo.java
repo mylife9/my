@@ -45,6 +45,9 @@ public class PassengerVo implements Serializable {
     @Schema(description = "预计出发地维度")
     private Double depLatitude;
 
+    @Schema(description = "预计出发地点详细地址")
+    private String departure;
+
     @NotNull(message = "目的地不能为空")
     @Pattern(regexp ="^[-+]?((180(\\.\\d{1,6})?)|((1[0-7]\\d)|([1-9]\\d?))(\\.\\d{1,6})?)$")
     @Schema(description = "预计目的地经度")
@@ -54,6 +57,9 @@ public class PassengerVo implements Serializable {
     @Pattern(regexp = "^[-+]?((90(\\.\\d{1,6})?)|([1-8]?\\d(\\.\\d{1,6})?))$")
     @Schema(description = "预计目的地维度")
     private Double destLatitude;
+
+    @Schema(description = "预计目的地")
+    private String destination;
 
     @Schema(description = "预计公里数")
     private Double expectDistance;
@@ -77,6 +83,7 @@ public class PassengerVo implements Serializable {
     private Integer isReserve;
 
     @Schema(description = "预约时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date departTime;
 
     @Schema(description = "订单状态1：订单开始 2：司机接单 3：去接乘客 4：司机到达乘客起点 5：乘客上车，司机开始行程 6：到达目的地，行程结束，未支付 7：发起收款 8: 支付完成 9.订单取消'")
