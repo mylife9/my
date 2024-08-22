@@ -7,6 +7,11 @@
         insert into coupons_get
         set user_id=#{userId}, coupon_id =#{couponId}, receive_time=now()
     </insert>
+    <insert id="couponsReceive">
+
+insert into coupons_get set user_id=#{userId} , coupon_id =#{couponId},coupon_status=0,receive_time=now()
+
+    </insert>
     <update id="updateCouponStatus">
         update coupons_get set coupon_status = 1 where user_id = #{userId} and coupon_id = #{couponId}
     </update>

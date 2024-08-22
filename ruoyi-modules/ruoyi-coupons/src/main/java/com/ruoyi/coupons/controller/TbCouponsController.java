@@ -34,23 +34,25 @@ public class TbCouponsController extends BaseController {
     private ICouponsTypeService couponsTypeService;
     @Resource
     private ITbCouponsService tbCouponsService;
+
     /**
      * 查询优惠券列表
      */
     @RequiresPermissions("coupons:coupons:list")
     @GetMapping("/list")
-    public TableDataInfo couponsList(TbCoupons tbCoupons){
+    public TableDataInfo couponsList(TbCoupons tbCoupons) {
         startPage();
         AjaxResult result = tbCouponsService.couponsList(tbCoupons);
         List<TbCoupons> couponsList = (List<TbCoupons>) result.get(DATA_TAG);
         return getDataTable(couponsList);
     }
+
     /**
      * 查询优惠券信息
      */
     @RequiresPermissions("coupons:coupons:query")
     @GetMapping("/query/{id}")
-    public AjaxResult query(@PathVariable("id")Long id){
+    public AjaxResult query(@PathVariable("id") Long id) {
         return tbCouponsService.couponsInfo(id);
     }
 
@@ -96,6 +98,7 @@ public class TbCouponsController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tbCouponsService.deleteTbCouponsByIds(ids));
     }
+
     /**
      * @param
      * @return @return com.ruoyi.common.core.web.page.TableDataInfo
@@ -108,76 +111,82 @@ public class TbCouponsController extends BaseController {
         List<CouponsType> list = couponsTypeService.selectListType();
         return getDataTable(list);
     }
+
     /**
      * @Description:发放优惠券
-     * @Author: 段帅虎
+     * @Author: M
      * @Date: 2024/8/20 星期二 17:04
      * * @param tbCoupons:
      * * @return: com.ruoyi.common.core.web.domain.AjaxResult
-     *
      */
     @Transactional(rollbackFor = Exception.class)
     @GetMapping("/startCoupons/{ids}")
     public AjaxResult startCoupons(@PathVariable Long[] ids) {
         return tbCouponsService.startCoupons(ids);
     }
+
     /**
      * @Description:停止发放优惠券
-     * @Author: 段帅虎
+     * @Author: M
      * @Date: 2024/8/20 星期二 17:09
      * * @param null:
      * * @return: null
-     *
      */
-    @Transactional(rollbackFor = Exception.class)
     @GetMapping("/closeCoupons/{ids}")
     public AjaxResult closeCoupons(@PathVariable Long[] ids) {
         return tbCouponsService.closeCoupons(ids);
     }
+
     /**
+     * @param userId: * @return: java.lang.String
      * @Description:优惠券的领取
-     * @Author: 段帅虎
+     * @Author:M
      * @Date: 2024/8/19 星期一 22:53
      * * @param couponId:
-     * @param userId:
-     * * @return: java.lang.String
-     *
      */
-    @Transactional
+
     @GetMapping("/getCoupon/{couponId}/{userId}")
     public AjaxResult getUserCoupon(@PathVariable Long couponId, @PathVariable Long userId) {
-        return tbCouponsService.getUserCoupon(couponId,userId);
+        return tbCouponsService.getUserCoupon(couponId, userId);
     }
+
     /**
      * @Description:订单使用优惠券
-     * @Author: 段帅虎
+     * @Author: M
      * @Date: 2024/8/20 星期二 21:02
      * * @param couponId:
      * * @return: com.ruoyi.common.core.web.domain.AjaxResult
-     *
      */
     @PostMapping("/useCoupon/{orderId}/{userId}/{couponsId}")
     public AjaxResult useCoupon(@PathVariable Long orderId,
                                 @PathVariable Integer userId,
                                 @PathVariable Integer couponsId) {
-        return tbCouponsService.useCoupon(orderId,userId,couponsId);
+        return tbCouponsService.useCoupon(orderId, userId, couponsId);
     }
+
     /**
      * @Description:查询用户可用优惠券
-     * @Author: 段帅虎
+     * @Author: M
      * @Date: 2024/8/20 星期二 20:43
-     * * @param userId: 
+     * * @param userId:
      * * @return: com.ruoyi.common.core.web.domain.AjaxResult
-     *
      */
     @GetMapping("/usableCoupon/{userId}")
     public AjaxResult usableCoupon(@PathVariable("userId") @Validated Long userId) {
         return tbCouponsService.usableCoupon(userId);
     }
 
-    @PostMapping("/redisAcquireLockLock/{id}")
-    public AjaxResult redisAcquireLockLock(@PathVariable("id") Long id){
-        return tbCouponsService.redisAcquireLockLock(id);
+    /**
+     * @param couponId
+     * @param userId
+     * @return @return com.ruoyi.common.core.web.domain.AjaxResult
+     * @Author M
+     * @Description //TODO 领取优惠券保证幂等性
+     * @Date 2024/8/22 18:03:29
+     **/
+    @PostMapping("/redisAcquireLockLock/{couponId}/{userId}")
+    public AjaxResult redisAcquireLockLock(@PathVariable("couponId") Long couponId, @PathVariable("userId") Long userId) {
+        return tbCouponsService.redisAcquireLockLock(couponId, userId);
     }
 
 }

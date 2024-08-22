@@ -8,7 +8,7 @@ import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * @program: ruoyi
- * @author: MaoYiFan
+ * @author: M
  * @description:
  * @create: 2024-08-19 17:15
  */

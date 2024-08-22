@@ -125,7 +125,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     /**
      * @Description:查询所有优惠券
-     * @Author: dsh
+     * @Author: M
      * @Date: 2024/8/20 星期二 14:20
      * <p>
      * * @return: com.ruoyi.common.core.web.domain.AjaxResult
@@ -158,7 +158,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     /**
      * @Description:获取setnx锁
-     * @Author: dsh
+     * @Author: M
      * @Date: 2024/8/20 星期二 14:19
      * * @param key:
      * * @return: boolean
@@ -171,7 +171,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     /**
      * @Description:释放setnx锁
-     * @Author: dsh
+     * @Author: M
      * @Date: 2024/8/20 星期二 14:19
      * * @param key:
      * * @return: void
@@ -182,7 +182,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     /**
      * @Description:查询优惠券详细信息
-     * @Author: dsh
+     * @Author: M
      * @Date: 2024/8/20 星期二 14:20
      * * @param id:
      * * @return: com.ruoyi.common.core.web.domain.AjaxResult
@@ -233,7 +233,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();*/
-//        Long userId = 2L;  // 实际应用中应从登录信息等获取
+        //  Long userId = 2L;  实际应用中应从登录信息等获取
         //查询redis缓存是否存在优惠券
         String couponsKey = STARTKEY + couponId;
         Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(couponsKey);
@@ -280,8 +280,8 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
             if (insertFlag >= 1) {
                 //如果能优惠券能领取成功 ， 那么数据库中的值就得和redis中的值是一致的
                 //使用乐观锁防止超卖
-                tbCouponsMapper.updateCountById(couponId, couponCount);
                 //修改后删除，保证mysql 和 redis 数据一致
+                tbCouponsMapper.updateCountById(couponId, couponCount);
                 stringRedisTemplate.delete(COUPONSALL_KEY);
             }
             return AjaxResult.success("领取成功");
@@ -369,16 +369,21 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     @Override
     public AjaxResult usableCoupon(Long userId) {
+        //获取锁
         RLock lock = redissonUtils.getLock("usableCoupon-lock:" + userId);
         try {
+            //在这个时间内获取锁
             boolean b = lock.tryLock(1, 10, TimeUnit.SECONDS);
             if (b) {
+                //查询用户可用的优惠券
                 List<TbCoupons> usableCouponList = couponsGetMapper.usableCoupon(userId);
+
                 return AjaxResult.success(usableCouponList);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
+            //释放锁
             if (lock.isLocked()) {
                 lock.unlock();
             }
@@ -409,11 +414,11 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
     }
 
     @Override
-    public AjaxResult redisAcquireLockLock(Long id) {
+    public AjaxResult redisAcquireLockLock(Long couponId, Long userId) {
 
         // 从数据库查询优惠券信息
-        String tokenKey = "CouponKey-" + id;
-        TbCoupons tbCoupons = tbCouponsMapper.selectCouponsById(id);
+        String tokenKey = "CouponKey-" + couponId;
+        TbCoupons tbCoupons = tbCouponsMapper.selectCouponsById(couponId);
         stringRedisTemplate.opsForHash().put(tokenKey, "couponsName", tbCoupons.getCouponsName());
         stringRedisTemplate.opsForHash().put(tokenKey, "receiveCount", String.valueOf(tbCoupons.getReceiveCount()));
 
@@ -424,22 +429,22 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
         if (!jedisPool.isClosed()) {
             try (Jedis jedis = jedisPool.getResource()) {
                 // 调用方法
-                return getRedisResult(eventsPromoCodeMark, id, tokenKey);
+                return getRedisResult(eventsPromoCodeMark, couponId, tokenKey, userId);
             }
         } else {
             // 如果连接池已关闭，重新初始化
             jedisPool = new JedisPool(redisConfig.jedisPoolConfig(), "localhost", 6379);
             // 调用方法
-            return getRedisResult(eventsPromoCodeMark, id, tokenKey);
+            return getRedisResult(eventsPromoCodeMark, couponId, tokenKey, userId);
         }
     }
 
     // 调用方法来获取Redis连接池进行判断
-    private AjaxResult getRedisResult(String eventsPromoCodeMark, Long id, String tokenKey) {
+    private AjaxResult getRedisResult(String eventsPromoCodeMark, Long couponId, String tokenKey, Long userId) {
         // 从 Redis 连接池 (jedisPool) 中获取一个 Jedis 实例的方法。这个连接池用于管理与 Redis 服务器的连接，通过复用连接来提高性能。
         Jedis jedisResources = jedisPool.getResource();
         // 执行 Redis 操作
-        String lock = 3 + eventsPromoCodeMark;//设置本次优惠券锁（保证幂等性）：userId + 优惠码活动的key
+        String lock = userId + eventsPromoCodeMark;//设置本次优惠券锁（保证幂等性）：userId + 优惠码活动的key
         String userKey = lock + "receiveCoupon";//设置用户优惠券领取key（自定义，只要保证一个用户在一个活动的唯一性即可）
 
         // 获取缓存数量
@@ -466,11 +471,11 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
                     //3,再进行优惠券分发（可异步执行通过MQ进行发放，如果减库存成功，发放失败，进行发放补偿性操作）
                     jedisResources.set(userKey, "received");
                     stringRedisTemplate.opsForHash().increment(tokenKey, "receiveCount", -1);
-                    tbCouponsMapper.updateByReceiveCount(id);
+                    tbCouponsMapper.updateByReceiveCount(couponId);
                     System.out.println("领取成功");
 
                     // 存储到优惠券领取表 coupons_get
-
+                    couponsGetMapper.couponsReceive(userId, couponId);
 
                     long oldValue = Long.valueOf(jedisResources.get(lock));//获取锁的旧值
                     if (oldValue > System.currentTimeMillis()) {//检查处理时间是否小于超时时间,释放锁
@@ -493,7 +498,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
     /**
      * @param lock: 锁的k
      * @Description: 获取锁方法
-     * @Author: MaoYiFan
+     * @Author: M
      * @Date: 2024/8/19 22:58
      * @return: boolean 本次获锁是否成功
      */

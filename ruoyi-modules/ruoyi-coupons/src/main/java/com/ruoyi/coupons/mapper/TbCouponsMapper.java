@@ -59,8 +59,8 @@ public interface TbCouponsMapper {
 
     void updateCountById(@Param("id") Long id, @Param("couponCount") Long couponCount);
 
-    @Update("UPDATE tb_coupons SET receive_count = receive_count -1 WHERE id = #{id}")
-    void updateByReceiveCount(Long id);
+    @Update("UPDATE tb_coupons SET receive_count = receive_count -1 WHERE id = #{couponId}")
+    void updateByReceiveCount(Long couponId);
 
     List<TbCoupons> couponsList(TbCoupons tbCoupons);
 

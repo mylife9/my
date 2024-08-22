@@ -470,7 +470,7 @@ public class ExcelUtil<T>
      */
     public void exportExcel(HttpServletResponse response, List<T> list, String sheetName, String title)
     {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreaMeetml.sheet");
         response.setCharacterEncoding("utf-8");
         this.init(list, sheetName, title, Type.EXPORT);
         exportExcel(response);
@@ -496,7 +496,7 @@ public class ExcelUtil<T>
      */
     public void importTemplateExcel(HttpServletResponse response, String sheetName, String title)
     {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreaMeetml.sheet");
         response.setCharacterEncoding("utf-8");
         this.init(null, sheetName, title, Type.IMPORT);
         exportExcel(response);

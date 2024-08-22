@@ -99,13 +99,14 @@
     <update id="updateCountById">
         update tb_coupons
         set receive_count=#{couponCount}
-        where id = #{id} and receive_count > 0
+        where id = #{id}
+          and receive_count > 0
     </update>
-    <update id="startCoupons" >
+    <update id="startCoupons">
         update tb_coupons set coupons_status = #{couponsStatus} where id in
-                                                     <foreach collection="ids" item="id" open="(" separator="," close=")">
-                                                         #{id}
-                                                     </foreach>
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </update>
 
     <delete id="deleteTbCouponsById" parameterType="Long">
@@ -133,8 +134,9 @@
         </where>
     </select>
     <select id="findStartCouponsByIds" resultType="com.ruoyi.coupons.domain.TbCoupons">
-        select * from tb_coupons where id in <foreach collection="ids" close=")" open="(" separator="," item="id">
-        #{id}
-    </foreach>
+        select * from tb_coupons where id in
+        <foreach collection="ids" close=")" open="(" separator="," item="id">
+            #{id}
+        </foreach>
     </select>
 </mapper>

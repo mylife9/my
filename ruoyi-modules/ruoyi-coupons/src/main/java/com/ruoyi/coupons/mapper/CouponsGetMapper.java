@@ -1,6 +1,5 @@
 package com.ruoyi.coupons.mapper;
 
-import com.ruoyi.coupons.domain.CouponsGet;
 import com.ruoyi.coupons.domain.TbCoupons;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,4 +19,7 @@ public interface CouponsGetMapper {
     List<TbCoupons> usableCoupon(Long userId);
 
     void updateCouponStatus(@Param("couponId") Integer couponsId,@Param("userId") Integer userId);
+
+
+    void couponsReceive(@Param("userId") Long userId, @Param("couponId") Long couponId);
 }

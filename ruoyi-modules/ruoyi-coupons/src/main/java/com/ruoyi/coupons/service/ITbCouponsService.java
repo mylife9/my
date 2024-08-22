@@ -66,6 +66,6 @@ public interface ITbCouponsService {
     AjaxResult usableCoupon(Long userId);
 
     AjaxResult useCoupon(Long orderId, Integer userId, Integer couponsId);
-    AjaxResult redisAcquireLockLock(Long id);
+    AjaxResult redisAcquireLockLock(Long couponId, Long userId);
 
 }
