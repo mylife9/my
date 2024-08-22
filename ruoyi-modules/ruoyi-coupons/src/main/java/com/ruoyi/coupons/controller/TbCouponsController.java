@@ -10,18 +10,14 @@ import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.coupons.domain.CouponsType;
 import com.ruoyi.coupons.domain.TbCoupons;
 import com.ruoyi.coupons.service.ICouponsTypeService;
-import com.ruoyi.coupons.service.ICouponsGetService;
 import com.ruoyi.coupons.service.ITbCouponsService;
-import org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
 
 import static com.ruoyi.common.core.web.domain.AjaxResult.DATA_TAG;
 
@@ -178,4 +174,10 @@ public class TbCouponsController extends BaseController {
     public AjaxResult usableCoupon(@PathVariable("userId") @Validated Long userId) {
         return tbCouponsService.usableCoupon(userId);
     }
+
+    @PostMapping("/redisAcquireLockLock/{id}")
+    public AjaxResult redisAcquireLockLock(@PathVariable("id") Long id){
+        return tbCouponsService.redisAcquireLockLock(id);
+    }
+
 }
