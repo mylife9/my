@@ -2,6 +2,7 @@ package com.ruoyi.dirver.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -17,35 +18,22 @@ public class Driver {
     private String driverPhone;
     private String driverNumber;
     private String driverGender;
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date driverBirthday;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String driverBirthday;
     private String driverAddress;
     private String licenseId;
+//    private String frontImage;
     private String driverPhoto;
     private String code;
+    private String driverNation;
+    private Long state;
 
-    public String getDriverNumber() {
-        return driverNumber;
+    public String getDriverBirthday() {
+        return driverBirthday;
     }
 
-    public void setDriverNumber(String driverNumber) {
-        this.driverNumber = driverNumber;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDriverPhoto() {
-        return driverPhoto;
-    }
-
-    public void setDriverPhoto(String driverPhoto) {
-        this.driverPhoto = driverPhoto;
+    public void setDriverBirthday(String driverBirthday) {
+        this.driverBirthday = driverBirthday;
     }
 
     public Long getId() {
@@ -72,20 +60,20 @@ public class Driver {
         this.driverPhone = driverPhone;
     }
 
+    public String getDriverNumber() {
+        return driverNumber;
+    }
+
+    public void setDriverNumber(String driverNumber) {
+        this.driverNumber = driverNumber;
+    }
+
     public String getDriverGender() {
         return driverGender;
     }
 
     public void setDriverGender(String driverGender) {
         this.driverGender = driverGender;
-    }
-
-    public Date getDriverBirthday() {
-        return driverBirthday;
-    }
-
-    public void setDriverBirthday(Date driverBirthday) {
-        this.driverBirthday = driverBirthday;
     }
 
     public String getDriverAddress() {
@@ -104,6 +92,38 @@ public class Driver {
         this.licenseId = licenseId;
     }
 
+    public String getDriverPhoto() {
+        return driverPhoto;
+    }
+
+    public void setDriverPhoto(String driverPhoto) {
+        this.driverPhoto = driverPhoto;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getDriverNation() {
+        return driverNation;
+    }
+
+    public void setDriverNation(String driverNation) {
+        this.driverNation = driverNation;
+    }
+
+    public Long getState() {
+        return state;
+    }
+
+    public void setState(Long state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "Driver{" +
@@ -115,8 +135,9 @@ public class Driver {
                 ", driverBirthday=" + driverBirthday +
                 ", driverAddress='" + driverAddress + '\'' +
                 ", licenseId='" + licenseId + '\'' +
-                ", driverPhoto='" + driverPhoto + '\'' +
                 ", code='" + code + '\'' +
+                ", driverNation='" + driverNation + '\'' +
+                ", state=" + state +
                 '}';
     }
 }

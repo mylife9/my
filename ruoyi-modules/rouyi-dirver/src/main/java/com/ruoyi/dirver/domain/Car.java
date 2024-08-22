@@ -37,6 +37,16 @@ public class Car {
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date certifyDateA;
 
+    private String vehiclePicture;
+
+    public String getVehiclePicture() {
+        return vehiclePicture;
+    }
+
+    public void setVehiclePicture(String vehiclePicture) {
+        this.vehiclePicture = vehiclePicture;
+    }
+
     public Date getCertifyDateA() {
         return certifyDateA;
     }

@@ -49,16 +49,16 @@ public class DriverServiceImpl implements DriverService {
             throw new ServiceException("手机号不能为空");
         }
 
-        String codeKey = "code:"+driver.getDriverPhoto();
-        String code = stringRedisTemplate.opsForValue().get(codeKey);
-        if(!driver.getCode().equals(code)){
-            throw new ServiceException("验证码错误");
-        }
-
-        Driver login = driverMapper.isRegister(driver.getDriverPhoto());
-        if(login != null){
-            throw new ServiceException("该用户已经注册，不能重复注册");
-        }
+//        String codeKey = "code:"+driver.getDriverPhoto();
+//        String code = stringRedisTemplate.opsForValue().get(codeKey);
+//        if(!driver.getCode().equals(code)){
+//            throw new ServiceException("验证码错误");
+//        }
+//
+//        Driver login = driverMapper.isRegister(driver.getDriverPhoto());
+//        if(login != null){
+//            throw new ServiceException("该用户已经注册，不能重复注册");
+//        }
 
         Integer integer = driverMapper.save(driver);
 

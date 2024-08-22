@@ -81,6 +81,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-edit"
+            @click="handleFind(scope.row)"
+            v-hasPermi="['driver:licensesd:edit']"
+          >查看詳情</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['model:model:remove']"

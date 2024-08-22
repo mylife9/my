@@ -84,15 +84,23 @@
       <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="车辆所在城市" align="center" prop="address" />
       <el-table-column label="车辆号牌" align="center" prop="vehicleNo" />
-      <el-table-column label="车牌颜色" align="center" prop="plateColor" />
+      <el-table-column label="车牌颜色" align="center" prop="plateColor" >
+        <template slot-scope="scope">
+          <span>{{plateColorMap[scope.row.plateColor]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="核定载客位" align="center" prop="seats" />
       <el-table-column label="车辆品牌" align="center" prop="model" />
       <el-table-column label="车辆型号" align="center" prop="brand" />
       <el-table-column label="车辆类型" align="center" prop="vehicleType" />
       <el-table-column label="车辆所有人" align="center" prop="ownerName" />
-      <el-table-column label="车辆颜色" align="center" prop="vehicleColor" />
+      <el-table-column label="车辆颜色" align="center" prop="vehicleColor" >
+        <template slot-scope="scope">
+          <span>{{carColorMap[scope.row.vehicleColor]}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="发动机号" align="center" prop="engineId" />
-      <el-table-column label="车辆vin识别代码" align="center" prop="vin" />
+<!--      <el-table-column label="车辆vin识别代码" align="center" prop="vin" />-->
       <el-table-column label="车辆注册日期" align="center" prop="certifyDateA" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.certifyDateA, '{y}-{m}-{d}') }}</span>
@@ -104,64 +112,64 @@
         </template>
       </el-table-column>
       <el-table-column label="发动机排量" align="center" prop="engineDisplace" />
-      <el-table-column label="车辆运输证发证机构" align="center" prop="transAgency" />
-      <el-table-column label="车辆经验区域" align="center" prop="transArea" />
-      <el-table-column label="车辆运输证有效期起" align="center" prop="transDateStart" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.transDateStart, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="车辆运输证有效期止" align="center" prop="transDateEnd" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.transDateEnd, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="车辆初次登记日期" align="center" prop="certifyDateB" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.certifyDateB, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="车辆运输证发证机构" align="center" prop="transAgency" />-->
+<!--      <el-table-column label="车辆经验区域" align="center" prop="transArea" />-->
+<!--      <el-table-column label="车辆运输证有效期起" align="center" prop="transDateStart" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.transDateStart, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="车辆运输证有效期止" align="center" prop="transDateEnd" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.transDateEnd, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="车辆初次登记日期" align="center" prop="certifyDateB" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.certifyDateB, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="车辆的检修状态" align="center" prop="fixState" >
         <template slot-scope="scope">
           <span>{{statusMap[scope.row.fixState]}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下次年检时间" align="center" prop="nextFixDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.nextFixDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="下次年检时间" align="center" prop="nextFixDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.nextFixDate, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="年度审验状态" align="center" prop="checkState" >
         <template slot-scope="scope">
           <span>{{checkStateMap[scope.row.checkState]}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票打印设备序列号" align="center" prop="feePrintId" />
-      <el-table-column label="卫星定位装置品牌" align="center" prop="gpsBrand" />
-      <el-table-column label="卫星型号" align="center" prop="gpsModel" />
-      <el-table-column label="卫星定位设备安装日期" align="center" prop="gpsInstallDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.gpsInstallDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="报备日期" align="center" prop="registerDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.registerDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="服务类型" align="center" prop="commercialType" >
-        <template slot-scope="scope">
-          <span>{{commercialTypeMap[scope.row.commercialType]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="运价编码 关联计价规则" align="center" prop="fareType" />
+<!--      <el-table-column label="发票打印设备序列号" align="center" prop="feePrintId" />-->
+<!--      <el-table-column label="卫星定位装置品牌" align="center" prop="gpsBrand" />-->
+<!--      <el-table-column label="卫星型号" align="center" prop="gpsModel" />-->
+<!--      <el-table-column label="卫星定位设备安装日期" align="center" prop="gpsInstallDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.gpsInstallDate, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="报备日期" align="center" prop="registerDate" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.registerDate, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="服务类型" align="center" prop="commercialType" >-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{commercialTypeMap[scope.row.commercialType]}}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="运价编码 关联计价规则" align="center" prop="fareType" />-->
       <el-table-column label="状态" align="center" prop="state" >
       <template slot-scope="scope">
         <span>{{stateMap[scope.row.state]}}</span>
       </template>
       </el-table-column>
-      <el-table-column label="终端Id" align="center" prop="tid" />
-      <el-table-column label="轨迹ID" align="center" prop="trid" />
+<!--      <el-table-column label="终端Id" align="center" prop="tid" />-->
+<!--      <el-table-column label="轨迹ID" align="center" prop="trid" />-->
 
       <el-table-column label="创建时间" align="center" prop="gmtCreate" width="180">
         <template slot-scope="scope">
@@ -173,7 +181,14 @@
           <span>{{ parseTime(scope.row.gmtModified, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="车辆图片" align="center" prop="carPicture" />
+      <el-table-column label="车辆图片" align="center" prop="carPicture" >
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.carPicture"
+          ></el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="持有方" align="center" prop="owerStatus" >
         <template slot-scope="scope">
           <span>{{owerStatusMap[scope.row.owerStatus]}}</span>
@@ -191,10 +206,17 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-edit"
+            @click="handleFind(scope.row)"
+            v-hasPermi="['driver:driver:edit']"
+          >查看详情</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['driver:driver:remove']"
-          >删除</el-button>
+          >下線</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -286,21 +308,21 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="发动机号" prop="engineId">
+<!--        <el-form-item label="发动机号" prop="engineId">-->
 
-          <el-input
-            type="text"
-            id="engineNumber"
-            v-model="form.engineId"
-            @input="validateEngineNumber"
-            :class="{ invalid: !engineNumberError    }"
-            placeholder="请输入发动机号"
-          />
-          <span v-if="engineNumberError " class="error-message">{{ engineNumberError  }}</span>
-        </el-form-item>
-        <el-form-item label="车辆vin识别代码" prop="vin">
-          <el-input v-model="form.vin" placeholder="请输入车辆vin识别代码" />
-        </el-form-item>
+<!--          <el-input-->
+<!--            type="text"-->
+<!--            id="engineNumber"-->
+<!--            v-model="form.engineId"-->
+<!--            @input="validateEngineNumber"-->
+<!--            :class="{ invalid: !engineNumberError    }"-->
+<!--            placeholder="请输入发动机号"-->
+<!--          />-->
+<!--          <span v-if="engineNumberError " class="error-message">{{ engineNumberError  }}</span>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="车辆vin识别代码" prop="vin">-->
+<!--          <el-input v-model="form.vin" placeholder="请输入车辆vin识别代码" />-->
+<!--        </el-form-item>-->
         <el-form-item label="车辆注册日期" prop="certifyDateA">
           <el-date-picker clearable
             v-model="form.certifyDateA"
@@ -312,82 +334,82 @@
         <el-form-item label="发动机排量" prop="engineDisplace">
           <el-input v-model="form.engineDisplace" placeholder="请输入发动机排量" />
         </el-form-item>
-        <el-form-item label="车辆运输证发证机构" prop="transAgency">
-          <el-input v-model="form.transAgency" placeholder="请输入车辆运输证发证机构" />
-        </el-form-item>
-        <el-form-item label="车辆经验区域" prop="transArea">
-          <el-input v-model="form.transArea" placeholder="请输入车辆经验区域" />
-        </el-form-item>
-        <el-form-item label="车辆运输证有效期起" prop="transDateStart">
-          <el-date-picker clearable
-            v-model="form.transDateStart"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择车辆运输证有效期起">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="车辆运输证有效期止" prop="transDateEnd">
-          <el-date-picker clearable
-            v-model="form.transDateEnd"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择车辆运输证有效期止">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="车辆初次登记日期" prop="certifyDateB">
-          <el-date-picker clearable
-            v-model="form.certifyDateB"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择车辆初次登记日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="车辆的检修状态" prop="fixState">
-          <el-select v-model="form.fixState" placeholder="请选择">
-            <el-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="下次年检时间" prop="nextFixDate">
-          <el-date-picker clearable
-            v-model="form.nextFixDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择下次年检时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="发票打印设备序列号" prop="feePrintId">
-          <el-input v-model="form.feePrintId" placeholder="请输入发票打印设备序列号" />
-        </el-form-item>
-        <el-form-item label="卫星定位装置品牌" prop="gpsBrand">
-          <el-input v-model="form.gpsBrand" placeholder="请输入卫星定位装置品牌" />
-        </el-form-item>
-        <el-form-item label="卫星型号" prop="gpsModel">
-          <el-input v-model="form.gpsModel" placeholder="请输入卫星型号" />
-        </el-form-item>
-        <el-form-item label="卫星定位设备安装日期" prop="gpsInstallDate">
-          <el-date-picker clearable
-            v-model="form.gpsInstallDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择卫星定位设备安装日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="报备日期" prop="registerDate">
-          <el-date-picker clearable
-            v-model="form.registerDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择报备日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="终端Id" prop="tid">
-          <el-input v-model="form.tid" placeholder="请输入终端Id" />
-        </el-form-item>
+<!--        <el-form-item label="车辆运输证发证机构" prop="transAgency">-->
+<!--          <el-input v-model="form.transAgency" placeholder="请输入车辆运输证发证机构" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="车辆经验区域" prop="transArea">-->
+<!--          <el-input v-model="form.transArea" placeholder="请输入车辆经验区域" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="车辆运输证有效期起" prop="transDateStart">-->
+<!--          <el-date-picker clearable-->
+<!--            v-model="form.transDateStart"-->
+<!--            type="date"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            placeholder="请选择车辆运输证有效期起">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="车辆运输证有效期止" prop="transDateEnd">-->
+<!--          <el-date-picker clearable-->
+<!--            v-model="form.transDateEnd"-->
+<!--            type="date"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            placeholder="请选择车辆运输证有效期止">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="车辆初次登记日期" prop="certifyDateB">-->
+<!--          <el-date-picker clearable-->
+<!--            v-model="form.certifyDateB"-->
+<!--            type="date"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            placeholder="请选择车辆初次登记日期">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="车辆的检修状态" prop="fixState">-->
+<!--          <el-select v-model="form.fixState" placeholder="请选择">-->
+<!--            <el-option-->
+<!--              v-for="item in options2"-->
+<!--              :key="item.value"-->
+<!--              :label="item.label"-->
+<!--              :value="item.value">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="下次年检时间" prop="nextFixDate">-->
+<!--          <el-date-picker clearable-->
+<!--            v-model="form.nextFixDate"-->
+<!--            type="date"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            placeholder="请选择下次年检时间">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="发票打印设备序列号" prop="feePrintId">-->
+<!--          <el-input v-model="form.feePrintId" placeholder="请输入发票打印设备序列号" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="卫星定位装置品牌" prop="gpsBrand">-->
+<!--          <el-input v-model="form.gpsBrand" placeholder="请输入卫星定位装置品牌" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="卫星型号" prop="gpsModel">-->
+<!--          <el-input v-model="form.gpsModel" placeholder="请输入卫星型号" />-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="卫星定位设备安装日期" prop="gpsInstallDate">-->
+<!--          <el-date-picker clearable-->
+<!--            v-model="form.gpsInstallDate"-->
+<!--            type="date"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            placeholder="请选择卫星定位设备安装日期">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="报备日期" prop="registerDate">-->
+<!--          <el-date-picker clearable-->
+<!--            v-model="form.registerDate"-->
+<!--            type="date"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            placeholder="请选择报备日期">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="终端Id" prop="tid">-->
+<!--          <el-input v-model="form.tid" placeholder="请输入终端Id" />-->
+<!--        </el-form-item>-->
         <el-form-item label="创建时间" prop="gmtCreate">
           <el-date-picker clearable
             v-model="form.gmtCreate"
@@ -405,7 +427,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="车辆图片" prop="carPicture">
-          <el-input v-model="form.carPicture" placeholder="请输入车辆图片" />
+          <image-upload v-model="form.carPicture"/>
 
 
         </el-form-item>
@@ -415,6 +437,66 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
+    <el-dialog
+      title="详情"
+      :visible.sync="open2"
+      width="30%">
+      <span slot="footer" class="dialog-footer">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+<!--        <el-form-item label="车辆所在城市" prop="address">-->
+<!--          {{form.address}}-->
+<!--        </el-form-item>-->
+        <el-form-item label="车辆号牌" prop="vehicleNo">
+          {{form.vehicleNo}}
+        </el-form-item>
+        <el-form-item label="车牌颜色" prop="plateColor">
+          {{form.plateColor}}
+        </el-form-item>
+        <el-form-item label="核定载客位" prop="seats">
+          {{form.seats}}
+        </el-form-item>
+        <el-form-item label="车辆厂牌" prop="brand">
+          {{form.brand}}
+        </el-form-item>
+        <el-form-item label="车辆型号" prop="model">
+          {{form.model}}
+        </el-form-item>
+        <el-form-item label="车辆所有人" prop="ownerName">
+          {{form.ownerName}}
+        </el-form-item>
+
+
+<!--        <el-form-item label="轨迹名称" prop="trname" aria-readonly="true">-->
+<!--          {{form.trname}}-->
+
+<!--        </el-form-item>-->
+
+        <el-form-item label="车辆图片" prop="carPicture">
+<!--          <image-upload v-model="form.carPicture"/>-->
+          <!--          <el-upload-->
+          <!--            :disabled="title=='车辆审核'"-->
+          <!--            class="avatar-uploader"-->
+          <!--            action="/dev-api/driver/car/upload"-->
+          <!--            :show-file-list="false"-->
+          <!--            :on-success="handleAvatarSuccess"-->
+          <!--            :headers="{'Authorization':token}">-->
+          <!--            <el-img :src="form.imageUrl" class="avatar">-->
+          <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+          <!--          </el-upload>-->
+                    <el-image :src="form.carPicture"/>
+          {{form.carPicture}}
+        </el-form-item>
+      </el-form>
+
+<!--    <el-button type="primary" @click="carSccess(1)">通过</el-button>-->
+<!--    <el-button type="danger" @click="carSccess(2)">驳回</el-button>-->
+                <el-button @click="cancel">取 消</el-button>
+
+  </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -564,6 +646,20 @@ export default {
           '1':"已检修",
           '2':"未知"
         },
+      plateColorMap:
+        {
+          0:'白色',
+          1:'蓝色',
+          2:'绿色',
+          3:'黄色',
+          4:'黑色',
+        },
+      carColorMap:
+        {
+          0:'黑色',
+          1:'白色',
+          2:'其他',
+        },
       fueTypeMap:
         {
         '1' :"汽油",
@@ -615,6 +711,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      open2: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -631,7 +728,7 @@ export default {
       // 表单校验
       rules: {
       },
-      cityOptions:[]
+      cityOptions:[],
     };
   },
   created() {
@@ -666,6 +763,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.open2 = false;
       this.reset();
 
     },
@@ -747,6 +845,16 @@ export default {
         this.title = "修改车辆";
       });
     },
+    /** 修改按钮操作 */
+    handleFind(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getDriver(id).then(response => {
+        this.form = response.data;
+        this.open2 = true;
+        this.title = "查看详情";
+      });
+    },
     validateLicensePlate() {
       // 定义车辆号牌的正则表达式
       const licensePlatePattern = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{5}$/;
@@ -805,11 +913,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除车辆编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认下線车辆编号为"' + ids + '"的数据项？').then(function() {
         return delDriver(ids);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess("下線成功");
       }).catch(() => {});
     },
     /** 导出按钮操作 */
