@@ -1,7 +1,12 @@
 package com.ruoyi.drools.mapper;
 
+import com.ruoyi.drools.domain.Compliance;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
  * @author : 暴龙兽
@@ -10,10 +15,12 @@ import org.apache.ibatis.annotations.Param;
  **/
 public interface ComPlianceMapper {
 
-    @Insert("insert into compliance (driver_card,id_card,compliance_scope,driver_id) values (#{driverCard},#{idCard},#{scope},#{driverId})")
-    void inserts(@Param("scope") Double scope, @Param("driverId") Integer driverId, @Param("driverCard") String driverCard, @Param("idCard")String idCard);
 
-    @Insert("insert into compliance (driver_card,compliance_scope,driver_id,if_null) values (#{driverCard},#{scope},#{driverId},0)")
-    void insert(@Param("scope") Double scope, @Param("driverId") Integer driverId, @Param("driverCard") String driverCard);
 
+    @Select("select * from compliance limit 10")
+    List<Compliance> list();
+
+    @Update("update compliance set complianceScope = complianceScope + #{complianceScope} where driverId=#{driverId}")
+
+    void updateCompliance(@Param("complianceScope") Double complianceScope,@Param("driverId") Integer driverId);
 }

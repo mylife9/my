@@ -1,10 +1,13 @@
 package com.ruoyi.drools.service.impl;
 
+import com.ruoyi.drools.domain.ServicePoints;
 import com.ruoyi.drools.mapper.ServicePointsMapper;
 import com.ruoyi.drools.service.ServicePointsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author : 暴龙兽
@@ -24,12 +27,15 @@ public class ServicePointsServiceImpl implements ServicePointsService {
         servicePointsMapper.updateServiceScope(servicePoints1,driverId);
     }
 
+    @Override
+    public List<ServicePoints> list() {
+        return servicePointsMapper.list();
+    }
 
-
-
-
-
-
+    @Override
+    public void updateServiceScope1(Double servicePoints1, Integer driverId) {
+        servicePointsMapper.updateServiceScope1(servicePoints1,driverId);
+    }
 
 
 }

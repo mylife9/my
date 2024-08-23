@@ -93,7 +93,7 @@ rule "drools10"
     then
     $m.setModelPoints(30d);
     update($m)
-    System.out.println("-------豪车------"+30+"车型分:"+$m.getModelPoints());
+    System.out.println("-------商务车------"+30+"车型分:"+$m.getModelPoints());
 end
 
 
@@ -120,16 +120,28 @@ rule "drools12"
 
         System.out.println("触发司机上传驾驶证,没有上传身份证=================+因此只加上传驾驶证分数（15）"+$c.getComplianceScope());
 end
+//rule "drools13"
+//    when
+//         $t:TripPoints(bonusPointId==1)
+//    then
+//       double tripScope=($t.getTripHour() * $t.getNum())*0.2;
+//        $t.setTripScope(tripScope);
+//
+//        update($t);
+//
+//        System.out.println("触发司机出行分添加=================司机出行分+"+tripScope);
+//end
 
-
-rule "drools13"
+rule "drools14"
     when
-         $t:TripPoints(bonusPointId==1)
+         $t:TripPoints(bonusPointId==1 )
     then
-       double tripScope=($t.getTripHour() * $t.getNum())*0.2;
-        $t.setTripScope(tripScope);
+
+        $t.setTripScope(($t.getTripHour() * 0.2d));
 
         update($t);
 
-        System.out.println("触发司机出行分添加=================司机出行分+"+tripScope);
+        System.out.println("触发司机出行分添加=================司机出行分+"+$t.getTripScope());
 end
+
+

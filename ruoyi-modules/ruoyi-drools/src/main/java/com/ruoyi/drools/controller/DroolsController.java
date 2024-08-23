@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -50,7 +51,20 @@ public class DroolsController {
     TripService tripService;
 
 
+    @PostMapping("test")
+    public AjaxResult test(){
+       List<ServicePoints> list = pointsService.list();
+       return AjaxResult.success("查询成功").put("list",list);
+    }
 
+
+
+    /**
+    * //TODO  无违规订单
+    * @author 卫航
+    * @date 2024/8/23 14:41
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test1")
     public AjaxResult drools1() throws Exception  {
         ServicePoints servicePoints = new ServicePoints();
@@ -68,22 +82,27 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
+        List<ServicePoints> list = pointsService.list();
 
-        log.info("参数是"+jobParam);
+        for (ServicePoints points : list) {
+            servicePoints.setSubtractPoints(points.getSubtractPoints());
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
-        Double servicePoints1 = servicePoints.getServicePoints();
-
-        servicePoints.setDriverId(jobParam);
-
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
 
          log.info("数据库司机服务分产生变化");
 
         return AjaxResult.success("操作成功").put("list",servicePoints.getServicePoints());
     }
+    /**
+    * //TODO 存在神访订单
+    * @author 卫航
+    * @date 2024/8/23 14:42
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test2")
     public AjaxResult drools2() {
         ServicePoints servicePoints = new ServicePoints();
@@ -100,23 +119,27 @@ public class DroolsController {
         kieSession.fireAllRules();
         //关闭kieSession
         kieSession.dispose();
+        List<ServicePoints> list = pointsService.list();
+        for (ServicePoints points : list) {
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
-
-        log.info("参数是"+jobParam);
-
-        Double servicePoints1 = servicePoints.getServicePoints();
-
-        servicePoints.setDriverId(jobParam);
-
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
+            servicePoints.setSubtractPoints(points.getSubtractPoints());
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
         log.info("数据库司机服务分产生变化");
 
         return AjaxResult.success("操作成功").put("list",servicePoints.getServicePoints());
     }
+
+    /**
+    * //TODO 乘客行程后主动好评无附加内容
+    * @author 卫航
+    * @date 2024/8/23 14:42
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test3")
     public AjaxResult drools3() {
         ServicePoints servicePoints = new ServicePoints();
@@ -134,22 +157,27 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
+        List<ServicePoints> list = pointsService.list();
+        for (ServicePoints points : list) {
 
-        log.info("参数是"+jobParam);
-
-        Double servicePoints1 = servicePoints.getServicePoints();
-
-        servicePoints.setDriverId(jobParam);
-
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
+            servicePoints.setSubtractPoints(points.getSubtractPoints());
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
         log.info("数据库司机服务分产生变化");
 
         return AjaxResult.success("操作成功").put("list",servicePoints.getServicePoints());
     }
+
+    /**
+    * //TODO 乘客行程后主动好评带附加内容
+    * @author 卫航
+    * @date 2024/8/23 14:43
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test4")
     public AjaxResult drools4() {
         ServicePoints servicePoints = new ServicePoints();
@@ -167,22 +195,27 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
+        List<ServicePoints> list = pointsService.list();
+        for (ServicePoints points : list) {
 
-        log.info("参数是"+jobParam);
-
-        Double servicePoints1 = servicePoints.getServicePoints();
-
-        servicePoints.setDriverId(jobParam);
-
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
+            servicePoints.setSubtractPoints(points.getSubtractPoints());
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
         log.info("数据库司机服务分产生变化");
 
         return AjaxResult.success("操作成功").put("list",servicePoints.getServicePoints());
     }
+
+    /**
+    * //TODO 小红花
+    * @author 卫航
+    * @date 2024/8/23 14:43
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test5")
     public AjaxResult drools5() {
         ServicePoints servicePoints = new ServicePoints();
@@ -200,22 +233,26 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
+        List<ServicePoints> list = pointsService.list();
+        for (ServicePoints points : list) {
 
-        log.info("参数是"+jobParam);
-
-        Double servicePoints1 = servicePoints.getServicePoints();
-
-        servicePoints.setDriverId(jobParam);
-
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
+            servicePoints.setSubtractPoints(points.getSubtractPoints());
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
         log.info("数据库司机服务分产生变化");
 
         return AjaxResult.success("操作成功").put("list",servicePoints.getServicePoints());
     }
+    /**
+     * //TODO 存在客诉订单
+     * @author 卫航
+     * @date 2024/8/23 14:45
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+     */
     @XxlJob("test6")
     public AjaxResult drools6() {
         ServicePoints servicePoints = new ServicePoints();
@@ -235,22 +272,28 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
 
-        log.info("参数是"+jobParam);
+        List<ServicePoints> list = pointsService.list();
+        for (ServicePoints points : list) {
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
-        Double servicePoints1 = servicePoints.getServicePoints();
 
-        servicePoints.setDriverId(jobParam);
 
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
 
         log.info("数据库司机服务分产生变化");
 
         return AjaxResult.success("操作成功").put("list",servicePoints.getServicePoints());
     }
+    /**
+     * //TODO 存在有责取消订单
+     * @author 卫航
+     * @date 2024/8/23 14:45
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+     */
 
     @XxlJob("test7")
     public AjaxResult drools7() {
@@ -270,23 +313,24 @@ public class DroolsController {
         kieSession.fireAllRules();
         //关闭kieSession
         kieSession.dispose();
-
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
-
-        log.info("参数是"+jobParam);
-
-        Double servicePoints1 = servicePoints.getServicePoints();
-
-        servicePoints.setDriverId(jobParam);
-
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
+        List<ServicePoints> list = pointsService.list();
+        for (ServicePoints points : list) {
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
         log.info("数据库司机服务分产生变化");
 
         return AjaxResult.success("操作成功").put("list",servicePoints.getServicePoints());
     }
+    /**
+     * //TODO 存在神访不合格订单
+     * @author 卫航
+     * @date 2024/8/23 14:45
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+     */
 
     @XxlJob("test8")
     public AjaxResult drools8() {
@@ -307,17 +351,13 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
-
-        log.info("参数是"+jobParam);
-
-        Double servicePoints1 = servicePoints.getServicePoints();
-
-        servicePoints.setDriverId(jobParam);
-
-        Integer driverId = servicePoints.getDriverId();
-
-        pointsService.updateServiceScope(servicePoints1,driverId);
+        List<ServicePoints> list = pointsService.list();
+        for (ServicePoints points : list) {
+            Double servicePoints1 = servicePoints.getServicePoints();
+            servicePoints.setDriverId(points.getDriverId());
+            Integer driverId = servicePoints.getDriverId();
+            pointsService.updateServiceScope(servicePoints1,driverId);
+        }
 
         log.info("数据库司机服务分产生变化");
 
@@ -325,6 +365,12 @@ public class DroolsController {
     }
 
 
+   /**
+   * //TODO 车型分 平价车
+   * @author 卫航
+   * @date 2024/8/23 14:51
+    * @return com.ruoyi.common.core.web.domain.AjaxResult
+   */
     @XxlJob("test9")
     public AjaxResult drools9() {
         ModelPoints modelPoints = new ModelPoints();
@@ -345,18 +391,13 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
-
-        log.info("参数是"+jobParam);
-
-
-        Double modelPoints1 = modelPoints.getModelPoints();
-
-        modelPoints.setVehicleTypeId(jobParam);
-
-        Integer vehicleTypeId = modelPoints.getVehicleTypeId();
-
-        modelPointsService.updateModelPoints(modelPoints1,vehicleTypeId);
+        List<ModelPoints> list = modelPointsService.list();
+        for (ModelPoints points : list) {
+            Double modelPoints1 = modelPoints.getModelPoints();
+            modelPoints.setVehicleTypeId(points.getVehicleTypeId());
+            Integer vehicleTypeId = points.getVehicleTypeId();
+            modelPointsService.updateModelPoints(modelPoints1,vehicleTypeId);
+        }
 
         log.info("数据库司机车型分产生变化");
 
@@ -365,6 +406,12 @@ public class DroolsController {
 
     }
 
+    /**
+    * //TODO 车型分  商务车
+    * @author 卫航
+    * @date 2024/8/23 14:45
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test10")
     public AjaxResult drools10() {
         ModelPoints modelPoints = new ModelPoints();
@@ -385,18 +432,13 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
-        Integer jobParam = Integer.valueOf(XxlJobHelper.getJobParam());
-
-        log.info("参数是"+jobParam);
-
-
-        Double modelPoints1 = modelPoints.getModelPoints();
-
-        modelPoints.setVehicleTypeId(jobParam);
-
-        Integer vehicleTypeId = modelPoints.getVehicleTypeId();
-
-        modelPointsService.updateModelPoints(modelPoints1,vehicleTypeId);
+        List<ModelPoints> list = modelPointsService.list();
+        for (ModelPoints points : list) {
+            Double modelPoints1 = modelPoints.getModelPoints();
+            modelPoints.setVehicleTypeId(points.getVehicleTypeId());
+            Integer vehicleTypeId = points.getVehicleTypeId();
+            modelPointsService.updateModelPoints(modelPoints1,vehicleTypeId);
+        }
 
         log.info("数据库司机车型分产生变化");
 
@@ -404,29 +446,21 @@ public class DroolsController {
 
 
     }
+
+    /**
+    * //TODO 合规分计算  上传身份证信息+驾驶证
+    * @author 卫航
+    * @date 2024/8/23 14:51
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test11")
     public AjaxResult drools11() throws Exception {
-        //xxl-job传入一个数组
-        String jobParam = XxlJobHelper.getJobParam();
-
-        //输出出来数组
-        System.out.println("xxl-job接参...[{}]" + jobParam);
-
-        //根据逗号切割
-        String[] split = jobParam.split(",");
-
 
         //创建合规分对象
         Compliance compliance = new Compliance();
 
         compliance.setIfNull(1);
 
-        //设置参数
-
-        compliance.setDriverId(Integer.valueOf(split[0]));
-
-        compliance.setDriverCard(split[1]);
-        compliance.setIdCard(split[2]);
 
 
         //获取kieServices
@@ -442,48 +476,33 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
+        List<Compliance> list = complianceService.list();
+        for (Compliance compliance1 : list) {
+            Double complianceScope = compliance.getComplianceScope();
+            compliance.setDriverId(compliance1.getDriverId());
+            Integer driverId = compliance.getDriverId();
+            complianceService.updateCompliance(complianceScope,driverId);
+        }
 
-        Double scope = compliance.getComplianceScope();
-
-        String driverCard = compliance.getDriverCard();
-
-        Integer driverId = compliance.getDriverId();
-
-        String idCard = compliance.getIdCard();
-
-        complianceService.inserts(scope, driverId, driverCard,idCard);
-
-
-        log.info("数据库司机服务分产生变化");
+        log.info("数据库司机合规分产生变化");
 
         return AjaxResult.success("操作成功");
     }
 
+    /**
+    * //TODO 合规分计算  没有上传身份证
+    * @author 卫航
+    * @date 2024/8/23 14:50
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test12")
     public AjaxResult drools12() throws Exception {
-        //xxl-job传入一个数组
-        String jobParam = XxlJobHelper.getJobParam();
-
-        //输出出来数组
-        System.out.println("xxl-job接参...[{}]" + jobParam);
-
-        //根据逗号切割
-        String[] split = jobParam.split(",");
-
 
         //创建合规分对象
         Compliance compliance = new Compliance();
 
         compliance.setIfNull(0);
 
-        //设置参数
-
-        compliance.setDriverId(Integer.valueOf(split[0]));
-
-        compliance.setDriverCard(split[1]);
-
-
-
         //获取kieServices
         KieServices kieServices = KieServices.Factory.get();
         //获取kieContainer
@@ -498,47 +517,73 @@ public class DroolsController {
         kieSession.dispose();
 
 
-        Double scope = compliance.getComplianceScope();
+        List<Compliance> list = complianceService.list();
+        for (Compliance compliance1 : list) {
+            Double complianceScope = compliance.getComplianceScope();
+            compliance.setDriverId(compliance1.getDriverId());
+            Integer driverId = compliance.getDriverId();
+            complianceService.updateCompliance(complianceScope,driverId);
+        }
 
-        String driverCard = compliance.getDriverCard();
-
-        Integer driverId = compliance.getDriverId();
-
-
-
-        complianceService.insert(scope, driverId, driverCard);
-
-
-        log.info("数据库司机服务分产生变化");
+        log.info("数据库司机合规分产生变化");
 
         return AjaxResult.success("操作成功");
     }
+
+    /**
+    * //TODO 出行分计算  根据结单时长+订单量
+    * @author 卫航
+    * @date 2024/8/23 14:49
+     * @return com.ruoyi.common.core.web.domain.AjaxResult
+    */
     @XxlJob("test13")
     public AjaxResult drools13() throws Exception {
-        //xxl-job传入一个数组
-        String jobParam = XxlJobHelper.getJobParam();
-
-        //输出出来数组
-        System.out.println("xxl-job接参..." + jobParam);
-
-        //根据逗号切割
-        String[] split = jobParam.split(",");
-
-
         //创建出行分对象
         TripPoints tripPoints = new TripPoints();
-
         //设置参数
         tripPoints.setBonusPointId(1);
 
-        tripPoints.setDriverId(Integer.valueOf(split[0]));
 
-        tripPoints.setTripHour(Integer.valueOf(split[1]));
+        List<TripPoints> list = tripService.list();
 
-        tripPoints.setNum(Integer.valueOf(split[2]));
+        for (TripPoints points1 : list) {
+            tripPoints.setTripHour(points1.getTripHour());
+            tripPoints.setNum(points1.getNum());
 
+
+            //获取kieServices
+            KieServices kieServices = KieServices.Factory.get();
+            //获取kieContainer
+            KieContainer kieContainer = kieServices.getKieClasspathContainer();
+            //创建 kieSession 对象来管理规则的应用和执行过程
+            KieSession kieSession = kieContainer.newKieSession();
+            //insert fact
+            kieSession.insert(tripPoints);
+            //触发规则
+            kieSession.fireAllRules();
+            //关闭kieSession
+            kieSession.dispose();
+
+            //scope = 120
+            Double tripScope = tripPoints.getTripScope();
+            tripPoints.setDriverId(points1.getDriverId());
+            Integer driverId1 = tripPoints.getDriverId();
+             tripService.update(tripScope, driverId1);
+
+            log.info("数据库司机出行分产生变化");
+    }
+            return AjaxResult.success("操作成功");
+        }
+
+
+    @PostMapping("/num/{hour}")
+    public AjaxResult num(@PathVariable("hour")Integer hour){
+
+        System.out.println(hour);
+        TripPoints tripPoints = new TripPoints();
         tripPoints.setCreateTime(new Date());
-
+        tripPoints.setTripHour(hour);
+        tripPoints.setBonusPointId(1);
 
         //获取kieServices
         KieServices kieServices = KieServices.Factory.get();
@@ -553,19 +598,12 @@ public class DroolsController {
         //关闭kieSession
         kieSession.dispose();
 
+        Double tripScope = tripPoints.getTripScope();
 
-        Double scope = tripPoints.getTripScope();
-        Integer num = tripPoints.getNum();
-        Integer hour = tripPoints.getTripHour();
-        Integer driverId = tripPoints.getDriverId();
+        tripService.insert(tripScope,hour);
 
-        //修改
-        tripService.update(scope, num, hour, driverId);
-
-
-        log.info("数据库司机服务分产生变化");
-
-        return AjaxResult.success("操作成功");
+        return AjaxResult.success("成功");
     }
+
 
 }

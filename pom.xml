@@ -234,6 +234,7 @@
         <module>ruoyi-api</module>
         <module>ruoyi-common</module>
         <module>ruoyi-modules/ruoyi-drools</module>
+        <module>ruoyi-modules/ruoyi-points</module>
     </modules>
     <packaging>pom</packaging>
 

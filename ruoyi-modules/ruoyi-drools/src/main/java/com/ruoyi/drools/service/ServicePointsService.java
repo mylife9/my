@@ -1,6 +1,9 @@
 package com.ruoyi.drools.service;
 
 
+import com.ruoyi.drools.domain.ServicePoints;
+
+import java.util.List;
 
 /**
  * @author : 暴龙兽
@@ -13,5 +16,7 @@ public interface ServicePointsService {
     void updateServiceScope(Double servicePoints1,Integer driverId);
 
 
+    List<ServicePoints> list();
 
+    void updateServiceScope1(Double servicePoints1, Integer driverId);
 }

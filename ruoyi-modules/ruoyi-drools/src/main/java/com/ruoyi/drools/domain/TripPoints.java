@@ -25,9 +25,6 @@ public class TripPoints extends BaseEntity {
     private Integer num;
     private Integer driverId;
     private Double nowScope;
-
-
-
     private Double tripScope;
     private Integer bonusPointId;
     private Date createTime;
