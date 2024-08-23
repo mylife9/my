@@ -1,28 +1,25 @@
-package com.ruoyi.coupons;
+package com.ruoyi.order;
 
 import com.ruoyi.common.security.annotation.EnableCustomConfig;
 import com.ruoyi.common.security.annotation.EnableRyFeignClients;
 import com.ruoyi.common.swagger.annotation.EnableCustomSwagger2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
- * @Author: M
- * @Date: 2024/8/16 19:50:53
- * @Version: v1.0.0
- **/
+ * @program: rouyi
+ * @author: xlk
+ * @description:
+ * @create: 2024-08-16 11:30
+ */
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
 @SpringBootApplication
-public class RuoYiCouponsApplication {
-
-
-    public static void main(String[] args)
-    {
-        SpringApplication.run(RuoYiCouponsApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  优惠券模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+public class RuoYiOrderApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(RuoYiOrderApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  网约车模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +

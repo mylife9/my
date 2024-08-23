@@ -176,17 +176,11 @@ public class TbCouponsController extends BaseController {
         return tbCouponsService.usableCoupon(userId);
     }
 
-    /**
-     * @param couponId
-     * @param userId
-     * @return @return com.ruoyi.common.core.web.domain.AjaxResult
-     * @Author M
-     * @Description //TODO 领取优惠券保证幂等性
-     * @Date 2024/8/22 18:03:29
-     **/
-    @PostMapping("/redisAcquireLockLock/{couponId}/{userId}")
-    public AjaxResult redisAcquireLockLock(@PathVariable("couponId") Long couponId, @PathVariable("userId") Long userId) {
-        return tbCouponsService.redisAcquireLockLock(couponId, userId);
-    }
+
+
+
+
+
+
 
 }

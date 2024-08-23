@@ -17,7 +17,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
@@ -301,44 +300,45 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
     public AjaxResult startCoupons(Long[] ids) {
         //1.查询指定发放优惠券的信息
         List<TbCoupons> startCoupons = tbCouponsMapper.findStartCouponsByIds(ids);
-        if (startCoupons.size() > 0 && startCoupons != null) {
-            for (TbCoupons coupon : startCoupons) {
-                //判断优惠券是否开放
-                if (coupon.getCouponsCreateDate().after(new Date())) {
-                    return AjaxResult.error("活动未开始");
-                } else if (coupon.getCouponsExpirationDate().before(new Date())) {
-                    return AjaxResult.error("活动已结束");
-                } else {
-                    //优惠券状态(0停止发放 1开始发放)
-                    int couponsStatus = 1;
-                    //2.修改优惠券的发放状态
-                    int updateRows = tbCouponsMapper.startCoupons(ids, couponsStatus);
-                    if (updateRows > 0) {
-                        //开放优惠券存储redis的key
-                        String couponsKey = STARTKEY + coupon.getId();
-                        //3.将信息存到redis当中
-
-                        //如果优惠券的数量小于0，不进行存储
-                        if (coupon.getReceiveCount() <= 0) {
-                            return AjaxResult.error(coupon.getCouponsName() + "的优惠券库存不足");
-                        }
-                        //存入优惠券的数量
-                        stringRedisTemplate.opsForHash().put(couponsKey, "count", String.valueOf(coupon.getReceiveCount()));
-                        //存入优惠券的名称
-                        stringRedisTemplate.opsForHash().put(couponsKey, "name", coupon.getCouponsName());
-                        //存入优惠券的编号（唯一）
-                        stringRedisTemplate.opsForHash().put(couponsKey, "number", coupon.getCouponsNumber());
-                        //设置优惠券开放的过期时间
-                        long timeout = coupon.getCouponsExpirationDate().getTime() - coupon.getCouponsCreateDate().getTime();
-                        stringRedisTemplate.expire(couponsKey, timeout, TimeUnit.SECONDS);
-                    }
-                    stringRedisTemplate.delete(COUPONSALL_KEY);
-                    return AjaxResult.success("活动已开放");
-                }
-            }
-
+        if (startCoupons.size() <= 0 && startCoupons == null) {
+            return AjaxResult.error("未查到优惠券信息");
         }
-        return AjaxResult.error("优惠券不存在");
+        for (TbCoupons coupon : startCoupons) {
+            //判断优惠券是否开放
+            if (coupon.getCouponsCreateDate().after(new Date())) {
+                return AjaxResult.error("活动未开始");
+            }
+            if (coupon.getCouponsExpirationDate().before(new Date())) {
+                return AjaxResult.error("活动已结束");
+            }
+            //优惠券状态(0停止发放 1开始发放)
+            int couponsStatus = 1;
+            //2.修改优惠券的发放状态
+            int updateRows = tbCouponsMapper.startCoupons(ids, couponsStatus);
+            if (updateRows <= 0) {
+                return AjaxResult.error("数量不足");
+            }
+            //开放优惠券存储redis的key
+            String couponsKey = STARTKEY + coupon.getId();
+            //3.将信息存到redis当中
+
+            //如果优惠券的数量小于0，不进行存储
+            if (coupon.getReceiveCount() <= 0) {
+                return AjaxResult.error(coupon.getCouponsName() + "的优惠券库存不足");
+            }
+            //存入优惠券的数量
+            stringRedisTemplate.opsForHash().put(couponsKey, "count", String.valueOf(coupon.getReceiveCount()));
+            //存入优惠券的名称
+            stringRedisTemplate.opsForHash().put(couponsKey, "name", coupon.getCouponsName());
+            //存入优惠券的编号（唯一）
+            stringRedisTemplate.opsForHash().put(couponsKey, "number", coupon.getCouponsNumber());
+            //设置优惠券开放的过期时间
+            long timeout = coupon.getCouponsExpirationDate().getTime() - coupon.getCouponsCreateDate().getTime();
+            stringRedisTemplate.expire(couponsKey, timeout, TimeUnit.SECONDS);
+        }
+        stringRedisTemplate.delete(COUPONSALL_KEY);
+        return AjaxResult.success("活动已开放");
+
     }
 
     @Override
@@ -400,9 +400,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
         if (!Optional.ofNullable(orderInfo).isPresent()) {
             return AjaxResult.error("订单还未创建");
         }
-//        if(orderInfo==null){
-//            return AjaxResult.error("订单还未创建");
-//        }
+
         if (orderInfo.getOrderStatus() == 8) {
             //支付成功后添加优惠券使用记录
             couponsLogMapper.insertLog(orderId, userId, couponId);
@@ -411,121 +409,6 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
             return AjaxResult.error("使用记录创建成功");
         }
         return AjaxResult.error("订单还未支付");
-    }
-
-    @Override
-    public AjaxResult redisAcquireLockLock(Long couponId, Long userId) {
-
-        // 从数据库查询优惠券信息
-        String tokenKey = "CouponKey-" + couponId;
-        TbCoupons tbCoupons = tbCouponsMapper.selectCouponsById(couponId);
-        stringRedisTemplate.opsForHash().put(tokenKey, "couponsName", tbCoupons.getCouponsName());
-        stringRedisTemplate.opsForHash().put(tokenKey, "receiveCount", String.valueOf(tbCoupons.getReceiveCount()));
-
-        // 本次优惠券领取唯一标记
-        String eventsPromoCodeMark = tbCoupons.getCouponsNumber();
-
-        // 如何连接池没有关闭，则直接获取连接池资源
-        if (!jedisPool.isClosed()) {
-            try (Jedis jedis = jedisPool.getResource()) {
-                // 调用方法
-                return getRedisResult(eventsPromoCodeMark, couponId, tokenKey, userId);
-            }
-        } else {
-            // 如果连接池已关闭，重新初始化
-            jedisPool = new JedisPool(redisConfig.jedisPoolConfig(), "localhost", 6379);
-            // 调用方法
-            return getRedisResult(eventsPromoCodeMark, couponId, tokenKey, userId);
-        }
-    }
-
-    // 调用方法来获取Redis连接池进行判断
-    private AjaxResult getRedisResult(String eventsPromoCodeMark, Long couponId, String tokenKey, Long userId) {
-        // 从 Redis 连接池 (jedisPool) 中获取一个 Jedis 实例的方法。这个连接池用于管理与 Redis 服务器的连接，通过复用连接来提高性能。
-        Jedis jedisResources = jedisPool.getResource();
-        // 执行 Redis 操作
-        String lock = userId + eventsPromoCodeMark;//设置本次优惠券锁（保证幂等性）：userId + 优惠码活动的key
-        String userKey = lock + "receiveCoupon";//设置用户优惠券领取key（自定义，只要保证一个用户在一个活动的唯一性即可）
-
-        // 获取缓存数量
-        Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(tokenKey);
-        Integer count = Integer.valueOf((String) entries.get("receiveCount"));
-
-        //优惠码领取库存校验
-        if (count <= 0) {
-            System.out.println("优惠券已经领取完了");
-            jedisResources.close();
-            return AjaxResult.error("优惠券已经领取完了");
-        }
-
-        //为了避免竞争（同一个用户，多个设备同时领取）.使用Redis.setNX() 实现分布式锁（重复数据插入可用其来实现排他锁）
-        boolean flag = acquireLock(lock);
-        if (flag) {
-            //1,获取锁成功,进行用户已领取标记，查询用户是否已经领取过
-            Boolean isExists = jedisResources.exists(userKey);
-            if (!isExists) {
-                //2,先使用redis的decr可以实现原子性的递增递减操作控制优惠券不超送,
-                Long success = jedisResources.decrBy(String.valueOf(count), -1);
-                // 先减库存后发券（减库存后返回的现有库存数量大于等于0说明本次抢券成功，再进行发送优惠券，否则库存已经空了就不进行发送优惠券）
-                if (success >= 0L) {
-                    //3,再进行优惠券分发（可异步执行通过MQ进行发放，如果减库存成功，发放失败，进行发放补偿性操作）
-                    jedisResources.set(userKey, "received");
-                    stringRedisTemplate.opsForHash().increment(tokenKey, "receiveCount", -1);
-                    tbCouponsMapper.updateByReceiveCount(couponId);
-                    System.out.println("领取成功");
-
-                    // 存储到优惠券领取表 coupons_get
-                    couponsGetMapper.couponsReceive(userId, couponId);
-
-                    long oldValue = Long.valueOf(jedisResources.get(lock));//获取锁的旧值
-                    if (oldValue > System.currentTimeMillis()) {//检查处理时间是否小于超时时间,释放锁
-                        jedisResources.del(lock);
-                    }
-                    return AjaxResult.success("领取成功");
-                }
-            } else {
-                System.out.println("已经领取过了");
-                return AjaxResult.error("已经领取过了");
-            }
-        } else {
-            System.out.println("请重试");
-            return AjaxResult.error("请重试");
-        }
-        jedisResources.close();
-        return AjaxResult.success();
-    }
-
-    /**
-     * @param lock: 锁的k
-     * @Description: 获取锁方法
-     * @Author: M
-     * @Date: 2024/8/19 22:58
-     * @return: boolean 本次获锁是否成功
-     */
-    public boolean acquireLock(String lock) {
-        boolean success;//设置获锁成功标记
-        Jedis jedis = jedisPool.getResource();
-        int expired = 60 * 1000;//强制过期时间：60 秒
-        long value = System.currentTimeMillis() + expired;
-        long acquired = jedis.setnx(lock, String.valueOf(value)); //通过SETNX试图获取一个lock
-        if (1 == acquired) {//setnx 返回值为1则表示设置成功，则成功获取一个锁
-            success = true;
-        } else {//setnx 失败，说明锁仍然被其他对象保持，检查其是否已经超时
-            long oldValue = Long.valueOf(jedis.get(lock));//获取锁的旧值
-            if (oldValue < System.currentTimeMillis()) {//检查是否超时
-                String getOldValue = jedis.getSet(lock, String.valueOf(value));//超时，进行锁覆盖，并获取覆盖值之后的获取到的旧值
-                // 进行最终获取锁是否成功原子性校验(覆盖旧值之前获取到的旧值 和 覆盖值之后的获取到的旧值 相同 则本次获锁成功，否则 失败已经被别的对象获取到)
-                if (Long.valueOf(getOldValue) == oldValue) {
-                    success = true;
-                } else {// 已被其他进程捷足先登了
-                    success = false;
-                }
-            } else {//未超时，则直接返回获取锁失败
-                success = false;
-            }
-        }
-        jedisPool.close();
-        return success;
     }
 
 
