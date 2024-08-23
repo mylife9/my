@@ -1,23 +1,19 @@
 # Tomcat
 server:
-  port: 9205
+  port: ${PORT:9301}
 
 # Spring
 spring:
-  servlet:
-    multipart:
-      # 单个文件最大大小
-      max-file-size: 50MB
-      # 所有上传文件最大大小
-      max-request-size: 50MB
-
+  main:
+    allow-circular-references: true
   application:
     # 应用名称
-    name: ruoyi-taxi
+    name: ruoyi-coupons
   profiles:
     # 环境配置
     active: dev
   cloud:
+
     nacos:
       discovery:
         # 服务注册地址

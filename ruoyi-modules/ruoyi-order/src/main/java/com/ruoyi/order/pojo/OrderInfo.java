@@ -278,14 +278,22 @@ public class OrderInfo implements Serializable {
      * 乘客手机号
      */
     public String getPassengerPhone() {
+<<<<<<< HEAD
         return passenger_phone;
+=======
+        return passengerPhone;
+>>>>>>> m
     }
 
     /**
      * 乘客手机号
      */
     public void setPassengerPhone(String passengerPhone) {
+<<<<<<< HEAD
         this.passenger_phone = passengerPhone;
+=======
+        this.passengerPhone = passengerPhone;
+>>>>>>> m
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.ruoyi.taxi;
+package com.ruoyi.coupons;
 
 import com.ruoyi.common.security.annotation.EnableCustomConfig;
 import com.ruoyi.common.security.annotation.EnableRyFeignClients;
@@ -7,22 +7,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-import javax.swing.*;
-
 /**
- * @program: rouyi
- * @author: xlk
- * @description:
- * @create: 2024-08-16 11:30
- */
+ * @Author: M
+ * @Date: 2024/8/16 19:50:53
+ * @Version: v1.0.0
+ **/
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
 @SpringBootApplication
-public class RuoYiTaxiApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(RuoYiTaxiApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  网约车模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+public class RuoYiCouponsApplication {
+
+
+    public static void main(String[] args)
+    {
+        SpringApplication.run(RuoYiCouponsApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  优惠券模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +
