@@ -4,6 +4,7 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
 import com.ruoyi.taxi.service.OrderInfoService;
 import com.ruoyi.taxi.service.TaxiService;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,11 @@ public class TaxiController {
             ,@PathVariable(name = "passengerId")Integer passengerId)
     {
         return orderInfoService.cancelOrder(id,passengerId);
+    }
+
+    @PostMapping("/computeAmount")
+    public AjaxResult computeAmount(@RequestBody PassengerVo passengerVo){
+        return orderInfoService.computeAmount(passengerVo);
     }
 
 }

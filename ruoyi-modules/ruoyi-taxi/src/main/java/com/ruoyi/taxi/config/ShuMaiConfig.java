@@ -9,4 +9,5 @@ public class ShuMaiConfig {
 
     public static String driverOcrUrl = "https://api.shumaidata.com/v2/driving_licence/ocr";
 
+    public static String faceOcrUrl = "https://api.shumaidata.com/v2/life/check";
 }

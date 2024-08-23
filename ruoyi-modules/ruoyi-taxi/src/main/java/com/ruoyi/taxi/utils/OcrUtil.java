@@ -1,5 +1,6 @@
 package com.ruoyi.taxi.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.taxi.config.ShuMaiConfig;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,25 +88,29 @@ public class OcrUtil {
      * @return: java.lang.String
      *
      */
-    public String ocrFace(MultipartFile file) throws IOException {
+    public Map ocrFace(String videoUrl) throws IOException {
         long timestamp = System.currentTimeMillis();
         String signStr = ShuMaiConfig.appid+"&"+timestamp+"&"+ShuMaiConfig.appSecurity;
         String sign = DigestUtils.md5Hex(signStr.getBytes());
-
-        String ossUrl = ossFileUtil.uploadFile(file);
 
         String url = ShuMaiConfig.faceOcrUrl+
                 "?appid="+ShuMaiConfig.appid+
                 "&timestamp="+timestamp+
                 "&sign="+sign+
-                "&motions=BLINK"+
-                "&url="+ossUrl;
+                "&motions=MOUTH"+
+                "&url="+videoUrl;
 
-        System.out.println(url);
+        String result = HttpClientUtil.post(url, null,null);
 
-        String post = HttpClientUtil.post(url, null,null);
+        System.out.println(result);
 
-        System.out.println(post);
-        return post;
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        Map data = JSONObject.parseObject(jsonObject.get("data").toString(), Map.class);
+
+        Map map = new HashMap<String,Object>();
+        map.put("result",data);
+
+
+        return map;
     }
 }

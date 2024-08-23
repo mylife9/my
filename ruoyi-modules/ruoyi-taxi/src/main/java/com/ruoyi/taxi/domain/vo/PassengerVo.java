@@ -21,10 +21,10 @@ import java.util.Date;
 public class PassengerVo implements Serializable {
 
     @Schema(description = "乘客id")
-    private Long openId;
+    private String openid;
 
     @Schema(description = "乘客手机号")
-    private Long passengerPhone;
+    private String passengerPhone;
 
     @Schema(description = "司机Id")
     private Long driverId;

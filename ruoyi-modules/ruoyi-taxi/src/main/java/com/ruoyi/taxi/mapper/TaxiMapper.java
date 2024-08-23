@@ -11,11 +11,11 @@ import java.util.List;
 
 @Mapper
 public interface TaxiMapper {
-    @Select("select * from passenger_user where open_id=#{openId}")
-    PassengerUser selectPassenger(Long openId);
+    @Select("select * from passenger_user where openid=#{openid}")
+    PassengerUser selectPassenger(String openid);
 
-    @Select("select * from order_info where open_id =#{openId} and order_status=6")
-    OrderInfo selectOrder(Long openId);
+    @Select("select * from order_info where openid =#{openid} and order_status!=8")
+    OrderInfo selectOrder(String openid);
 
     int saveOrder(PassengerVo passengerVo);
 

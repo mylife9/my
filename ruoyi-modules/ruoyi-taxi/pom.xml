@@ -89,7 +89,11 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common-log</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+        </dependency>
 <!--         OSS 依赖-->
                 <dependency>
                     <groupId>com.aliyun.oss</groupId>

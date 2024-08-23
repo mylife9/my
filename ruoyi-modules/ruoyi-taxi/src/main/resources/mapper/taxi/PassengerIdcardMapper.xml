@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.taxi.mapper.PassengerIdcardMapper">
+    <resultMap id="idcardResult" type="com.ruoyi.taxi.domain.PassengerIdcard">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+        <result property="age" column="age"></result>
+        <result property="address" column="address"></result>
+        <result property="idNumber" column="id_number"></result>
+        <result property="idCardAfter" column="id_card_front"></result>
+        <result property="idCardFront" column="id_card_after"></result>
+        <result property="openid" column="openid"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+    </resultMap>
+
+    <select id="selectIdcardByOpenid" resultMap="idcardResult" resultType="com.ruoyi.taxi.domain.PassengerIdcard">
+        select * from passenger_idcard where openid = #{openid}
+    </select>
+
+    <insert id="saveIdcard" parameterType="com.ruoyi.taxi.domain.PassengerIdcard" useGeneratedKeys="true" keyProperty="id">
+        insert into passenger_idcard(
+        <if test="name != null and name != ''">name,</if>
+        <if test="sex != null and sex != ''">sex,</if>
+        <if test="birthday != null and birthday != ''">birthday,</if>
+        <if test="age != null and age != ''">age,</if>
+        <if test="address != null and address != ''">address,</if>
+        <if test="idNumber != null and idNumber != ''">id_number,</if>
+        <if test="idCardFront != null and idCardFront != ''">id_card_front,</if>
+        <if test="idCardAfter != null and idCardAfter != ''">id_card_after,</if>
+        <if test="openid != null and openid != ''">openid,</if>
+        create_time
+        )values(
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="sex != null and sex != ''">#{sex},</if>
+        <if test="birthday != null and birthday != ''">#{birthday},</if>
+        <if test="age != null and age != ''">#{age},</if>
+        <if test="address != null and address != ''">#{address},</if>
+        <if test="idNumber != null and idNumber != ''">#{idNumber},</if>
+        <if test="idCardFront != null and idCardFront != ''">#{idCardFront},</if>
+        <if test="idCardAfter != null and idCardAfter != ''">#{idCardAfter},</if>
+        <if test="openid != null and openid != ''">#{openid},</if>
+        now()
+        )
+    </insert>
+
+    <update id="updateIdcardByOpenid" parameterType="com.ruoyi.taxi.domain.PassengerIdcard">
+        update passenger_idcard
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="birthday != null and birthday != ''">birthday = #{birthday},</if>
+            <if test="age != null and age != ''">age = #{age},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="idNumber != null and idNumber != ''">id_number = #{idNumber},</if>
+            <if test="idCardFront != null and idCardFront != ''">id_card_front = #{idCardFront},</if>
+            <if test="idCardAfter != null and idCardAfter != ''">id_card_after = #{idCardAfter},</if>
+            <if test="openid != null and openid != ''">openid = #{openid},</if>
+            update_time = sysdate()
+        </set>
+        where openid = #{openid}
+    </update>
+</mapper>

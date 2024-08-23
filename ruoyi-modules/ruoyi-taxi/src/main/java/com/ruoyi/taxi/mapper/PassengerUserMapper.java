@@ -8,9 +8,8 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface PassengerUserMapper {
-    PassengerUser isRegister(String openid);
+    PassengerUser selectPassengerByOpenid(String openid);
     Integer registerUser(PassengerUser user);
     Integer updateUser(PassengerUser user);
-
-    PassengerUser login(String openId);
+    PassengerUser isFinish(String openid);
 }
