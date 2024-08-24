@@ -1,21 +1,19 @@
 package com.ruoyi.approve.controller;
 
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import com.ruoyi.approve.domain.TbCar;
+import com.ruoyi.approve.service.ICarService;
+import com.ruoyi.common.core.utils.poi.ExcelUtil;
+import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
-import com.ruoyi.approve.domain.TbCar;
-import com.ruoyi.approve.service.ICarService;
-import com.ruoyi.common.core.web.controller.BaseController;
-import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.core.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.web.page.TableDataInfo;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 车辆管理Controller
@@ -36,7 +34,7 @@ public class CarApproveController extends BaseController
     /**
      * 查询车辆管理列表
      */
-    @RequiresPermissions("driver:car:list")
+/*    @RequiresPermissions("driver:car:list")*/
     @GetMapping("/list")
     public TableDataInfo list(TbCar car)
     {

@@ -18,6 +18,7 @@
         <module>ruoyi-taxi</module>
         <module>ruoyi-order</module>
         <module>ruoyi-coupons</module>
+        <module>../ruoyi-driver</module>
 
     </modules>
 

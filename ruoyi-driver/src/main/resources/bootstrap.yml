@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 9303
+  port: 9403
 
 # Spring
 spring: 
@@ -15,11 +15,11 @@ spring:
       discovery:
         # 服务注册地址
         server-addr: 127.0.0.1:8848
-        namespace: 9873b239-95a1-4f3f-b675-61338aed9dd5
+        namespace: 2a36a4ce-2139-436a-9c23-8eb6a62c7a7a
       config:
         # 配置中心地址
         server-addr: 127.0.0.1:8848
-        namespace: 9873b239-95a1-4f3f-b675-61338aed9dd5
+        namespace: 2a36a4ce-2139-436a-9c23-8eb6a62c7a7a
         # 配置文件格式
         file-extension: yml
         # 共享配置
