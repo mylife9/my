@@ -33,19 +33,16 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-<<<<<<<< HEAD:ruoyi-modules/ruoyi-taxi/pom.xml
-========
 
->>>>>>>> m:ruoyi-modules/ruoyi-order/pom.xml
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-<<<<<<<< HEAD:ruoyi-modules/ruoyi-taxi/pom.xml
-========
 
 
->>>>>>>> m:ruoyi-modules/ruoyi-order/pom.xml
+
+
         <!-- SpringCloud Alibaba Nacos Config -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

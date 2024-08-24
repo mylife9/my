@@ -1,10 +1,7 @@
 package com.ruoyi.taxi.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.ruoyi.common.core.utils.JwtUtils;
-import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.taxi.controller.WebSocketController;
 import com.ruoyi.taxi.domain.DriverUserWorkStatus;
 import com.ruoyi.taxi.domain.OrderInfo;
@@ -13,24 +10,17 @@ import com.ruoyi.taxi.domain.vo.PassengerVo;
 import com.ruoyi.taxi.mapper.TaxiMapper;
 import com.ruoyi.taxi.service.TaxiService;
 import com.ruoyi.taxi.util.Utils;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.swagger.models.auth.In;
+import com.ruoyi.taxi.utils.OrderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 public class TaxiServiceImpl implements TaxiService {
@@ -42,10 +32,9 @@ public class TaxiServiceImpl implements TaxiService {
     WebSocketController webSocketController;
 
 
-
     @Override
     @Transactional
-    public synchronized AjaxResult saveOrder( @Validated PassengerVo passengerVo) {
+    public synchronized AjaxResult saveOrder(@Validated PassengerVo passengerVo) {
 
         //redis key值
         String key = "Order";
@@ -100,7 +89,8 @@ public class TaxiServiceImpl implements TaxiService {
 
 
         passengerVo.setPassengerPhone(passengerUser.getPhone());
-
+        String orderId = OrderUtil.createOrderId(passengerVo.getOpenid());
+        passengerVo.setOrderId(orderId);
         taxiMapper.saveOrder(passengerVo);
 
         //删除缓存

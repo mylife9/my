@@ -3,7 +3,14 @@ server:
   port: 9205
 
 # Spring
-spring: 
+spring:
+  servlet:
+    multipart:
+      # 单个文件最大大小
+      max-file-size: 50MB
+      # 所有上传文件最大大小
+      max-request-size: 50MB
+
   application:
     # 应用名称
     name: ruoyi-taxi

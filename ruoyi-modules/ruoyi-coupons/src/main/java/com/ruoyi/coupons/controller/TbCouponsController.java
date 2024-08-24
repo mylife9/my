@@ -6,7 +6,6 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.coupons.domain.CouponsType;
 import com.ruoyi.coupons.domain.TbCoupons;
 import com.ruoyi.coupons.service.ICouponsTypeService;
@@ -38,7 +37,7 @@ public class TbCouponsController extends BaseController {
     /**
      * 查询优惠券列表
      */
-    @RequiresPermissions("coupons:coupons:list")
+
     @GetMapping("/list")
     public TableDataInfo couponsList(TbCoupons tbCoupons) {
         startPage();
@@ -50,7 +49,7 @@ public class TbCouponsController extends BaseController {
     /**
      * 查询优惠券信息
      */
-    @RequiresPermissions("coupons:coupons:query")
+   /* @RequiresPermissions("coupons:coupons:query")*/
     @GetMapping("/query/{id}")
     public AjaxResult query(@PathVariable("id") Long id) {
         return tbCouponsService.couponsInfo(id);
@@ -59,7 +58,7 @@ public class TbCouponsController extends BaseController {
     /**
      * 导出优惠券列表
      */
-    @RequiresPermissions("coupons:coupons:export")
+/*    @RequiresPermissions("coupons:coupons:export")*/
     @Log(title = "优惠券", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, TbCoupons tbCoupons) {
@@ -72,7 +71,7 @@ public class TbCouponsController extends BaseController {
     /**
      * 新增优惠券
      */
-    @RequiresPermissions("coupons:coupons:add")
+/*    @RequiresPermissions("coupons:coupons:add")*/
     @Log(title = "优惠券", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult add(@RequestBody TbCoupons tbCoupons) {
@@ -82,7 +81,7 @@ public class TbCouponsController extends BaseController {
     /**
      * 修改优惠券
      */
-    @RequiresPermissions("coupons:coupons:edit")
+/*    @RequiresPermissions("coupons:coupons:edit")*/
     @Log(title = "优惠券", businessType = BusinessType.UPDATE)
     @PutMapping("/edit")
     public AjaxResult edit(@RequestBody TbCoupons tbCoupons) {
@@ -92,7 +91,7 @@ public class TbCouponsController extends BaseController {
     /**
      * 删除优惠券
      */
-    @RequiresPermissions("coupons:coupons:remove")
+/*    @RequiresPermissions("coupons:coupons:remove")*/
     @Log(title = "优惠券", businessType = BusinessType.DELETE)
     @DeleteMapping("/remove/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
