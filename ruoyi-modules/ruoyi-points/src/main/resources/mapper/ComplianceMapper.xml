@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.points.mapper.ComplianceMapper">
+    
+    <resultMap type="com.ruoyi.points.domain.Compliance" id="ComplianceResult">
+        <result property="id"    column="id"    />
+        <result property="driverCard"    column="driverCard"    />
+        <result property="idCard"    column="idCard"    />
+        <result property="complianceScope"    column="complianceScope"    />
+        <result property="driverId"    column="driverId"    />
+        <result property="ifNull"    column="ifNull"    />
+        <result property="foundTime"    column="foundTime"    />
+    </resultMap>
+
+    <sql id="selectComplianceVo">
+        select id, driverCard, idCard, complianceScope, driverId, ifNull, foundTime from compliance
+    </sql>
+
+    <select id="selectComplianceList" parameterType="com.ruoyi.points.domain.Compliance" resultMap="ComplianceResult">
+        <include refid="selectComplianceVo"/>
+        <where>  
+            <if test="driverCard != null  and driverCard != ''"> and driverCard = #{driverCard}</if>
+            <if test="idCard != null  and idCard != ''"> and idCard = #{idCard}</if>
+            <if test="complianceScope != null "> and complianceScope = #{complianceScope}</if>
+            <if test="driverId != null "> and driverId = #{driverId}</if>
+            <if test="ifNull != null  and ifNull != ''"> and ifNull = #{ifNull}</if>
+            <if test="foundTime != null "> and foundTime = #{foundTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectComplianceById" parameterType="Long" resultMap="ComplianceResult">
+        <include refid="selectComplianceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCompliance" parameterType="com.ruoyi.points.domain.Compliance" useGeneratedKeys="true" keyProperty="id">
+        insert into compliance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="driverCard != null">driverCard,</if>
+            <if test="idCard != null">idCard,</if>
+            <if test="complianceScope != null">complianceScope,</if>
+            <if test="driverId != null">driverId,</if>
+            <if test="ifNull != null">ifNull,</if>
+            <if test="foundTime != null">foundTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="driverCard != null">#{driverCard},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="complianceScope != null">#{complianceScope},</if>
+            <if test="driverId != null">#{driverId},</if>
+            <if test="ifNull != null">#{ifNull},</if>
+            <if test="foundTime != null">#{foundTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCompliance" parameterType="com.ruoyi.points.domain.Compliance">
+        update compliance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driverCard != null">driverCard = #{driverCard},</if>
+            <if test="idCard != null">idCard = #{idCard},</if>
+            <if test="complianceScope != null">complianceScope = #{complianceScope},</if>
+            <if test="driverId != null">driverId = #{driverId},</if>
+            <if test="ifNull != null">ifNull = #{ifNull},</if>
+            <if test="foundTime != null">foundTime = #{foundTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteComplianceById" parameterType="Long">
+        delete from compliance where id = #{id}
+    </delete>
+
+    <delete id="deleteComplianceByIds" parameterType="String">
+        delete from compliance where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

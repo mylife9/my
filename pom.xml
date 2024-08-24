@@ -233,6 +233,8 @@
         <module>ruoyi-modules</module>
         <module>ruoyi-api</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-modules/ruoyi-drools</module>
+        <module>ruoyi-modules/ruoyi-points</module>
         <module>ruoyi-driver</module>
     </modules>
     <packaging>pom</packaging>

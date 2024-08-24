@@ -1,0 +1,147 @@
+package rules;
+import com.ruoyi.drools.domain.ServicePoints
+import com.ruoyi.drools.domain.ModelPoints
+import com.ruoyi.drools.domain.Compliance
+import com.ruoyi.drools.domain.TripPoints
+rule "drools1"
+    when
+        $s:ServicePoints(bonusPointId == 1)
+    then
+        $s.setServicePoints(5d);
+        update($s)
+        System.out.println("-------无违规订单------"+5+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools2"
+    when
+        $s:ServicePoints(bonusPointId == 2)
+    then
+        $s.setServicePoints(7d);
+        update($s)
+        System.out.println("-------存在神访合格订单------"+7+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools3"
+    when
+        $s:ServicePoints(bonusPointId == 3)
+    then
+        $s.setServicePoints(2.5);
+        update($s)
+        System.out.println("-------乘客行程后主动好评无附加内容------"+2.5+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools4"
+    when
+        $s:ServicePoints(bonusPointId == 4)
+    then
+        $s.setServicePoints(3d);
+        update($s)
+        System.out.println("-------乘客行程后主动好评带附加内容------"+3+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools5"
+    when
+        $s:ServicePoints(bonusPointId == 5)
+    then
+        $s.setServicePoints(1d);
+        update($s)
+        System.out.println("-------小红花------"+1+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools6"
+    when
+        $s:ServicePoints(subtractPointsId == 1)
+    then
+        double subtractPoints = $s.getSubtractPoints()-15;
+        $s.setServicePoints(subtractPoints);
+        update($s)
+        System.out.println("-------存在客诉订单------"+-15+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools7"
+    when
+        $s:ServicePoints(subtractPointsId == 2)
+    then
+        double subtractPoints = $s.getSubtractPoints()-5;
+        $s.setServicePoints(subtractPoints);
+        update($s)
+        System.out.println("-------存在有责取消订单------"+-5+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools8"
+    when
+        $s:ServicePoints(subtractPointsId == 3)
+    then
+         double subtractPoints = $s.getSubtractPoints()-7;
+         $s.setServicePoints(subtractPoints);
+        update($s)
+        System.out.println("-------存在神访不合格订单------"+-7+"服务分:"+$s.getServicePoints());
+end
+
+rule "drools9"
+    when
+    $m:ModelPoints(vehicleTypeId == 1)
+    then
+    $m.setModelPoints(15d);
+    update($m)
+    System.out.println("-------平价车------"+15+"车型分:"+$m.getModelPoints());
+end
+
+rule "drools10"
+    when
+    $m:ModelPoints(vehicleTypeId == 2)
+    then
+    $m.setModelPoints(30d);
+    update($m)
+    System.out.println("-------商务车------"+30+"车型分:"+$m.getModelPoints());
+end
+
+
+rule "drools11"
+    when
+         $c:Compliance(ifNull==1)
+    then
+
+       $c.setComplianceScope(30d);
+       update($c);
+
+
+        System.out.println("触发司机上传驾驶证,上传身份证=================+"+$c.getComplianceScope());
+end
+
+rule "drools12"
+    when
+         $c:Compliance(ifNull==0)
+    then
+
+       $c.setComplianceScope(15d);
+       update($c);
+
+
+        System.out.println("触发司机上传驾驶证,没有上传身份证=================+因此只加上传驾驶证分数（15）"+$c.getComplianceScope());
+end
+//rule "drools13"
+//    when
+//         $t:TripPoints(bonusPointId==1)
+//    then
+//       double tripScope=($t.getTripHour() * $t.getNum())*0.2;
+//        $t.setTripScope(tripScope);
+//
+//        update($t);
+//
+//        System.out.println("触发司机出行分添加=================司机出行分+"+tripScope);
+//end
+
+rule "drools14"
+    when
+         $t:TripPoints(bonusPointId==1 )
+    then
+
+        $t.setTripScope(($t.getTripHour() * 0.2d));
+
+        update($t);
+
+        System.out.println("触发司机出行分添加=================司机出行分+"+$t.getTripScope());
+end
+
+

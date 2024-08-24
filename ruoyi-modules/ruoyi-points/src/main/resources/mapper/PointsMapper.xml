@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.points.mapper.PointsMapper">
+    
+    <resultMap type="com.ruoyi.points.domain.Points" id="PointsResult">
+        <result property="id"    column="id"    />
+        <result property="driverId"    column="driverId"    />
+        <result property="currentScore"    column="currentScore"    />
+        <result property="tripScore"    column="tripScore"    />
+        <result property="serviceScore"    column="serviceScore"    />
+        <result property="carTypePoints"    column="carTypePoints"    />
+        <result property="complianceScore"    column="complianceScore"    />
+        <result property="foundTime"    column="foundTime"    />
+    </resultMap>
+
+    <sql id="selectPointsVo">
+        select id, driverId, currentScore, tripScore, serviceScore, carTypePoints, complianceScore, foundTime from points
+    </sql>
+
+    <select id="selectPointsList" parameterType="com.ruoyi.points.domain.Points" resultMap="PointsResult">
+        <include refid="selectPointsVo"/>
+        <where>  
+            <if test="driverId != null "> and driverId = #{driverId}</if>
+            <if test="currentScore != null "> and currentScore = #{currentScore}</if>
+            <if test="tripScore != null "> and tripScore = #{tripScore}</if>
+            <if test="serviceScore != null "> and serviceScore = #{serviceScore}</if>
+            <if test="carTypePoints != null "> and car_typePoints = #{carTypePoints}</if>
+            <if test="complianceScore != null "> and complianceScore = #{complianceScore}</if>
+            <if test="foundTime != null "> and foundTime = #{foundTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPointsById" parameterType="Long" resultMap="PointsResult">
+        select * from points where driverId = #{driverId}
+    </select>
+    <select id="selectNum" resultType="java.lang.Double">
+        SELECT sum(tripScore+serviceScore+carTypePoints+complianceScore) as selectNum FROM points where driverId=#{driverId}
+    </select>
+
+    <insert id="insertPoints" parameterType="com.ruoyi.points.domain.Points" useGeneratedKeys="true" keyProperty="id">
+
+    </insert>
+    <insert id="inter" parameterType="com.ruoyi.points.domain.Points">
+        insert into points(driverId,tripScore,serviceScore,carTypePoints,complianceScore,foundTime) values (#{driverId},#{tripScore},#{serviceScore},#{carTypePoints},#{complianceScore},now())
+    </insert>
+
+
+    <update id="updatePoints" parameterType="com.ruoyi.points.domain.Points">
+        update points
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driverId != null">driverId = #{driverId},</if>
+            <if test="currentScore != null">currentScore = #{currentScore},</if>
+            <if test="tripScore != null">tripScore = #{tripScore},</if>
+            <if test="serviceScore != null">serviceScore = #{serviceScore},</if>
+            <if test="carTypePoints != null">carTypePoints = #{carTypePoints},</if>
+            <if test="complianceScore != null">complianceScore = #{complianceScore},</if>
+            <if test="foundTime != null">foundTime = #{foundTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="update">
+        update points set driverId=#{points.driverId},tripScore=#{points.tripScore}+tripScore,serviceScore=#{points.serviceScore}+serviceScore,carTypePoints=#{points.carTypePoints}+carTypePoints,complianceScore=#{points.complianceScore}+complianceScore,currentScore=#{selectNum},foundTime=now() where driverId=#{points.driverId}
+    </update>
+
+
+    <delete id="deletePointsById" parameterType="Long">
+        delete from points where id = #{id}
+    </delete>
+
+    <delete id="deletePointsByIds" parameterType="String">
+        delete from points where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

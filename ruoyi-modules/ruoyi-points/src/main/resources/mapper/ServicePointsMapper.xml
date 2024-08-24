@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.points.mapper.ServicePointsMapper">
+    
+    <resultMap type="com.ruoyi.points.domain.ServicePoints" id="ServicePointsResult">
+        <result property="id"    column="id"    />
+        <result property="driverId"    column="driverId"    />
+        <result property="description"    column="description"    />
+        <result property="servicename"    column="servicename"    />
+        <result property="servicePoints"    column="servicePoints"    />
+        <result property="bonusPointId"    column="bonusPointId"    />
+        <result property="subtractPointsId"    column="subtractPointsId"    />
+        <result property="subtractPoints"    column="subtractPoints"    />
+        <result property="foundTime"    column="foundTime"    />
+    </resultMap>
+
+    <sql id="selectServicePointsVo">
+        select id, driverId, description, servicename, servicePoints, bonusPointId, subtractPointsId, subtractPoints, foundTime from service_points
+    </sql>
+
+    <select id="selectServicePointsList" parameterType="com.ruoyi.points.domain.ServicePoints" resultMap="ServicePointsResult">
+        <include refid="selectServicePointsVo"/>
+        <where>  
+            <if test="driverId != null "> and driverId = #{driverId}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="servicename != null  and servicename != ''"> and servicename like concat('%', #{servicename}, '%')</if>
+            <if test="servicePoints != null "> and servicePoints = #{servicePoints}</if>
+            <if test="bonusPointId != null "> and bonusPointId = #{bonusPointId}</if>
+            <if test="subtractPointsId != null "> and subtractPointsId = #{subtractPointsId}</if>
+            <if test="subtractPoints != null "> and subtractPoints = #{subtractPoints}</if>
+            <if test="foundTime != null "> and foundTime = #{foundTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectServicePointsById" parameterType="Long" resultMap="ServicePointsResult">
+        <include refid="selectServicePointsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertServicePoints" parameterType="com.ruoyi.points.domain.ServicePoints" useGeneratedKeys="true" keyProperty="id">
+        insert into service_points
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="driverId != null">driverId,</if>
+            <if test="description != null">description,</if>
+            <if test="servicename != null">servicename,</if>
+            <if test="servicePoints != null">servicePoints,</if>
+            <if test="bonusPointId != null">bonusPointId,</if>
+            <if test="subtractPointsId != null">subtractPointsId,</if>
+            <if test="subtractPoints != null">subtractPoints,</if>
+            <if test="foundTime != null">foundTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="driverId != null">#{driverId},</if>
+            <if test="description != null">#{description},</if>
+            <if test="servicename != null">#{servicename},</if>
+            <if test="servicePoints != null">#{servicePoints},</if>
+            <if test="bonusPointId != null">#{bonusPointId},</if>
+            <if test="subtractPointsId != null">#{subtractPointsId},</if>
+            <if test="subtractPoints != null">#{subtractPoints},</if>
+            <if test="foundTime != null">#{foundTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateServicePoints" parameterType="com.ruoyi.points.domain.ServicePoints">
+        update service_points
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driverId != null">driverId = #{driverId},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="servicename != null">servicename = #{servicename},</if>
+            <if test="servicePoints != null">servicePoints = #{servicePoints},</if>
+            <if test="bonusPointId != null">bonusPointId = #{bonusPointId},</if>
+            <if test="subtractPointsId != null">subtractPointsId = #{subtractPointsId},</if>
+            <if test="subtractPoints != null">subtractPoints = #{subtractPoints},</if>
+            <if test="foundTime != null">foundTime = #{foundTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteServicePointsById" parameterType="Long">
+        delete from service_points where id = #{id}
+    </delete>
+
+    <delete id="deleteServicePointsByIds" parameterType="String">
+        delete from service_points where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
