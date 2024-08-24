@@ -39,6 +39,16 @@ public class Car {
 
     private String vehiclePicture;
 
+    private Integer owerStatus;
+
+    public Integer getOwerStatus() {
+        return owerStatus;
+    }
+
+    public void setOwerStatus(Integer owerStatus) {
+        this.owerStatus = owerStatus;
+    }
+
     public String getVehiclePicture() {
         return vehiclePicture;
     }

@@ -341,22 +341,24 @@ export default {
 
     // 通过按钮
     userSccess(status){
+
       var data={
         state:status,
-        id:this.id
+        id:this.form.id
       }
       licenseSuccessUpdata(data).then(res=>{
-        this.dialogVisible=false
+        this.open2=false
         this.getList()
-
+        this.$message.info("操作成功")
       })
+
     },
 
     /** 查询行驶证管理列表 */
     getList() {
       this.loading = true;
       listLicensesd(this.queryParams).then(response => {
-        debugger
+
         this.licensesdList = response.rows;
         this.total = response.total;
         this.loading = false;

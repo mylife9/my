@@ -189,6 +189,11 @@ public class TbUserController extends BaseController
         return AjaxResult.success("登录成功"+token);
     }
 
+    /**
+     * 司机个人信息添加
+     * @param driver
+     * @return
+     */
     @PostMapping("/saveDriver")
     public AjaxResult saveDriver(@RequestBody Driver driver){
         Integer i = tbUserService.saveDriver(driver);

@@ -31,12 +31,23 @@ public class DrivingLicenseController {
     @Autowired
     private OSSFileUtil ossFileUtil;
 
+    /**
+     * 司机行驶证信息添加
+     * @param driving
+     * @return
+     */
     @PostMapping("/saveDriving")
     public AjaxResult saveDriving(@RequestBody DrivingLicense driving){
         Integer integer = drivingLicenseService.save(driving);
         return integer>0?success():error();
     }
 
+    /**
+     * 图片上传
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @PostMapping("upload")
     public AjaxResult upload(MultipartFile file) throws IOException {
         String s = ossFileUtil.uploadFile(file);

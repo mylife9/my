@@ -99,12 +99,12 @@
         {{stateMap[scope.row.state]}}
       </template>
       </el-table-column>
-      <el-table-column label="身份证正面图片" align="center" prop="cardFrontImage" >
+      <el-table-column label="身份证正面图片" align="center" prop="driverPhoto" >
         <template slot-scope="scope">
 <!--          <el-image :src="scope.row.cardFrontImage"></el-image>-->
           <el-image
             style="width: 100px; height: 100px"
-            :src="scope.row.cardFrontImage"
+            :src="scope.row.driverPhoto"
           ></el-image>
         </template>
       </el-table-column>
@@ -338,12 +338,12 @@
         </el-form-item>
 
 
-        <el-form-item label="网络预约出租汽车驾驶员资格证号" prop="certificateNo">
-          {{form.certificateNo}}
-        </el-form-item>
-        <el-form-item label="网络预约出租汽车驾驶员发证机构" prop="networkCarIssueOrganization">
-          {{form.networkCarIssueOrganization}}
-        </el-form-item>
+<!--        <el-form-item label="网络预约出租汽车驾驶员资格证号" prop="certificateNo">-->
+<!--          {{form.certificateNo}}-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="网络预约出租汽车驾驶员发证机构" prop="networkCarIssueOrganization">-->
+<!--          {{form.networkCarIssueOrganization}}-->
+<!--        </el-form-item>-->
 
 
         <el-form-item label="身份证正面图片" prop="cardFrontImage">

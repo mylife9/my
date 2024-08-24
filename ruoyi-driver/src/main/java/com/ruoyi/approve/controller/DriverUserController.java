@@ -110,6 +110,7 @@ public class DriverUserController extends BaseController
     /**
      * 修改审批状态
      */
+    @RequiresPermissions("driver:driveruser:remove")
     @PutMapping("/userSuccessUpdata")
     public AjaxResult userSuccessUpdata(@RequestBody DriverUser driverUser)
     {

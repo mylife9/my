@@ -48,6 +48,6 @@ export function licenseSuccessUpdata(data) {
   return request({
     url: '/driver/licensesd/licenseSuccessUpdata',
     method: 'put',
-    data
+    data: data
   })
 }

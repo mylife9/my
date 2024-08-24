@@ -24,6 +24,11 @@ public class CarController {
     @Autowired
     private CarService carService;
 
+    /**
+     * 司机车辆信息添加
+     * @param car
+     * @return
+     */
     @PostMapping("/saveCar")
     public AjaxResult saveCar(@RequestBody Car car){
         Integer integer = carService.saveCar(car);

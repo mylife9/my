@@ -158,7 +158,11 @@ public class CarController extends BaseController
         String post = HttpClientUtil.post(ShuMaiConfig.idcarOcrUrl, null, jsonObject.toString());
         System.out.println(post);
     }
-   /* @RequiresPermissions("driver:driver:list")*/
+
+    /**
+     * 城市的三级联动
+      * @return
+     */
     @GetMapping("/dicList")
     public TableDataInfo dicList(){
         List<DicDistrict> dicDistricts=dicDistrictService.selectDic();
