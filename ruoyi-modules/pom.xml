@@ -14,9 +14,11 @@
         <module>ruoyi-job</module>
         <module>ruoyi-file</module>
         <module>ruoyi-order</module>
+        <module>rouyi-dirver</module>
         <module>ruoyi-taxi</module>
         <module>ruoyi-order</module>
         <module>ruoyi-coupons</module>
+
     </modules>
 
     <artifactId>ruoyi-modules</artifactId>

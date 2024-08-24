@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.driver.mapper.LicenseMapper">
+    
+    <resultMap type="com.ruoyi.driver.domain.License" id="LicenseResult">
+        <result property="id"    column="id"    />
+        <result property="licensePlate"    column="license_plate"    />
+        <result property="modelName"    column="model_name"    />
+        <result property="owner"    column="owner"    />
+        <result property="nature"    column="nature"    />
+        <result property="modelNumber"    column="model_number"    />
+        <result property="identificationCode"    column="Identification_code"    />
+        <result property="engineNumber"    column="engine_number"    />
+        <result property="registrationDate"    column="registration_date"    />
+        <result property="issueDate"    column="issue_date"    />
+        <result property="authorizedNumber"    column="authorized_number"    />
+        <result property="grossMass"    column="gross_mass"    />
+        <result property="qualityService"    column="quality_service"    />
+        <result property="verandaDimension"    column="veranda_dimension"    />
+        <result property="drivingImage"    column="driving_image"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
+    <sql id="selectLicenseVo">
+        select id, license_plate, model_name, owner, nature, model_number, Identification_code, engine_number, registration_date, issue_date, authorized_number, gross_mass, quality_service, veranda_dimension, driving_image, state from driving_license
+    </sql>
+
+    <select id="selectLicenseList" parameterType="com.ruoyi.driver.domain.License" resultMap="LicenseResult">
+        <include refid="selectLicenseVo"/>
+        <where>  
+            <if test="licensePlate != null  and licensePlate != ''"> and license_plate = #{licensePlate}</if>
+            <if test="modelName != null  and modelName != ''"> and model_name like concat('%', #{modelName}, '%')</if>
+            <if test="registrationDate != null "> and registration_date = #{registrationDate}</if>
+            is_delete  = 0
+        </where>
+
+    </select>
+    
+    <select id="selectLicenseById" parameterType="Long" resultMap="LicenseResult">
+        <include refid="selectLicenseVo"/>
+        where id = #{id} and  is_delete  = 0
+    </select>
+
+    <insert id="insertLicense" parameterType="com.ruoyi.driver.domain.License" useGeneratedKeys="true" keyProperty="id">
+        insert into driving_license
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="licensePlate != null">license_plate,</if>
+            <if test="modelName != null">model_name,</if>
+            <if test="owner != null">owner,</if>
+            <if test="nature != null">nature,</if>
+            <if test="modelNumber != null">model_number,</if>
+            <if test="identificationCode != null">Identification_code,</if>
+            <if test="engineNumber != null">engine_number,</if>
+            <if test="registrationDate != null">registration_date,</if>
+            <if test="issueDate != null">issue_date,</if>
+            <if test="authorizedNumber != null">authorized_number,</if>
+            <if test="grossMass != null">gross_mass,</if>
+            <if test="qualityService != null">quality_service,</if>
+            <if test="verandaDimension != null">veranda_dimension,</if>
+            <if test="drivingImage != null">driving_image,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="licensePlate != null">#{licensePlate},</if>
+            <if test="modelName != null">#{modelName},</if>
+            <if test="owner != null">#{owner},</if>
+            <if test="nature != null">#{nature},</if>
+            <if test="modelNumber != null">#{modelNumber},</if>
+            <if test="identificationCode != null">#{identificationCode},</if>
+            <if test="engineNumber != null">#{engineNumber},</if>
+            <if test="registrationDate != null">#{registrationDate},</if>
+            <if test="issueDate != null">#{issueDate},</if>
+            <if test="authorizedNumber != null">#{authorizedNumber},</if>
+            <if test="grossMass != null">#{grossMass},</if>
+            <if test="qualityService != null">#{qualityService},</if>
+            <if test="verandaDimension != null">#{verandaDimension},</if>
+            <if test="drivingImage != null">#{drivingImage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLicense" parameterType="com.ruoyi.driver.domain.License">
+        update driving_license
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="licensePlate != null">license_plate = #{licensePlate},</if>
+            <if test="modelName != null">model_name = #{modelName},</if>
+            <if test="owner != null">owner = #{owner},</if>
+            <if test="nature != null">nature = #{nature},</if>
+            <if test="modelNumber != null">model_number = #{modelNumber},</if>
+            <if test="identificationCode != null">Identification_code = #{identificationCode},</if>
+            <if test="engineNumber != null">engine_number = #{engineNumber},</if>
+            <if test="registrationDate != null">registration_date = #{registrationDate},</if>
+            <if test="issueDate != null">issue_date = #{issueDate},</if>
+            <if test="authorizedNumber != null">authorized_number = #{authorizedNumber},</if>
+            <if test="grossMass != null">gross_mass = #{grossMass},</if>
+            <if test="qualityService != null">quality_service = #{qualityService},</if>
+            <if test="verandaDimension != null">veranda_dimension = #{verandaDimension},</if>
+            <if test="drivingImage != null">driving_image = #{drivingImage},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLicenseById" parameterType="Long">
+       update driving_license set is_delete  = 2
+    </delete>
+
+    <delete id="deleteLicenseByIds" parameterType="String">
+        update driving_license set is_delete  = 2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateLicenseStatus">
+        update driving_license set state = #{state} where id = #{id}
+    </update>
+</mapper>

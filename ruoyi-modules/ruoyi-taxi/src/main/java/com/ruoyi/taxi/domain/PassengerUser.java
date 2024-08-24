@@ -49,5 +49,51 @@ public class PassengerUser {
 
     private Integer jurisdiction;
 
+    public Integer getState() {
+        return state;
+    }
 
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
+
+    @Override
+    public String toString() {
+        return "PassengerUser{" +
+                "id=" + id +
+                ", gmtCreate=" + gmtCreate +
+                ", gmtModified=" + gmtModified +
+                ", passengerPhone='" + passengerPhone + '\'' +
+                ", passengerName='" + passengerName + '\'' +
+                ", passengerGender=" + passengerGender +
+                ", state=" + state +
+                ", profilePhoto='" + profilePhoto + '\'' +
+                ", code='" + code + '\'' +
+                ", openid='" + openid + '\'' +
+                '}';
+    }
 }
