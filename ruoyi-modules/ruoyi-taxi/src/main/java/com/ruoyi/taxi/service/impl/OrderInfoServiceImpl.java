@@ -131,7 +131,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             switch (passengerVo.getCarType()) {
                 case 1: // 新能源
                     basePrice = 300.0;
+                    //按时收费率
                     timeRate = 0.3;
+                    //按距收费率
                     distanceRate = 2.3;
                     break;
                 case 2: // 舒适型

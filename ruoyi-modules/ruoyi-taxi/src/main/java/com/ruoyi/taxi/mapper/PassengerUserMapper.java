@@ -12,17 +12,4 @@ public interface PassengerUserMapper {
     Integer registerUser(PassengerUser user);
     Integer updateUser(PassengerUser user);
     PassengerUser isFinish(String openid);
-
-    PassengerUser isRegister(String openid);
-
-    Integer registerUser(PassengerUser user);
-
-    Integer updateUser(PassengerUser user);
-    @Select("select * from passenger_user where passenger_phone = #{passengerPhone}")
-    PassengerUser login(String passengerPhone);
-
-//    @Insert("insert into passenger_user set" +
-//            "gmt_create=now(),passenger_phone=#{passengerPhone},passenger_name=#{passengerName}," +
-//            "passenger_gender=#{passengerGender}")
-//    Integer registerUser(PassengerUser user);
 }
