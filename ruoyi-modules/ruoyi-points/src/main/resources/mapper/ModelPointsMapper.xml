@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.points.mapper.ModelPointsMapper">
+    
+    <resultMap type="com.ruoyi.points.domain.ModelPoints" id="ModelPointsResult">
+        <result property="id"    column="id"    />
+        <result property="driverId"    column="driverId"    />
+        <result property="vehicleTypeId"    column="vehicleTypeId"    />
+        <result property="typeName"    column="typeName"    />
+        <result property="seats"    column="seats"    />
+        <result property="description"    column="description"    />
+        <result property="modelPoints"    column="modelPoints"    />
+        <result property="foundTime"    column="foundTime"    />
+    </resultMap>
+
+    <sql id="selectModelPointsVo">
+        select id, driverId, vehicleTypeId, typeName, seats, description, modelPoints, foundTime from model_points
+    </sql>
+
+    <select id="selectModelPointsList" parameterType="com.ruoyi.points.domain.ModelPoints" resultMap="ModelPointsResult">
+        <include refid="selectModelPointsVo"/>
+        <where>  
+            <if test="driverId != null "> and driverId = #{driverId}</if>
+            <if test="vehicleTypeId != null "> and vehicleTypeId = #{vehicleTypeId}</if>
+            <if test="typeName != null  and typeName != ''"> and typeName like concat('%', #{typeName}, '%')</if>
+            <if test="seats != null  and seats != ''"> and seats = #{seats}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="modelPoints != null "> and modelPoints = #{modelPoints}</if>
+            <if test="foundTime != null "> and foundTime = #{foundTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectModelPointsById" parameterType="Long" resultMap="ModelPointsResult">
+        <include refid="selectModelPointsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertModelPoints" parameterType="com.ruoyi.points.domain.ModelPoints" useGeneratedKeys="true" keyProperty="id">
+        insert into model_points
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="driverId != null">driverId,</if>
+            <if test="vehicleTypeId != null">vehicle_typeId,</if>
+            <if test="typeName != null">typeName,</if>
+            <if test="seats != null">seats,</if>
+            <if test="description != null">description,</if>
+            <if test="modelPoints != null">modelPoints,</if>
+            <if test="foundTime != null">foundTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="driverId != null">#{driverId},</if>
+            <if test="vehicleTypeId != null">#{vehicleTypeId},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="seats != null">#{seats},</if>
+            <if test="description != null">#{description},</if>
+            <if test="modelPoints != null">#{modelPoints},</if>
+            <if test="foundTime != null">#{foundTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateModelPoints" parameterType="com.ruoyi.points.domain.ModelPoints">
+        update model_points
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driverId != null">driverId = #{driverId},</if>
+            <if test="vehicleTypeId != null">vehicleTypeId = #{vehicleTypeId},</if>
+            <if test="typeName != null">typeName = #{typeName},</if>
+            <if test="seats != null">seats = #{seats},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="modelPoints != null">modelPoints = #{modelPoints},</if>
+            <if test="foundTime != null">foundTime = #{foundTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteModelPointsById" parameterType="Long">
+        delete from model_points where id = #{id}
+    </delete>
+
+    <delete id="deleteModelPointsByIds" parameterType="String">
+        delete from model_points where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

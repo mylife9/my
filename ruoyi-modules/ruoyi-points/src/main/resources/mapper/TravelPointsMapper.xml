@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.points.mapper.TravelPointsMapper">
+    
+    <resultMap type="com.ruoyi.points.domain.TravelPoints" id="TravelPointsResult">
+        <result property="id"    column="id"    />
+        <result property="driverId"    column="driverId"    />
+        <result property="tripHour"    column="tripHour"    />
+        <result property="num"    column="num"    />
+        <result property="tripScope"    column="tripScope"    />
+        <result property="bonusPointId"    column="bonusPointId"    />
+        <result property="createTime"    column="createTime"    />
+    </resultMap>
+
+    <sql id="selectTravelPointsVo">
+        select id, driverId, tripHour, num, tripScope, bonusPointId, createTime from travel_points
+    </sql>
+
+    <select id="selectTravelPointsList" parameterType="com.ruoyi.points.domain.TravelPoints" resultMap="TravelPointsResult">
+        <include refid="selectTravelPointsVo"/>
+        <where>  
+            <if test="driverId != null "> and driverId = #{driverId}</if>
+            <if test="tripHour != null "> and tripHour = #{tripHour}</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="tripScope != null "> and tripScope = #{tripScope}</if>
+            <if test="bonusPointId != null "> and bonusPointId = #{bonusPointId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTravelPointsById" parameterType="Long" resultMap="TravelPointsResult">
+        <include refid="selectTravelPointsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTravelPoints" parameterType="com.ruoyi.points.domain.TravelPoints" useGeneratedKeys="true" keyProperty="id">
+        insert into travel_points
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="driverId != null">driverId,</if>
+            <if test="tripHour != null">tripHour,</if>
+            <if test="num != null">num,</if>
+            <if test="tripScope != null">tripScope,</if>
+            <if test="bonusPointId != null">bonusPointId,</if>
+            <if test="createTime != null">createTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="driverId != null">#{driverId},</if>
+            <if test="tripHour != null">#{tripHour},</if>
+            <if test="num != null">#{num},</if>
+            <if test="tripScope != null">#{tripScope},</if>
+            <if test="bonusPointId != null">#{bonusPointId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTravelPoints" parameterType="com.ruoyi.points.domain.TravelPoints">
+        update travel_points
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driverId != null">driverId = #{driverId},</if>
+            <if test="tripHour != null">tripHour = #{tripHour},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="tripScope != null">tripScope = #{tripScope},</if>
+            <if test="bonusPointId != null">bonusPointId = #{bonusPointId},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTravelPointsById" parameterType="Long">
+        delete from travel_points where id = #{id}
+    </delete>
+
+    <delete id="deleteTravelPointsByIds" parameterType="String">
+        delete from travel_points where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
