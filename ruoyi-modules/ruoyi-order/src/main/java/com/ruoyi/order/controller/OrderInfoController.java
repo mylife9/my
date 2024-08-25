@@ -46,16 +46,5 @@ public class OrderInfoController {
 
         return orderInfoService.getOrderInfoList();
     }
-    /***
-     *@Description:抢单
-     * @param id
-     * @return void
-     * @author 26440
-     *@date 2024/8/21 8:47
-     *
-     */
-    @PostMapping("/RushToBuyAnOrder/{id}")
-    public void RushToBuyAnOrder(@PathVariable Integer id) {
 
-    }
 }
