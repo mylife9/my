@@ -226,7 +226,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
     }
 
     @Override
-    public AjaxResult getUserCoupon(Long couponId, Long userId) {
+    public AjaxResult getUserCoupon(Long couponId, String openid) {
         // 假设通过某种方式获取到当前用户的 ID
    /*     Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
@@ -258,9 +258,9 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
             String couponsSetKey = "couponsSet:" + couponId;
             Set<String> couponsSet = stringRedisTemplate.opsForSet().members(couponsSetKey);
             if (couponsSet.size() > 0 && couponsSet != null) {
-                boolean userFlag = couponsSet.contains(String.valueOf(userId));
+                boolean userFlag = couponsSet.contains(String.valueOf(openid));
                 if (userFlag) {
-                    return AjaxResult.error("您已领取，请勿重复领取");
+                    return AjaxResult.error("请勿重复领取");
                 }
             }
             //获取redis中的数量
@@ -272,9 +272,9 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
             Long couponCount = stringRedisTemplate.opsForHash().increment(couponsKey, "count", -1);
             // 将优惠券与用户关联（例如在数据库中记录用户领取的优惠券）
             //存入数据
-            int insertFlag = couponsGetMapper.associateUserWithCoupon(userId, couponId);
+            int insertFlag = couponsGetMapper.associateUserWithCoupon(openid, couponId);
             //领取成功后向缓存添加领取记录
-            stringRedisTemplate.opsForSet().add(couponsSetKey, "userId", String.valueOf(userId));
+            stringRedisTemplate.opsForSet().add(couponsSetKey, "userId", String.valueOf(openid));
             //如果插入的数据条数是1或者是>1的数 那么就说明优惠券领取成功了
             if (insertFlag >= 1) {
                 //如果能优惠券能领取成功 ， 那么数据库中的值就得和redis中的值是一致的
@@ -368,15 +368,15 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
     }
 
     @Override
-    public AjaxResult usableCoupon(Long userId) {
+    public AjaxResult usableCoupon(String openid) {
         //获取锁
-        RLock lock = redissonUtils.getLock("usableCoupon-lock:" + userId);
+        RLock lock = redissonUtils.getLock("usableCoupon-lock:" + openid);
         try {
             //在这个时间内获取锁
             boolean b = lock.tryLock(1, 10, TimeUnit.SECONDS);
             if (b) {
                 //查询用户可用的优惠券
-                List<TbCoupons> usableCouponList = couponsGetMapper.usableCoupon(userId);
+                List<TbCoupons> usableCouponList = couponsGetMapper.usableCoupon(openid);
 
                 return AjaxResult.success(usableCouponList);
             }
@@ -393,7 +393,7 @@ public class TbCouponsServiceImpl implements ITbCouponsService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public synchronized AjaxResult useCoupon(Long orderId, Integer userId, Integer couponId) {
+    public synchronized AjaxResult useCoupon( Long orderId, Integer userId, Integer couponId) {
         //判断支付的状态
         OrderInfo orderInfo = orderInfoMapper.findOrderStatus(orderId);
         //使用java8使用Optional类型的对象包含不包含值

@@ -1,10 +1,10 @@
 
 package com.ruoyi.taxi.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.taxi.domain.DriverUserWorkStatus;
-import com.ruoyi.taxi.domain.OrderInfo;
-import com.ruoyi.taxi.domain.PassengerUser;
+import com.ruoyi.taxi.controller.WebSocketController;
+import com.ruoyi.taxi.domain.*;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
 import com.ruoyi.taxi.mapper.OrderMapper;
 import com.ruoyi.taxi.mapper.TaxiMapper;
@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -37,6 +34,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    WebSocketController webSocketController;
 
 
 
@@ -121,6 +121,21 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
                 Double expectedPrice = aboutPrice;
             }
+
+            //判断是否使用优惠券
+            if(passengerVo.getIsCoupons() == 2){
+                //获取优惠券的类型
+                List<CouponsGet> couponsGet = orderMapper.showCoupons();
+                CouponsGet couponsGet1 = couponsGet.get(0);
+                //判断优惠券是否已被使用
+                if(couponsGet1.getCouponStatus() == 0){
+                    if(couponsGet1.getCouponId() == 1 && aboutPrice >= 10){
+                        aboutPrice = aboutPrice - 3;
+                    } else if (couponsGet1.getCouponId() == 2 && aboutPrice >= 20){
+                        aboutPrice = aboutPrice * 0.9;
+                    }
+                }
+            }
         }
         // 半日租
         if (passengerVo.getVehicleType() == 2) {
@@ -171,6 +186,22 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
             //核算总价
             aboutPrice = basePrice + extraTimeCost + extraDistanceCost;
+
+            //判断是否使用优惠券
+            //默认使用最大面额的优惠券
+            if(passengerVo.getIsCoupons() == 2){
+                //获取优惠券的类型
+                List<CouponsGet> couponsGet = orderMapper.showCoupons();
+                CouponsGet couponsGet1 = couponsGet.get(0);
+                //判断优惠券是否已被使用
+                if(couponsGet1.getCouponStatus() == 0){
+                    if(couponsGet1.getCouponId() == 1 && aboutPrice >= 10){
+                        aboutPrice = aboutPrice - 3;
+                    } else if (couponsGet1.getCouponId() == 2 && aboutPrice >= 20){
+                        aboutPrice = aboutPrice * 0.9;
+                    }
+                }
+            }
         }
 
 
@@ -227,5 +258,22 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
             return AjaxResult.success(aboutPrice);
 
+    }
+
+    @Override
+    public AjaxResult showDriverById(String tel) {
+        //查询乘客的手机号 根据手机号去查询司机信息
+        OrderInfo orderInfo = orderMapper.selectOrderInfoId(tel);
+
+        DriverUser driverUser = orderMapper.showDriverById(orderInfo.getDriverId());
+
+
+        return AjaxResult.success(driverUser);
+    }
+
+    @Override
+    public OrderInfo getstate(String tel) {
+
+        return orderMapper.getstatu(tel);
     }
 }

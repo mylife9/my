@@ -8,23 +8,22 @@ import java.util.Date;
  * 
  * @TableName order_info
  */
-
-public class OrderInfo implements Serializable {
+public class OrderInfo {
     /**
      * 订单ID
      */
 
-    private Long id;
+    private String id;
 
     /**
      * 乘客ID
      */
-    private Long passengerId;
+    private String passengerId;
 
     /**
      * 乘客手机号
      */
-    private String passenger_phone;
+    private String passengerPhone;
 
     /**
      * 司机ID
@@ -69,12 +68,12 @@ public class OrderInfo implements Serializable {
     /**
      * 预计出发地点经度
      */
-    private String dep_longitude;
+    private String depLongitude;
 
     /**
      * 预计出发地点纬度
      */
-    private String dep_latitude;
+    private String depLatitude;
 
     /**
      * 预计目的地
@@ -243,34 +242,42 @@ public class OrderInfo implements Serializable {
      */
     private Date gmtModified;
 
+    private Integer count;
 
 
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     /**
      * 订单ID
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * 订单ID
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     /**
      * 乘客ID
      */
-    public Long getPassengerId() {
+    public String getPassengerId() {
         return passengerId;
     }
 
     /**
      * 乘客ID
      */
-    public void setPassengerId(Long passengerId) {
+    public void setPassengerId(String passengerId) {
         this.passengerId = passengerId;
     }
 
@@ -279,8 +286,7 @@ public class OrderInfo implements Serializable {
      */
     public String getPassengerPhone() {
 
-        return passenger_phone;
-
+        return passengerPhone;
 
 
     }
@@ -290,7 +296,7 @@ public class OrderInfo implements Serializable {
      */
     public void setPassengerPhone(String passengerPhone) {
 
-        this.passenger_phone = passengerPhone;
+        this.passengerPhone = passengerPhone;
 
 
 
@@ -412,28 +418,28 @@ public class OrderInfo implements Serializable {
      * 预计出发地点经度
      */
     public String getDepLongitude() {
-        return dep_longitude;
+        return depLongitude;
     }
 
     /**
      * 预计出发地点经度
      */
     public void setDepLongitude(String depLongitude) {
-        this.dep_longitude = depLongitude;
+        this.depLongitude = depLongitude;
     }
 
     /**
      * 预计出发地点纬度
      */
     public String getDepLatitude() {
-        return dep_latitude;
+        return depLatitude;
     }
 
     /**
      * 预计出发地点纬度
      */
     public void setDepLatitude(String depLatitude) {
-        this.dep_latitude = depLatitude;
+        this.depLatitude = depLatitude;
     }
 
     /**
@@ -1011,7 +1017,7 @@ public class OrderInfo implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", passengerId=").append(passengerId);
-        sb.append(", passengerPhone=").append(passenger_phone);
+        sb.append(", passengerPhone=").append(passengerPhone);
         sb.append(", driverId=").append(driverId);
         sb.append(", driverPhone=").append(driverPhone);
         sb.append(", carId=").append(carId);
@@ -1020,8 +1026,8 @@ public class OrderInfo implements Serializable {
         sb.append(", orderTime=").append(orderTime);
         sb.append(", departTime=").append(departTime);
         sb.append(", departure=").append(departure);
-        sb.append(", depLongitude=").append(dep_longitude);
-        sb.append(", depLatitude=").append(dep_latitude);
+        sb.append(", depLongitude=").append(depLongitude);
+        sb.append(", depLatitude=").append(depLatitude);
         sb.append(", destination=").append(destination);
         sb.append(", destLongitude=").append(destLongitude);
         sb.append(", destLatitude=").append(destLatitude);

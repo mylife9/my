@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.cms.mapper.TbTypeTemplateMapper">
+    
+    <resultMap type="com.ruoyi.cms.domain.TbTypeTemplate" id="TbTypeTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="specIds"    column="spec_ids"    />
+        <result property="brandIds"    column="brand_ids"    />
+        <result property="customAttributeItems"    column="custom_attribute_items"    />
+    </resultMap>
+
+    <sql id="selectTbTypeTemplateVo">
+        select id, name, spec_ids, brand_ids, custom_attribute_items from tb_type_template
+    </sql>
+
+    <select id="selectTbTypeTemplateList" parameterType="com.ruoyi.cms.domain.TbTypeTemplate" resultMap="TbTypeTemplateResult">
+        <include refid="selectTbTypeTemplateVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTbTypeTemplateById" parameterType="Long" resultMap="TbTypeTemplateResult">
+        <include refid="selectTbTypeTemplateVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbTypeTemplate" parameterType="com.ruoyi.cms.domain.TbTypeTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_type_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="specIds != null">spec_ids,</if>
+            <if test="brandIds != null">brand_ids,</if>
+            <if test="customAttributeItems != null">custom_attribute_items,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="specIds != null">#{specIds},</if>
+            <if test="brandIds != null">#{brandIds},</if>
+            <if test="customAttributeItems != null">#{customAttributeItems},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbTypeTemplate" parameterType="com.ruoyi.cms.domain.TbTypeTemplate">
+        update tb_type_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="specIds != null">spec_ids = #{specIds},</if>
+            <if test="brandIds != null">brand_ids = #{brandIds},</if>
+            <if test="customAttributeItems != null">custom_attribute_items = #{customAttributeItems},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbTypeTemplateById" parameterType="Long">
+        delete from tb_type_template where id = #{id}
+    </delete>
+
+    <delete id="deleteTbTypeTemplateByIds" parameterType="String">
+        delete from tb_type_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

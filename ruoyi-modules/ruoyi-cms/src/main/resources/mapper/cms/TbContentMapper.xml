@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.cms.mapper.TbContentMapper">
+    
+    <resultMap type="com.ruoyi.cms.domain.TbContent" id="TbContentResult">
+        <result property="id"    column="id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="title"    column="title"    />
+        <result property="url"    column="url"    />
+        <result property="pic"    column="pic"    />
+        <result property="status"    column="status"    />
+        <result property="sortOrder"    column="sort_order"    />
+    </resultMap>
+
+    <sql id="selectTbContentVo">
+        select id, category_id, title, url, pic, status, sort_order from tb_content
+    </sql>
+
+    <select id="selectTbContentList" parameterType="com.ruoyi.cms.domain.TbContent" resultMap="TbContentResult">
+        <include refid="selectTbContentVo"/>
+        <where>  
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTbContentById" parameterType="Long" resultMap="TbContentResult">
+        <include refid="selectTbContentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTbContent" parameterType="com.ruoyi.cms.domain.TbContent" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">category_id,</if>
+            <if test="title != null">title,</if>
+            <if test="url != null">url,</if>
+            <if test="pic != null">pic,</if>
+            <if test="status != null">status,</if>
+            <if test="sortOrder != null">sort_order,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="url != null">#{url},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbContent" parameterType="com.ruoyi.cms.domain.TbContent">
+        update tb_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbContentById" parameterType="Long">
+        delete from tb_content where id = #{id}
+    </delete>
+
+    <delete id="deleteTbContentByIds" parameterType="String">
+        delete from tb_content where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

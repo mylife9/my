@@ -14,9 +14,9 @@ import java.util.List;
 @Mapper
 public interface CouponsGetMapper {
 
-    int associateUserWithCoupon(@Param("userId") Long userId, @Param("couponId") Long couponId);
+    int associateUserWithCoupon(@Param("openid") String openid, @Param("couponId") Long couponId);
 
-    List<TbCoupons> usableCoupon(Long userId);
+    List<TbCoupons> usableCoupon(String openid);
 
     void updateCouponStatus(@Param("couponId") Integer couponsId,@Param("userId") Integer userId);
 

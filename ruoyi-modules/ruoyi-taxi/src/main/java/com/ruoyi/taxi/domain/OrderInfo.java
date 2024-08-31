@@ -33,7 +33,7 @@ public class OrderInfo implements Serializable {
     */
     @NotNull(message="[乘客ID]不能为空")
     @ApiModelProperty("乘客ID")
-    private Long passengerId;
+    private String passengerId;
     /**
     * 乘客手机号
     */

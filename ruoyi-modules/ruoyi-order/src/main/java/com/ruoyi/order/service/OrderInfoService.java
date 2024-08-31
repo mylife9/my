@@ -18,4 +18,6 @@ public interface OrderInfoService {
     int orderInsert(OrderInfo orderInfo);
 
     AjaxResult InsertOrder(OrderInfo orderInfo);
+
+    AjaxResult orderById(Long driverId,String id);
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.coupons.controller;
 
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -137,16 +138,19 @@ public class TbCouponsController extends BaseController {
     }
 
     /**
-     * @param userId: * @return: java.lang.String
+     * @param openid: * @return: java.lang.String
      * @Description:优惠券的领取
      * @Author:M
      * @Date: 2024/8/19 星期一 22:53
      * * @param couponId:
      */
 
-    @GetMapping("/getCoupon/{couponId}/{userId}")
-    public AjaxResult getUserCoupon(@PathVariable Long couponId, @PathVariable Long userId) {
-        return tbCouponsService.getUserCoupon(couponId, userId);
+    @GetMapping("/getCoupon/{couponId}/{openid}")
+    public AjaxResult getUserCoupon(@PathVariable Long couponId, @PathVariable String openid) {
+        if(StringUtils.isEmpty(openid)){
+            return error("未登录，请先登录");
+        }
+        return tbCouponsService.getUserCoupon(couponId, openid);
     }
 
     /**
@@ -170,9 +174,9 @@ public class TbCouponsController extends BaseController {
      * * @param userId:
      * * @return: com.ruoyi.common.core.web.domain.AjaxResult
      */
-    @GetMapping("/usableCoupon/{userId}")
-    public AjaxResult usableCoupon(@PathVariable("userId") @Validated Long userId) {
-        return tbCouponsService.usableCoupon(userId);
+    @GetMapping("/usableCoupon/{openid}")
+    public AjaxResult usableCoupon(@PathVariable("openid") @Validated String openid) {
+        return tbCouponsService.usableCoupon(openid);
     }
 
 

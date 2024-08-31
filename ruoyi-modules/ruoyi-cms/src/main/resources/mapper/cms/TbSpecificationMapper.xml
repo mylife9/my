@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.cms.mapper.TbSpecificationMapper">
+    
+    <resultMap type="com.ruoyi.cms.domain.TbSpecification" id="TbSpecificationResult">
+        <result property="id"    column="id"    />
+        <result property="specName"    column="spec_name"    />
+    </resultMap>
+
+    <sql id="selectTbSpecificationVo">
+        select id, spec_name from tb_specification
+    </sql>
+
+    <select id="selectTbSpecificationList" parameterType="com.ruoyi.cms.domain.TbSpecification" resultMap="TbSpecificationResult">
+        select a.*,GROUP_CONCAT(b.option_name order by orders) as optionName from tb_specification a left join
+        tb_specification_option b on a.id = b.spec_id
+        <where>
+            <if test="specName != null  and specName != ''"> and a.spec_name like concat('%', #{specName}, '%')</if>
+        </where>
+        GROUP BY a.id
+    </select>
+    
+    <select id="selectTbSpecificationById" parameterType="Long" resultMap="TbSpecificationResult">
+        <include refid="selectTbSpecificationVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectTbSpecificationOptionsBySpecId" parameterType="Long" resultType="com.ruoyi.cms.domain.TbSpecificationOption">
+        select * from tb_specification_option where spec_id=#{id} order by orders
+    </select>
+
+    <insert id="insertTbSpecification" parameterType="com.ruoyi.cms.domain.TbSpecification" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_specification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="specName != null">spec_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="specName != null">#{specName},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertTbSpecificationOption" parameterType="com.ruoyi.cms.domain.TbSpecificationOption">
+        insert into tb_specification_option set option_name=#{optionName},spec_id=#{specId},orders=#{orders}
+    </insert>
+
+    <update id="updateTbSpecification" parameterType="com.ruoyi.cms.domain.TbSpecification">
+        update tb_specification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="specName != null">spec_name = #{specName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateTbSpecificationOptionById" parameterType="com.ruoyi.cms.domain.TbSpecificationOption">
+        update tb_specification_option set option_name=#{optionName},spec_id=#{specId},orders=#{orders} where id=#{id}
+    </update>
+
+    <delete id="deleteTbSpecificationById" parameterType="Long">
+        delete from tb_specification where id = #{id}
+    </delete>
+
+    <delete id="deleteTbSpecificationByIds" parameterType="String">
+        delete from tb_specification where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteTbSpecificationOptionByIds" parameterType="String">
+        delete from tb_specification_option where spec_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteTbSpecificationOptionByIdsAndSpecId" parameterType="com.ruoyi.cms.domain.TbSpecification">
+        delete from tb_specification_option where spec_id=#{id} and id not in
+        <foreach item="obj" collection="options" open="(" separator="," close=")">
+            <if test="obj.id == null">
+                0
+            </if>
+            <if test="obj.id != null">
+                #{obj.id}
+            </if>
+        </foreach>
+    </delete>
+</mapper>

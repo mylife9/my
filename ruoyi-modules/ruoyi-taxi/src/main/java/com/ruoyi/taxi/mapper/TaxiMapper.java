@@ -1,5 +1,6 @@
 package com.ruoyi.taxi.mapper;
 
+import com.ruoyi.taxi.domain.DriverUser;
 import com.ruoyi.taxi.domain.DriverUserWorkStatus;
 import com.ruoyi.taxi.domain.OrderInfo;
 import com.ruoyi.taxi.domain.PassengerUser;
@@ -31,4 +32,10 @@ public interface TaxiMapper {
 
     @Select("UPDATE passenger_user SET chargeback_number = 0 WHERE id = #{id}")
     void updateChargebackNumber(Integer passengerId, Integer chargebackNumber);
+
+    @Select("select * from  driver_user")
+    List<DriverUser> driverSelect();
+
+    @Select("select * from  driver_user where id = #{aLong}")
+    DriverUser driverSelectPhone(Long aLong);
 }

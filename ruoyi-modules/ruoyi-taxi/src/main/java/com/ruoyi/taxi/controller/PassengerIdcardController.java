@@ -7,6 +7,7 @@ import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+
 import com.ruoyi.taxi.domain.PassengerIdcard;
 import com.ruoyi.taxi.service.PassengerIdcardService;
 import com.ruoyi.taxi.utils.OcrUtil;
@@ -38,8 +39,10 @@ public class PassengerIdcardController extends BaseController {
     @Autowired
     OcrUtil ocrUtil;
 
+
     @GetMapping("/selectIdcard")
     public AjaxResult selectIdcard(@RequestParam String openid){
+
         PassengerIdcard idcard = idcardService.getIdcardInfo(openid);
         return success(idcard);
     }

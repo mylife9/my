@@ -20,6 +20,7 @@ import java.util.Date;
 @Data
 public class PassengerVo implements Serializable {
 
+
     @Schema(description = "乘客id")
     private String openid;
 
@@ -34,6 +35,17 @@ public class PassengerVo implements Serializable {
 
     @Schema(description = "订单id")
     private String orderId;
+
+    @Schema(description = "乘客上车时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date pickUpPassengerTime;
+
+    @Schema(description = "乘客上车经纬度")
+    private Double pickUpPassengerLongitude;
+
+    @Schema(description = "乘客下车经纬度")
+    private Double pickUpPassengerLatitude;
+
 
     @NotNull(message = "出发地不能为空")
     @Pattern(regexp ="^[-+]?((180(\\.\\d{1,6})?)|((1[0-7]\\d)|([1-9]\\d?))(\\.\\d{1,6})?)$")
@@ -81,6 +93,17 @@ public class PassengerVo implements Serializable {
 
     @Schema(description = "是否预约用车1:预约用车2:实时用车")
     private Integer isReserve;
+
+
+    @Schema(description = "是否优惠券1：不使用 2.使用")
+    private Integer isCoupons;
+
+    @Schema(description = "1.满减 2.折扣")
+    private Integer couponsType;
+
+    @Schema(description = "预付金额")
+    private Double couponsPrice;
+
 
     @Schema(description = "预约时间")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

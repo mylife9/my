@@ -1,0 +1,48 @@
+package rules;
+import com.ruoyi.order.pojo.DriverPoints;
+import com.ruoyi.order.pojo.vo.PointsVo;
+import com.ruoyi.order.pojo.Passenger;
+
+
+
+rule "rules1"
+    when
+    //乘客评价司机非常满意
+       $d:PointsVo(driverId != null)
+    then
+  // 假设司机信用分计算逻辑为：乘客评价司机非常满意，基础分70+非常满意分数
+           double scope=Math.min($d.getDriverScope()+$d.getScoreValue(),100d);
+           $d.setDriverScope(scope);
+         System.out.printf("触发规则1,乘客评价司机"+$d.getScoreName()+"司机id"+$d.getDriverId()+",,,,,目前信用分"+$d.getDriverScope()+"如果该司机信用分已经100(封顶)只获得用户评价===============结束");
+ end
+
+
+ rule "rules4"
+     when
+     //乘客超过一天或者小于等于3天未支付
+        $p:Passenger(status==0 && day>=1 && day<=3)
+     then
+   //
+        $p.setPassengerScope($p.getPassengerScope()-3);
+        System.out.printf("触发规则4,乘客超过"+$p.getDay()+"天未付款乘客信用分-3分,"+"目前信用分"+$p.getPassengerScope());
+  end
+
+ rule "rules5"
+     when
+     //乘客超过3天未付款
+        $p:Passenger(status==0 && day>3 )
+     then
+   // 假设司机信用分计算逻辑为：乘客评价司机非常不满意，基础分-非常不满分数
+        $p.setPassengerScope($p.getPassengerScope()-5);
+        System.out.printf("触发规则5,乘客超过"+$p.getDay()+"天未付款乘客信用分-5分,"+"目前信用分"+$p.getPassengerScope());
+  end
+
+   rule "rules6"
+       when
+       //用户已付款
+          $p:Passenger(status==1)
+       then
+     // 假设司机信用分计算逻辑为：乘客评价司机非常不满意，基础分-非常不满分数
+         $p.setPassengerScope($p.getPassengerScope());
+          System.out.printf("触发规则6,乘客按照规定时间付款"+"目前信用分"+$p.getPassengerScope());
+    end

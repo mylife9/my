@@ -5,7 +5,7 @@
 <mapper namespace="com.ruoyi.coupons.mapper.CouponsGetMapper">
     <insert id="associateUserWithCoupon">
         insert into coupons_get
-        set user_id=#{userId}, coupon_id =#{couponId}, receive_time=now()
+        set open_id=#{openid}, coupon_id =#{couponId}, receive_time=now(),expiration_date = DATE_ADD(NOW(), INTERVAL 7 DAY);
     </insert>
     <insert id="couponsReceive">
 
@@ -16,6 +16,7 @@ insert into coupons_get set user_id=#{userId} , coupon_id =#{couponId},coupon_st
         update coupons_get set coupon_status = 1 where user_id = #{userId} and coupon_id = #{couponId}
     </update>
     <select id="usableCoupon" resultType="com.ruoyi.coupons.domain.TbCoupons">
-        SELECT b.coupons_number,b.coupons_name,b.coupons_amount from coupons_get a,tb_coupons b where a.coupon_id = b.id and a.user_id = #{userId} and a.coupon_status = 0 ORDER BY b.coupons_amount
+        SELECT b.coupons_number,b.coupons_name,b.coupons_amount,a.receive_time,a.expiration_date
+        from coupons_get a,tb_coupons b where a.coupon_id = b.id and a.open_id = #{openid} and a.coupon_status = 0 ORDER BY b.coupons_amount
     </select>
 </mapper>

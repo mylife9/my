@@ -7,5 +7,5 @@ package com.ruoyi.coupons.service;
  **/
 public interface ICouponsGetService {
 
-    int associateUserWithCoupon(Long userId, Long couponId);
+    int associateUserWithCoupon(String openid, Long couponId);
 }

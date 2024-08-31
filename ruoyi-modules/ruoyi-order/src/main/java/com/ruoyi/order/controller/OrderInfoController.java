@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/info")
+@RequestMapping("order")
 public class OrderInfoController {
 
     @Autowired
@@ -47,4 +47,17 @@ public class OrderInfoController {
         return orderInfoService.getOrderInfoList();
     }
 
+
+    /**
+     * @Description: 抢单
+     * @Author: 李紫颖
+     * @Date: 2024/8/26 20:36
+     * @param id:
+     * @return: com.ruoyi.common.core.web.domain.AjaxResult
+     *
+     */
+    @PostMapping("/orderById/{driverId}/{id}")
+    public AjaxResult orderById(@PathVariable("driverId")Long driverId,@PathVariable("id") String id){
+        return orderInfoService.orderById(driverId,id);
+    }
 }

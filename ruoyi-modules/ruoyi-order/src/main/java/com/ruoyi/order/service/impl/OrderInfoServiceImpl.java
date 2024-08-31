@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.order.controller.WebSocketController;
 import com.ruoyi.order.mapper.OrderInfoMapper;
+import com.ruoyi.order.pojo.DriverUser;
 import com.ruoyi.order.pojo.OrderInfo;
 import com.ruoyi.order.service.OrderInfoService;
+import com.ruoyi.order.utils.KmUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -55,39 +57,40 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
             // 遍历订单信息列表，进行处理
             for (OrderInfo orderInfo : orderInfoList) {
-                // 将起始经度转换为弧度
-                double lat1 = Math.toRadians(Double.parseDouble(orderInfo.getDepLongitude()));
-                // 将目标经度转换为弧度
-                double lat2 = Math.toRadians(139.11);
-                // 将起始纬度转换为弧度
-                double lng1 = Math.toRadians(Double.parseDouble(orderInfo.getDepLatitude()));
-                // 将目标纬度转换为弧度
-                double lng2 = Math.toRadians(39.12);
+//                // 将起始经度转换为弧度
+//                double lat1 = Math.toRadians(Double.parseDouble(orderInfo.getDepLongitude()));
+//                // 将目标经度转换为弧度
+//                double lat2 = Math.toRadians(139.11);
+//                // 将起始纬度转换为弧度
+//                double lng1 = Math.toRadians(Double.parseDouble(orderInfo.getDepLatitude()));
+//                // 将目标纬度转换为弧度
+//                double lng2 = Math.toRadians(39.12);
+//
+//                // 计算起始点和目标点的经度差和纬度差
+//                double a = lat1 - lat2;
+//                double b = lng1 - lng2;
+//
+//                // 根据经纬度差计算两点间的距离
+//                double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+//                        Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(b / 2), 2)));
+//
+//                // 将弧长乘以地球半径，得到距离，单位为米
+//                s = s * EARTH_RADIUS;
+//
+//                // 格式化距离输出为两位小数
+//                DecimalFormat df = new DecimalFormat("0.00");
+//
+//                // 输出距离，单位为公里
+//                System.out.println(df.format(s / 1000) + "公里");
 
-                // 计算起始点和目标点的经度差和纬度差
-                double a = lat1 - lat2;
-                double b = lng1 - lng2;
-
-                // 根据经纬度差计算两点间的距离
-                double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
-                        Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(b / 2), 2)));
-
-                // 将弧长乘以地球半径，得到距离，单位为米
-                s = s * EARTH_RADIUS;
-
-                // 格式化距离输出为两位小数
-                DecimalFormat df = new DecimalFormat("0.00");
-
-                // 输出距离，单位为公里
-                System.out.println(df.format(s / 1000) + "公里");
+                Double aDouble = KmUtils.calculateDistance(Double.valueOf(orderInfo.getDepLongitude()), 39.959928, Double.valueOf(orderInfo.getDepLatitude()), 116.298320);
 
                 // 根据距离判断订单是否在3km以外
-                if (Double.valueOf(df.format(s / 1000)) > 3) {
+                if (aDouble > 3) {
                     // 如果订单距离超过3km，则加入到结果列表中
                     list.add(orderInfo);
                 }
             }
-
             // 将处理后的结果列表推入Redis的列表的左侧
             opsForList.leftPush(key, JSON.toJSONString(list));
         } else {
@@ -123,6 +126,33 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
 
         return AjaxResult.success("下单成功");
+    }
+
+    @Override
+    public AjaxResult orderById(Long driverId,String id){
+
+        //根据id查询订单表
+        OrderInfo orderInfoById = orderInfoMapper.orderById(id);
+
+
+        if (orderInfoById.getOrderStatus() == 2){
+            return AjaxResult.error(500,"该订单已经被接取！！！");
+        }
+
+        //修改状态值
+        orderInfoById.setOrderStatus(2);
+        //根据id查询司机表
+        DriverUser driverUser = orderInfoMapper.driverById(driverId);
+        //订单表加入司机id
+        orderInfoById.setDriverId(driverId);
+        //添加司机的手机号
+        orderInfoById.setDriverPhone(driverUser.getDriverPhone());
+        //修改司机的信息
+        orderInfoMapper.updateOrder(orderInfoById);
+
+        stringRedisTemplate.delete("Order");
+
+        return AjaxResult.success(orderInfoById);
     }
 }
 

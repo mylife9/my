@@ -57,13 +57,13 @@ public interface ITbCouponsService {
 
     AjaxResult couponsInfo(Long id);
 
-    AjaxResult getUserCoupon(Long couponId, Long userId);
+    AjaxResult getUserCoupon(Long couponId, String openid);
 
     AjaxResult startCoupons(Long[] ids);
 
     AjaxResult closeCoupons(Long[] ids);
 
-    AjaxResult usableCoupon(Long userId);
+    AjaxResult usableCoupon(String openid);
 
     AjaxResult useCoupon(Long orderId, Integer userId, Integer couponsId);
 

@@ -22,6 +22,16 @@ public class CouponsGet extends BaseEntity {
     private Integer couponStatus;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date receiveTime;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private Date expirationDate;
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
 
     public Integer getId() {
         return id;

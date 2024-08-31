@@ -18,8 +18,9 @@ public class ICouponsGetServiceImpl implements ICouponsGetService {
 
 
     @Override
-    public int associateUserWithCoupon(Long userId, Long couponId) {
-        return couponsUseMapper.associateUserWithCoupon(userId, couponId);
+    public int associateUserWithCoupon(String openid, Long couponId) {
+        return couponsUseMapper.associateUserWithCoupon(openid, couponId);
     }
+
 
 }

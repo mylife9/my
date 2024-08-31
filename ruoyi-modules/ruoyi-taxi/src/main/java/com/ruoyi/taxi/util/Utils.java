@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class Utils {
@@ -85,23 +86,65 @@ public class Utils {
     }
 
 
-    public static Double calculateDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
-        double newLongitude = lat2 - lat1;
+    public static Double calculateDistance(Double lat1, Double lat2, Double lon1, Double lon2) {
+//        double newLongitude = lat2 - lat1;
+//
+//
+//        double newLatitude = lon2 - lon1;
+//
+//
+////        double newDistance = Math.asin(Math.sqrt(Math.pow(Math.sin(newLongitude / 2), 2) + Math.cos(lat2) * Math.cos(lat1) * Math.pow(Math.sin(newLatitude / 2), 2)));
+//        double newDistance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(newLongitude / 2), 2) +
+//                Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(newLatitude / 2), 2)));
+//
+//
+//        newDistance = newDistance * EARTH_RADIUS / 1000;
+//
+//        //保留小数点后两位
+//        String s = String.format("%.2f", newDistance);
+//        newDistance = Double.parseDouble(s);
 
 
-        double newLatitude = lon2 - lon1;
+        // 计算起始点和目标点的经度差和纬度差
+
+//        double a = lat1 - lon1;
+//        double b = lat2 - lon2;
+//
+//        // 根据经纬度差计算两点间的距离
+//        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+//                Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(b / 2), 2)));
+//
+//        // 将弧长乘以地球半径，得到距离，单位为米
+//        s = s * EARTH_RADIUS;
+//
+//        // 格式化距离输出为两位小数
+//        DecimalFormat df = new DecimalFormat("0.00");
+//
+//        // 输出距离，单位为公里
+//         Double aa = Double.valueOf(df.format(s / 1000));
+//
+//        return aa;
+
+        //a 和 b 都是从度数转换到弧度的过程。a 代表纬度之差，b 代表经度之差。
+        //lat1 和 lat2 是两个点的纬度坐标，lon1 和 lon2 是对应的经度坐标。
+        //(Math.PI / 180) 是将度数转换为弧度的常数因子
+        double a = (lat1 - lat2) * (Math.PI / 180); //计算纬度之差，并将其转换为弧度
+        double b = (lon1 - lon2) * (Math.PI / 180); //计算经度之差，并将其转换为弧度
+
+        // 根据经纬度差计算两点间的距离
+        //这里使用了一个公式（哈弗赛恩）来计算地球上两点之间的大圆距离。该公式基于球面三角学原理，a 是两半弦长度的平方和。
+        //s 是中心角的距离（以弧度表示）
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.pow(Math.sin(b / 2), 2)));
+
+        // 将弧长乘以地球半径，得到距离，单位为米
+        //其中 EARTH_RADIUS 是地球的平均半径（或者说是球体的半径）。对于地球来说，平均半径大约为6,371千米
+        s = s * EARTH_RADIUS;
+
+        // 返回距离，单位为公里
+        return s / 1000;
 
 
-        double newDistance = Math.asin(Math.sqrt(Math.pow(Math.sin(newLongitude / 2), 2) + Math.cos(lat2) * Math.cos(lat1) * Math.pow(Math.sin(newLatitude / 2), 2)));
-
-
-        newDistance = newDistance * EARTH_RADIUS / 1000;
-
-        //保留小数点后两位
-        String s = String.format("%.2f", newDistance);
-        newDistance = Double.parseDouble(s);
-
-        return newDistance;
     }
 
     public static String getAMapByLngAndLat(Double getLng, Double getLat) throws Exception {
