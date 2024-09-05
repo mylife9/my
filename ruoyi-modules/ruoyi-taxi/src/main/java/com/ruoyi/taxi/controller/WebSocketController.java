@@ -3,13 +3,11 @@ package com.ruoyi.taxi.controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.taxi.domain.OrderInfo;
-import com.ruoyi.taxi.domain.vo.PassengerVo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint("/websocket")

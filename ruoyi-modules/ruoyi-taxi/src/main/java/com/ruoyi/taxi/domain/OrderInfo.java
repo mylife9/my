@@ -1,37 +1,34 @@
 package com.ruoyi.taxi.domain;
 
-import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
-
-import java.io.Serializable;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 /**
-* 
-* @TableName order_info
-*/
+ * @TableName order_info
+ */
 @Data
 public class OrderInfo implements Serializable {
 
     /**
-    * 订单ID
-    */
-    @NotNull(message="[订单ID]不能为空")
+     * 订单ID
+     */
+    @NotNull(message = "[订单ID]不能为空")
     @ApiModelProperty("订单ID")
-    private String orderId;
+    private Long id;
     /**
-    * 乘客ID
-    */
-    @NotNull(message="[乘客ID]不能为空")
+     * 乘客ID
+     */
+    @NotNull(message = "[乘客ID]不能为空")
     @ApiModelProperty("乘客ID")
     private String passengerId;
     /**
@@ -48,29 +45,29 @@ public class OrderInfo implements Serializable {
     private Long driverId;
 
     @ApiModelProperty("大约金额")
-    private double aboutPrice;
+    private Double aboutPrice;
     /**
-    * 司机手机号
-    */
-    @Size(max= 16,message="编码长度不能超过16")
+     * 司机手机号
+     */
+    @Size(max = 16, message = "编码长度不能超过16")
     @ApiModelProperty("司机手机号")
-    @Length(max= 16,message="编码长度不能超过16")
-    private String driverPhone;
+    @Length(max = 16, message = "编码长度不能超过16")
+    private Long driverPhone;
     /**
-    * 车辆Id
-    */
+     * 车辆Id
+     */
     @ApiModelProperty("车辆Id")
     private Long carId;
     /**
-    * 
-    */
-    @Size(max= 8,message="编码长度不能超过8")
+     *
+     */
+    @Size(max = 8, message = "编码长度不能超过8")
     @ApiModelProperty("")
-    @Length(max= 8,message="编码长度不能超过8")
-    private String vehicleType;
+    @Length(max = 8, message = "编码长度不能超过8")
+    private Integer vehicleType;
     /**
-    * 发起地行政区划代码
-    */
+     * 发起地行政区划代码
+     */
     @ApiModelProperty("发起地行政区划代码")
     private String address;
     /**
@@ -113,23 +110,23 @@ public class OrderInfo implements Serializable {
     @Length(max= 128,message="编码长度不能超过128")
     private String destination;
     /**
-    * 预计目的地经度
-    */
-    @Size(max= 16,message="编码长度不能超过16")
+     * 预计目的地经度
+     */
+    @Size(max = 16, message = "编码长度不能超过16")
     @ApiModelProperty("预计目的地经度")
-    @Length(max= 16,message="编码长度不能超过16")
+    @Length(max = 16, message = "编码长度不能超过16")
     private Double destLongitude;
     /**
-    * 预计公里数
-    */
+     * 预计公里数
+     */
     @ApiModelProperty("预计公里数")
-    private BigDecimal expectDistance;
+    private Double expectDistance;
     /**
-    * 预计目的地纬度
-    */
-    @Size(max= 16,message="编码长度不能超过16")
+     * 预计目的地纬度
+     */
+    @Size(max = 16, message = "编码长度不能超过16")
     @ApiModelProperty("预计目的地纬度")
-    @Length(max= 16,message="编码长度不能超过16")
+    @Length(max = 16, message = "编码长度不能超过16")
     private Double destLatitude;
     /**
     * 坐标加密标识1:GCJ-02测绘局标准2:WGS84 GPS标准3:BD-09 百度标准4:CGCS2000 北斗标准0:其他
@@ -316,7 +313,7 @@ public class OrderInfo implements Serializable {
 
 
     @Schema(description = "预计时长(分钟)")
-    private Integer estimatedDuration;
+    private Double estimatedDuration;
 
     @Schema(description = "预付金额")
     private Double advanceAmount;

@@ -44,7 +44,7 @@
         <if test="idCardFront != null and idCardFront != ''">#{idCardFront},</if>
         <if test="idCardAfter != null and idCardAfter != ''">#{idCardAfter},</if>
         <if test="openid != null and openid != ''">#{openid},</if>
-        now()
+        #{createTime}
         )
     </insert>
 

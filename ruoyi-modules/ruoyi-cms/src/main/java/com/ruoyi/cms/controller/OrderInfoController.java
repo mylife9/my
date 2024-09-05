@@ -112,9 +112,9 @@ public class OrderInfoController extends BaseController
 //        long timestamp = System.currentTimeMillis() / 1000;
 //        result.put("timestamp", String.valueOf(timestamp));
 //        result.put("notifyurl", params.get("notifyurl"));
-        OrderInfo orderInfo1 = orderInfoService.selectorderInfo(tel);
+        OrderInfo  = orderInfoService.selectorderInfo(tel);
         //判断是否已经支付
-        if (orderInfo1.getOrderStatus()==6){
+        if (.getOrderStatus()==6){
             //保证幂等性
             String s1 = stringRedisTemplate.opsForValue().get("zf-" + tel);
             if (StringUtils.isEmpty(s1)){

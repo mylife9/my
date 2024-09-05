@@ -1,14 +1,13 @@
 package com.ruoyi.taxi.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.taxi.domain.OrderInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -18,7 +17,7 @@ import java.util.Date;
  * @create: 2024-08-16 18:25
  */
 @Data
-public class PassengerVo implements Serializable {
+public class PassengerVo extends OrderInfo implements Serializable {
 
 
     @Schema(description = "乘客id")
@@ -34,7 +33,7 @@ public class PassengerVo implements Serializable {
     private Long driverPhone;
 
     @Schema(description = "订单id")
-    private String orderId;
+    private Long id;
 
     @Schema(description = "乘客上车时间")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
@@ -108,7 +107,6 @@ public class PassengerVo implements Serializable {
     @Schema(description = "预约时间")
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date departTime;
-
     @Schema(description = "订单状态1：订单开始 2：司机接单 3：去接乘客 4：司机到达乘客起点 5：乘客上车，司机开始行程 6：到达目的地，行程结束，未支付 7：发起收款 8: 支付完成 9.订单取消'")
     private Integer orderStatus;
 

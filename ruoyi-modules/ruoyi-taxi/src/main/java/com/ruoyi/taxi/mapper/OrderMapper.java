@@ -1,7 +1,6 @@
 package com.ruoyi.taxi.mapper;
 
 import com.ruoyi.taxi.domain.CouponsGet;
-import com.ruoyi.taxi.domain.CouponsLog;
 import com.ruoyi.taxi.domain.DriverUser;
 import com.ruoyi.taxi.domain.OrderInfo;
 import org.apache.ibatis.annotations.Mapper;

@@ -37,8 +37,7 @@
         <if test="passengerName != null and passengerName != ''">#{passengerName},</if>
         <if test="profilePhoto != null and profilePhoto != ''">#{profilePhoto},</if>
         <if test="openid != null and openid != ''">#{openid},</if>
-        now()
-        )
+        #{gmtCreate})
     </insert>
 
     <update id="updateUser" parameterType="com.ruoyi.taxi.domain.PassengerUser">

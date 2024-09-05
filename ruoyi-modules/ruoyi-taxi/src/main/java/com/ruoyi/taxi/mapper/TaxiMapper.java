@@ -1,17 +1,20 @@
 package com.ruoyi.taxi.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.taxi.domain.DriverUser;
 import com.ruoyi.taxi.domain.DriverUserWorkStatus;
 import com.ruoyi.taxi.domain.OrderInfo;
 import com.ruoyi.taxi.domain.PassengerUser;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
 import java.util.List;
 
 @Mapper
-public interface TaxiMapper {
+public interface TaxiMapper extends BaseMapper<OrderInfo> {
     @Select("select * from passenger_user where openid=#{openid}")
     PassengerUser selectPassenger(String openid);
 

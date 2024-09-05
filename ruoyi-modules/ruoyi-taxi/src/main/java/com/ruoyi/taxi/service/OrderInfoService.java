@@ -1,7 +1,6 @@
 package com.ruoyi.taxi.service;
 
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.taxi.domain.DriverUser;
 import com.ruoyi.taxi.domain.OrderInfo;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
 

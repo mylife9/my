@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WxLoginConfig {
-    public static String appid = "wx792ccc22586f6e6f";
-    public static String secret = "32756f6f9a0f1c5563cb6b50005e9d8f";
+    public static String appid = "wxb6c1737fc0824e5c";
+    public static String secret = "cf6bca4a2f083b026235d16d6f51ab55";
 
     public static String getOpenUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code";
 

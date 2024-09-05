@@ -5,12 +5,9 @@ import com.ruoyi.taxi.domain.OrderInfo;
 import com.ruoyi.taxi.domain.vo.PassengerVo;
 import com.ruoyi.taxi.service.OrderInfoService;
 import com.ruoyi.taxi.service.TaxiService;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static com.ruoyi.common.core.web.domain.AjaxResult.error;
 

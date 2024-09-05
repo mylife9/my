@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import javax.annotation.Resource;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class PassengerUserServiceImpl implements PassengerUserService {
     @Autowired
     PassengerUserMapper userMapper;
-    @Autowired
+    @Resource
     StringRedisTemplate stringRedisTemplate;
     @Autowired
     OSSFileUtil ossFileUtil;
@@ -50,9 +51,10 @@ public class PassengerUserServiceImpl implements PassengerUserService {
         if(login != null){
             throw new ServiceException("手机号已被使用");
         }
-
+        user.setGmtCreate(new Date());
         Integer i = userMapper.registerUser(user);
 
+        //int i = userMapper.insert(user);
         return i;
     }
 
@@ -98,7 +100,7 @@ public class PassengerUserServiceImpl implements PassengerUserService {
     @Override
     public Integer updateUser(@Validated PassengerUser user) {
         Integer update = userMapper.updateUser(user);
-
+//        int update = userMapper.update(user, null);
         if(update <= 0){
             register(user);
         }
